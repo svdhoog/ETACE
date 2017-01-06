@@ -9,7 +9,7 @@ agentname = "Eurostat"
 
 def write_hdf(fname, input_dbfolder):
     set_run_name = fname[len(os.path.normpath(input_dbfolder))+3:-3]
-    print set_run_name
+    print (set_run_name)
     # Read the input HDF5 file in memory
     store = pd.io.pytables.HDFStore(fname)
     # Filtering out each agent types from the input HDF5 file
@@ -22,7 +22,7 @@ def write_hdf(fname, input_dbfolder):
 # Function to check for existing directories, and create a new one if not present 
 def dir_check(d):
     if os.path.exists(d):
-        reply = input("Specified output directory already exists!! Delete existing directory named <<"+os.path.basename(d)+">> and all its contents? [y/n] ")
+        reply = raw_input("Specified output directory already exists!! Delete existing directory named <<"+os.path.basename(d)+">> and all its contents? [y/n] ")
         if reply in ['y', 'Y', 'yes']:
             try:
                 os.system('rm -r '+ d)
@@ -36,10 +36,10 @@ def dir_check(d):
             except:
                 error("- Could not delete directory <<" +os.path.basename(d)+">>. Directory may contain additional files, remove files manually and try again!")
         else:
-            replytwo = input("Continue & write output files inside existing directory: <<"+os.path.basename(d)+">> ? WARNING: This will overwrite old files having same name, if present in the folder! [y/n]: ")
+            replytwo = raw_input("Continue & write output files inside existing directory: <<"+os.path.basename(d)+">> ? WARNING: This will overwrite old files having same name, if present in the folder! [y/n]: ")
             if not replytwo in ['y', 'Y', 'yes']:
                 try:              
-                    print "Please remove or rename the existing directory <<"+os.path.basename(d)+">> and try again, or choose a different directory for the output"
+                    print ("Please remove or rename the existing directory <<"+os.path.basename(d)+">> and try again, or choose a different directory for the output")
                     sys.exit()
                 except OSError as exception:
                     if exception.errno != errno.EEXIST:
@@ -50,7 +50,7 @@ def dir_check(d):
 
 # Function to print out the error messages,if any, and exit
 def error(mesg):
-    print ">>>>> (Error): %s" % mesg
+    print (">>>>> (Error): %s" % mesg)
     sys.exit(1)
 
 
@@ -70,7 +70,7 @@ if __name__ == "__main__":
     input_dbfolder = args.dbpath[0]
     if input_dbfolder == "./": 
         cwd = os.getcwd()
-        print "- Python script and input csv files both inside the same folder <<" +cwd+">>. Expected at least one level of hierarchy!"
+        print ("- Python script and input csv files both inside the same folder <<" +cwd+">>. Expected at least one level of hierarchy!")
         sys.exit(1)
     dir_list =[]
     # Checking for nested subdirectories within a directory
