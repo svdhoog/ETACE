@@ -171,6 +171,10 @@ def Plots_main(df, M, A, NP):
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.show()
 
+
+
+
+
 # Opening the store to get the HDF file for Agent-type
 store = pd.io.pytables.HDFStore('./Bank/Bank.h5')
 

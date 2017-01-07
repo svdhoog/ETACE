@@ -15,14 +15,12 @@ class M:
     mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum = range(7)
     # 0, 1, 2, 3, 4, 5
 
-
-
-class SummaryStats(A, M):
-    def __init__(self, data, analysis_type, method_type):
+class SummaryStats(A):
+    def __init__(self, data, analysis_type):
         self.__data = data
         self.__analysis_type = analysis_type
-        self.__method_type = method_type
-        self.mean
+        #self.__method_type = method_type
+        #self.mean
  
     def mean(self):
         single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
@@ -88,9 +86,9 @@ class SummaryStats(A, M):
 
 
 
-    def method(self):
-        options = {M.mean : mean, M.median : quantile(0.50), M.upper_quartile : quantile(0.75), M.lower_quartile : quantile(0.25), M.custom_quantile: custom_quantile, M.minimum : minimum, M.maximum : maximum} 
-        return options[self.__analysis_type]()
+def method(self):
+    options = {M.mean : mean, M.median : quantile(0.50), M.upper_quartile : quantile(0.75), M.lower_quartile : quantile(0.25), M.custom_quantile: custom_quantile, M.minimum : minimum, M.maximum : maximum} 
+    return options[self.__analysis_type]()
     
 
 
@@ -99,7 +97,7 @@ store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
 d = pd.DataFrame()
 df_mean = []
 for key in store.keys():
-    print key 
+    #print key 
     if len(key) == 18:
         s = int(key[5:-12])
         r =int(key[11:-6])
@@ -122,7 +120,10 @@ for key in store.keys():
      
 filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level_values('run') <= 2) & (d.index.get_level_values('major') <= 6100) & (d.index.get_level_values('minor') <= 2 )]['total_credit'].astype(float)
 
-P = SummaryStats(filtered_df, A.agent, M.mean)
-print P.method()
+
+# instantiate a class with desired analysis type
+P = SummaryStats(filtered_df, A.agent)
+# then call the desired method
+print P.mean()
 
 store.close()
