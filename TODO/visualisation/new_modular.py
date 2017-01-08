@@ -81,15 +81,82 @@ class SummaryStats(A):
 
 
 
-
-
-
-
-
 def method(self):
     options = {M.mean : mean, M.median : quantile(0.50), M.upper_quartile : quantile(0.75), M.lower_quartile : quantile(0.25), M.custom_quantile: custom_quantile, M.minimum : minimum, M.maximum : maximum} 
     return options[self.__analysis_type]()
-    
+
+
+
+def Plots_main(df, M, A, NP):
+    N = 1000 # N is the number of points i.e 6020 to how much? i.e. 26000, generally 1000
+    P = statistical_summary(df, M, A) # passing data, method to apply, and type of analysis
+    if NP == 1:
+        if M == 4: # Custom quartile needs two plots unlike the others so a separate method
+            idx = P.keys()
+            ##################################################################################
+            #for i in idx:
+            #    d = P[i]
+            #    y =[]
+            #    for j in range(0,len(d),N):
+            #        y.append(np.array(d[j:j+N]))
+            #    for j in range(0,len(d)/N):
+            #        x = np.linspace(0, N, N, endpoint=True)
+            #        fig = str(i)+str(j)
+            #        fig = plt.figure()
+            #        
+            #        fig.plot(x,y[j])
+            #        plt.hold(True)
+            #for i in idx:
+            #    for j in range(0,len(d)/N):
+            #        fig = str(i)+str(j)
+            #        fig = plt.figure()
+            #        plot_name = str(n)+".png"
+            #        
+            #        fig.savefig(plot_name, bbox_inches='tight')	 
+            #        plt.clf() 
+            ###################################################################################
+        else:
+            y =[]
+            for i in range(0,len(P),N):
+                y.append(np.array(P[i:i+N]))
+            for i in range(0,len(P)/N):
+                x = np.linspace(0, N, N, endpoint=True)
+                plt.plot(x,y[i])
+                plot_name = str(i)+".png"
+                plt.savefig(plot_name, bbox_inches='tight')	 
+                # plt.show() # reset the plot, but gives output in display
+                # So, alternatively:
+                # plt.cla() # clear current axes
+                plt.clf() # clear current figure
+                # plt.close() # close the whole plot
+        
+    if NP == 0:
+        if M == 4: # Custom quartile needs two plots unlike the others so a separate method
+            idx = P.keys()
+            for i in idx:
+                d = P[i]
+                y =[]
+                for j in range(0,len(d),N):
+                    y.append(np.array(d[j:j+N]))
+                for j in range(0,len(d)/N):
+                    x = np.linspace(0, N, N, endpoint=True)
+                    plt.plot(x,y[j])          
+                    plt.hold(True)	 
+            plot_name = "summary_main.png"
+            plt.savefig(plot_name, bbox_inches='tight')
+            plt.show()              
+        else:
+            y =[]
+            for i in range(0,len(P),N):
+                y.append(np.array(P[i:i+N]))
+            for i in range(0,len(P)/N):
+                x = np.linspace(0, N, N, endpoint=True)
+                plt.plot(x,y[i])          
+                plt.hold(True)	 
+            plt.savefig('summary_main.png', bbox_inches='tight')
+            plt.show()
+
+   
 
 
 #Main method
@@ -125,5 +192,10 @@ filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level
 P = SummaryStats(filtered_df, A.agent)
 # then call the desired method
 print P.mean()
+
+# instantiate a plot class with desired output (Single, Multiple)
+Fig = Plot(P.mean(), NP.single)
+# Calling the plot class instance with the desired kind of plot
+Fig.timeseries()
 
 store.close()

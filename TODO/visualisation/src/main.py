@@ -5,8 +5,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import operator
 
-from parameters import A
+from parameters import A, M, NP
 from summarystats import SummaryStats
+from plot_main import Plot
 
 
 #def method(self):
@@ -47,6 +48,12 @@ filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level
 # instantiate a class with desired analysis type
 P = SummaryStats(filtered_df, A.agent)
 # then call the desired method
-print P.mean()
+#print P.mean()
+
+# instantiate a plot class with desired output (Single, Multiple)
+Fig = Plot(P.mean(), NP.single)
+# Calling the plot class instance with the desired kind of plot
+Fig.timeseries()
+
 
 store.close()
