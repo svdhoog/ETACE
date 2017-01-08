@@ -25,6 +25,7 @@ class Timeseries():
 
     def single_output(self):
         print "aaipugiyo single samma"
+        print self.__data 
         y =[]
         for i in range(0,len(self.__data),self.N):
             y.append(np.array(self.__data[i:i+self.N]))
@@ -33,4 +34,4 @@ class Timeseries():
             plt.plot(x,y[i])          
             plt.hold(True)	 
         plt.savefig('summary_main.png', bbox_inches='tight')
-        #plt.show()
+        plt.show()

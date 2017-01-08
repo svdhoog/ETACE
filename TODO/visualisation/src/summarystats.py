@@ -9,8 +9,7 @@ class SummaryStats(A):
         self.__data = data
         self.__analysis_type = analysis_type
         #self.__method_type = method_type
-        #self.mean
- 
+
     def mean(self):
         single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
@@ -37,18 +36,20 @@ class SummaryStats(A):
         if N == 1:
             S = {}
             Q = raw_input("Input the desired quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
-            S['quantile'] = quantile(self, float(Q)) # N is the custom value for Quantile that is needed
-        elif N ==2:
+            S['quantile'] = self.quantile(float(Q)) # N is the custom value for Quantile that is needed
+        elif N == 2:
             S = dict.fromkeys(['lower_q', 'upper_q'])
             Q1 = raw_input("Input the desired Lower quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
             Q2 = raw_input("Input the desired Upper quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
-            S1 = quantile(self, float(Q1)) # Q is the custom value for Quantile that is needed
+            S1 = self.quantile(float(Q1)) # Q is the custom value for Quantile that is needed
             S['lower_q'] = S1
-            S2 = quantile(self, float(Q2))  
+            S2 = self.quantile(float(Q2))  
             S['upper_q'] = S2
         else:
             print "Unidentified input values. Check input, and try again!"
             sys.exit(1)
+        return S
+
     def maximum(self):
         single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
@@ -66,6 +67,13 @@ class SummaryStats(A):
         options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
         return options[self.__analysis_type]()
 
+    def median(self):
+        return self.quantile(0.50)
 
+    def upper_quartile(self):
+        return self.quantile(0.75)
 
+    def lower_quartile(self):
+        return self.quantile(0.25)
+ 
 
