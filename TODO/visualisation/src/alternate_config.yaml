@@ -1,0 +1,17 @@
+plot: "timeseries"
+agent: 'bank'
+variables: 'interest_rate'
+set: '1'
+run: '1' 
+plot properties:
+    number_plots: 'single'
+    plot_label: 'no'
+
+plot: "boxplot"
+agent: 'Eurostat'
+variables: 'monthly_output'
+set: '2'
+run: '10:15' 
+plot properties:
+    number_plots: 'multiple'
+    plot_label: 'yes'

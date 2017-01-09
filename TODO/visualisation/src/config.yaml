@@ -1,19 +1,19 @@
-plot_type: timeseries
-    agent: bank
-    variables: interest_rate
-    set: 1
-    run: 1:5 
+timeseries:
+    agent: 'Bank'
+    analysis: 'parameter'    
+    variables: 'total_credit'
+    set: '1'
+    run: '1' 
     plot properties:
-        number_plots: single
-        plot_label: no
+        number_plots: 'single'
+        plot_label: 'no'
 
 
-plot_type: boxplot
-    agent: Eurostat
-    variables: monthly_output
-    set: 2
-    run: 10:15 
+boxplot:
+    agent: 'Eurostat'
+    variables: 'monthly_output'
+    set: '2'
+    run: '10:15' 
     plot properties:
-        number_plots: multiple
-        plot_label: yes
-
+        number_plots: 'multiple'
+        plot_label: 'yes'
