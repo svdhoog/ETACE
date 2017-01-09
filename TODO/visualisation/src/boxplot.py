@@ -4,10 +4,11 @@ import matplotlib.pyplot as plt
 from summarystats import SummaryStats
 
 class Boxplot():
-    def __init__(self, data, analysis_type):
+    def __init__(self, data, num_plots, analysis_type):
         self.__data = data
         self.__analysis_type = analysis_type
-    
+        self.__num_plots = num_plots        
+
     def single_output(self):
         s = SummaryStats(self.__data, self.__analysis_type )    
         box_df = pd.DataFrame()
