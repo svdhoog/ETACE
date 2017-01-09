@@ -7,7 +7,6 @@ class Timeseries():
         self.__data = data
         self.N = 1000
     def multiple_output(self):
-        print "aaipugiyo multiple samma"
         y =[]
         for i in range(0,len(self.__data),self.N):
             y.append(np.array(self.__data[i:i+self.N]))
@@ -24,8 +23,6 @@ class Timeseries():
             # plt.close() # close the whole plot
 
     def single_output(self):
-        print "aaipugiyo single samma"
-        print self.__data 
         y =[]
         for i in range(0,len(self.__data),self.N):
             y.append(np.array(self.__data[i:i+self.N]))
