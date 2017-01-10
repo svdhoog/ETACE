@@ -2,18 +2,20 @@ timeseries:
     agent: 'Bank'
     analysis: 'parameter'    
     variables: 'total_credit'
-    set: '1'
-    run: '1' 
+    set: 1
+    run: 1
+    major: 6020
+    minor: 1 
     plot properties:
         number_plots: 'single'
         plot_label: 'no'
 
 
-boxplot:
-    agent: 'Eurostat'
-    variables: 'monthly_output'
-    set: '2'
-    run: '10:15' 
-    plot properties:
-        number_plots: 'multiple'
-        plot_label: 'yes'
+#boxplot:
+#    agent: 'Eurostat'
+#    variables: 'monthly_output'
+#    set: '2'
+#    run: '10:15' 
+#    plot properties:
+#        number_plots: 'multiple'
+#        plot_label: 'yes'

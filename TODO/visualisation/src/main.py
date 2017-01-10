@@ -4,6 +4,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import operator
+import yaml
+
 
 # Custom calsses written locally, import as needed
 from parameters import A, M, NP
@@ -11,7 +13,24 @@ from summarystats import SummaryStats
 from plot_main import Plot
 from boxplot import Boxplot
 
+def get_parameters():
+    with open("config.yaml", 'r') as stream:
+        try:
+            #print(yaml.load(stream))
+            d = yaml.load(stream)
+            #print a.keys()
+        except yaml.YAMLError as exc:
+            print(exc)
+    #print d['timeseries'] 
+    return d                
+
+
+
 if __name__ == "__main__":
+    
+    # Read the desired input parameters
+    param = get_parameters()    
+
     # Opening the store to get the HDF file for Agent-type
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
     # Main dataframe to hold all the dataframes of each instance    
@@ -49,7 +68,17 @@ if __name__ == "__main__":
         del df,d_i   # Deleting sub df's for garbage collection  
 
     # Using appropriate index to get the required row and column from the main dataframe         
-    filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level_values('run') <= 2) & (d.index.get_level_values('major') <= 6200) & (d.index.get_level_values('minor') <= 2 )]['total_credit'].astype(float)
+    # filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level_values('run') <= 2) & (d.index.get_level_values('major') <= 6200) & (d.index.get_level_values('minor') <= 2 )]['total_credit'].astype(float)
+
+#print param['timeseries']
+for key in param.keys():
+    d_plt = param[key]      
+    filtered_df = d.iloc[(d.index.get_level_values('set').isin(d_plt['set'])) & (d.index.get_level_values('run').isin(d_plt['run'])) & (d.index.get_level_values('major').isin(d_plt['major'])) & (d.index.get_level_values('minor').isin(d_plt['minor']))]
+
+    print filtered_df
+
+
+
 
 
     # Example plots
@@ -58,16 +87,16 @@ if __name__ == "__main__":
     # For timeseries
 
     # instantiate a class with desired analysis type
-    P = SummaryStats(filtered_df, A.agent) 
+    #P = SummaryStats(filtered_df, A.agent) 
     
     # then call the desired method, if no plot wanted
     # print P.mean() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum
 
     # instantiate a plot class with desired output (Single, Multiple)
-    Fig = Plot(P.mean(), NP.multiple) 
+    #Fig = Plot(P.mean(), NP.multiple) 
 
     # Calling the plot class instance with the desired kind of plot
-    Fig.timeseries()
+    #Fig.timeseries()
     ############################################################################################################ 
     #
     #
