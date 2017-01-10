@@ -2,10 +2,10 @@ timeseries:
     agent: 'Bank'
     analysis: 'parameter'    
     variables: 'total_credit'
-    set: 1
-    run: 1
-    major: 6020
-    minor: 1 
+    set: [1]
+    run: [1]
+    major: [range,[6020,6100,20]]
+    minor: [range,[1,10]] 
     plot properties:
         number_plots: 'single'
         plot_label: 'no'
