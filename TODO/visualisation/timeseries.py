@@ -228,7 +228,7 @@ filtered_df = d.iloc[(d.index.get_level_values('set') >= 1) & (d.index.get_level
 #print filtered_df
 
 
-Plots_main(filtered_df,F.mean,A.parameter,NP.single)
+#Plots_main(filtered_df,F.mean,A.parameter,NP.single)
 
 
 store.close()
