@@ -34,6 +34,20 @@ def process_parsed_values(d):
             d[i] = range(x[0],x[1],x[2])
     return d
 
+def process_hdf_keys( string_in ):
+    def find_between( s, first, last ):
+        try:
+            start = s.index( first ) + len( first )
+            end = s.index( last, start )
+            return s[start:end]
+        except ValueError:
+            return ""
+    
+    tmp_string = string_in.replace('_run_', ',')        
+    string_out = find_between(tmp_string,"/set_","_iters")
+    return list(map(int, string_out.split(',')))
+
+
 # Function that calls the timeseries plot
 def plt_timeseries(df):
     # instantiate a class with desired analysis type
@@ -62,12 +76,9 @@ if __name__ == "__main__":
     # Going through sets and runs in the HDF file
     for key in store.keys():
         # getting set and run values from the names: set_1_run_1_iters etc. hardcoded atm
-        if len(key) == 18:
-            s = int(key[5:-12])
-            r =int(key[11:-6])
-        else:
-            s = int(key[5:-13])
-            r =int(key[11:-6])
+        sets_runs = process_hdf_keys(key)        
+        s = sets_runs[0]
+        r = sets_runs[1]
         # Opening Panel the particular set and run        
         pnl = store.select(key)
 
