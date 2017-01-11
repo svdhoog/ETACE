@@ -33,11 +33,24 @@ def process_parsed_values(d):
             d[i] = range(x[0],x[1],x[2])
     return d
 
+def plt_timeseries(df):
+    # instantiate a class with desired analysis type
+    P = SummaryStats(df, A.agent)
+    # then call the desired method, if no plot wanted
+    # print P.mean() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum        
+    # instantiate a plot class with desired output (Single, Multiple)
+    Fig = Plot(P.mean(), NP.single) 
+    # Calling the plot class instance with the desired kind of plot
+    Fig.timeseries()
+
+def plt_boxplot(df):        
+    # instantiate a boxplot class
+    Fig = Boxplot(df, NP.single, A.agent)  
+    # call the appropriate method within the class
+    Fig.single_output()
+
 
 if __name__ == "__main__":
-    
-      
-
     # Opening the store to get the HDF file for Agent-type
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
     # Main dataframe to hold all the dataframes of each instance    
@@ -74,55 +87,18 @@ if __name__ == "__main__":
         d.index = pd.MultiIndex.from_tuples(d.index,names=['set','run','major','minor'])      
         del df,d_i   # Deleting sub df's for garbage collection  
 
-    # Using appropriate index to get the required row and column from the main dataframe         
-    # filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level_values('run') <= 2) & (d.index.get_level_values('major') <= 6200) & (d.index.get_level_values('minor') <= 2 )]['total_credit'].astype(float)
-
-
-
     # Read the desired input parameters
     x = get_parameters()  
     for key in x.keys():
         x_plt = x[key] 
         param = process_parsed_values(x_plt)
+        # filter out the frame based on main parameters read from config file
         filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))]
 
-        print filtered_df[param['variables']]
-        
-        #print param['variables']
+        df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
 
-
-
-    # Example plots
-
-    #############################################################################################################
-    # For timeseries
-
-    # instantiate a class with desired analysis type
-    #P = SummaryStats(filtered_df, A.agent) 
+        plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot} #dictionary of desired functions
+        # calling appropriate function based on read-in key from config file 
+        plot_function[key](df_plot.astype(float))  # need to cast dataframe into float for some strange reason, need to look at it
     
-    # then call the desired method, if no plot wanted
-    # print P.mean() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum
-
-    # instantiate a plot class with desired output (Single, Multiple)
-    #Fig = Plot(P.mean(), NP.multiple) 
-
-    # Calling the plot class instance with the desired kind of plot
-    #Fig.timeseries()
-    ############################################################################################################ 
-    #
-    #
-    ############################################################################################################
-    # For boxplot
-
-    # For boxplot it is a little different than the above methods as multiple instance of summary stats is needed
-
-    # Instantiate a boxplot class
-    # Fig = Boxplot(filtered_df, NP.single, A.agent)  
-    
-    # call the appropriate method within the class
-    # Fig.single_output()
-    #############################################################################################################
-
-
-
     store.close()
