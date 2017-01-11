@@ -6,13 +6,13 @@ import matplotlib.pyplot as plt
 import operator
 import yaml
 
-
 # Custom calsses written locally, import as needed
 from parameters import A, M, NP
 from summarystats import SummaryStats
 from plot_main import Plot
 from boxplot import Boxplot
 
+# Function that gets user input parameters from the config file
 def get_parameters():
     with open("config.yaml", 'r') as stream:
         try:
@@ -24,6 +24,7 @@ def get_parameters():
     #print d['timeseries'] 
     return d                
 
+# Function to process the parsed config file values to make them usable
 def process_parsed_values(d): 
     indices = ['set','run','major','minor']    
     for i in indices:
@@ -33,6 +34,7 @@ def process_parsed_values(d):
             d[i] = range(x[0],x[1],x[2])
     return d
 
+# Function that calls the timeseries plot
 def plt_timeseries(df):
     # instantiate a class with desired analysis type
     P = SummaryStats(df, A.agent)
@@ -43,6 +45,7 @@ def plt_timeseries(df):
     # Calling the plot class instance with the desired kind of plot
     Fig.timeseries()
 
+# Function that calls the boxplot
 def plt_boxplot(df):        
     # instantiate a boxplot class
     Fig = Boxplot(df, NP.single, A.agent)  
@@ -93,10 +96,9 @@ if __name__ == "__main__":
         x_plt = x[key] 
         param = process_parsed_values(x_plt)
         # filter out the frame based on main parameters read from config file
-        filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))]
+        filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))].dropna()
 
         df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
-
         plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot} #dictionary of desired functions
         # calling appropriate function based on read-in key from config file 
         plot_function[key](df_plot.astype(float))  # need to cast dataframe into float for some strange reason, need to look at it
