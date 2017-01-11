@@ -1,7 +1,7 @@
 import sys
 import yaml
 
-with open("config.yaml", 'r') as stream:
+with open("./config_file/config.yaml", 'r') as stream:
     try:
         #print(yaml.load(stream))
         d = yaml.load(stream)
