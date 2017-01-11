@@ -24,12 +24,19 @@ def get_parameters():
     #print d['timeseries'] 
     return d                
 
+def process_parsed_values(d): 
+    indices = ['set','run','major','minor']    
+    for i in indices:
+        if 'range' in str(d[i][0]):
+            x = d[i][1]
+            if len(x)<3: x.append(1) 
+            d[i] = range(x[0],x[1],x[2])
+    return d
 
 
 if __name__ == "__main__":
     
-    # Read the desired input parameters
-    param = get_parameters()    
+      
 
     # Opening the store to get the HDF file for Agent-type
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
@@ -70,14 +77,18 @@ if __name__ == "__main__":
     # Using appropriate index to get the required row and column from the main dataframe         
     # filtered_df = d.iloc[(d.index.get_level_values('set') == 1) & (d.index.get_level_values('run') <= 2) & (d.index.get_level_values('major') <= 6200) & (d.index.get_level_values('minor') <= 2 )]['total_credit'].astype(float)
 
-#print param['timeseries']
-for key in param.keys():
-    d_plt = param[key]      
-    filtered_df = d.iloc[(d.index.get_level_values('set').isin(d_plt['set'])) & (d.index.get_level_values('run').isin(d_plt['run'])) & (d.index.get_level_values('major').isin(d_plt['major'])) & (d.index.get_level_values('minor').isin(d_plt['minor']))]
-
-    print filtered_df
 
 
+    # Read the desired input parameters
+    x = get_parameters()  
+    for key in x.keys():
+        x_plt = x[key] 
+        param = process_parsed_values(x_plt)
+        filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))]
+
+        print filtered_df[param['variables']]
+        
+        #print param['variables']
 
 
 

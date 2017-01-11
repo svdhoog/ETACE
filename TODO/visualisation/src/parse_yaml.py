@@ -1,3 +1,4 @@
+import sys
 import yaml
 
 with open("config.yaml", 'r') as stream:
@@ -10,20 +11,23 @@ with open("config.yaml", 'r') as stream:
 
 
 def process_parsed_values(d): 
-    indices = ['set','run','major','minor']    
+    indices = ['set','run','major','minor']     
     for i in indices:
-        if 'range' in str(d[i][0]):
-            x = d[i][1]
-            if len(x)<3: x.append(1) 
-            d[i] = range(x[0],x[1],x[2])
+        if d.get(i) is not None:         
+            if 'range' in str(d[i][0]):                       
+                x = d[i][1]
+                if len(x)<3: x.append(1) 
+                d[i] = range(x[0],x[1],x[2])
+        else:
+            print("Required parameters missing in the config.yaml file!")
+            sys.exit(1)
     return d
 
 
 for key in d.keys():
     d_plt = d[key] 
-    param = process_parsed_values(d_plt)
-
-#print param
+    param = process_parsed_values(d_plt)    
+    print param
 
 
 
