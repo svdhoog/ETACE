@@ -13,7 +13,7 @@ class Timeseries():
         for i in range(0,len(self.__data)/self.__N):
             x = np.linspace(0, self.__N, self.__N, endpoint=True)
             plt.plot(x,y[i])
-            plot_name = str(i)+".png"
+            plot_name = "timeseries_"+str(i)+".png"
             plt.savefig(plot_name, bbox_inches='tight')	 
             
             # plt.show() # reset the plot, but gives output in display
