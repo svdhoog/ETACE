@@ -9,10 +9,8 @@ class Plot(NP):
         self.__data = data
         self.__num_plots = num_plots    
     
-    def timeseries(self):
-        # Getting the sixe of x-axis values for timeseries plot based on number of rows in the input dataframe      
-        N = len(self.__data.index)
-        T = Timeseries(self.__data,self.__num_plots, N)      
+    def timeseries( self, n ):
+        T = Timeseries(self.__data,self.__num_plots, n)      
         single_plot = lambda : T.single_output()
         multiple_plot = lambda : T.multiple_output()        
         options = {NP.single : single_plot, NP.multiple : multiple_plot} 

@@ -176,7 +176,7 @@ def Plots_main(df, M, A, NP):
 
 
 # Opening the store to get the HDF file for Agent-type
-store = pd.io.pytables.HDFStore('./Bank/Bank.h5')
+store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
 
 
 # Main dataframe to hold all the dataframes of each instance
@@ -228,7 +228,7 @@ filtered_df = d.iloc[(d.index.get_level_values('set') >= 1) & (d.index.get_level
 #print filtered_df
 
 
-#Plots_main(filtered_df,F.mean,A.parameter,NP.single)
+Plots_main(filtered_df,F.mean,A.single,NP.multiple)
 
 
 store.close()
