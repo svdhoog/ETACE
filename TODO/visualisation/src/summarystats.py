@@ -31,24 +31,34 @@ class SummaryStats(A):
         return options[self.__analysis_type]()   
     
     def custom_quantile(self):
-        N = raw_input("Enter desired number of Quantiles. 1 for single quantile and 2 for both Upper and Lower quantile values : ")
-        N = float(N)
-        if N == 1:
-            S = {}
-            Q = raw_input("Input the desired quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
-            S['quantile'] = self.quantile(float(Q)) # N is the custom value for Quantile that is needed
-        elif N == 2:
-            S = dict.fromkeys(['lower_q', 'upper_q'])
-            Q1 = raw_input("Input the desired Lower quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
-            Q2 = raw_input("Input the desired Upper quantile. Input format: 0.XX, where XX is the numeric quantile value you want: ")
-            S1 = self.quantile(float(Q1)) # Q is the custom value for Quantile that is needed
-            S['lower_q'] = S1
-            S2 = self.quantile(float(Q2))  
-            S['upper_q'] = S2
-        else:
-            print "Unidentified input values. Check input, and try again!"
+        try:
+            N = float(raw_input("Enter desired number of Quantiles. 1 for single quantile and 2 for both Upper and Lower quantile values : "))
+        except Exception:        
+            print ("Unrecognized input. Check input and try again!")
             sys.exit(1)
-        return S
+                
+        if N == 1:
+            s = pd.DataFrame()
+            try:
+                Q = float(raw_input("Input the desired quantile. Input format: 0.XX, where XX is the numeric quantile value you want: "))
+            except Exception:        
+                print ("Unrecognized input. Check input and try again!")
+                sys.exit(1)
+            return s.append(self.quantile(Q)) # N is the custom value for Quantile that is needed        
+                       
+        elif N == 2:
+            s1 = pd.DataFrame()
+            s2 = pd.DataFrame()
+            try:
+                Q1 = float(raw_input("Input the desired Lower quantile. Input format: 0.XX, where XX is the numeric quantile value you want: "))
+                Q2 = float(raw_input("Input the desired Upper quantile. Input format: 0.XX, where XX is the numeric quantile value you want: "))
+            except Exception:        
+                print ("Unrecognized input. Check input and try again!")
+                sys.exit(1)
+            s1 = s1.append(self.quantile(Q1))
+            s2 = s2.append(self.quantile(Q2))
+            return pd.concat([s1,s2], axis = 1)
+
 
     def maximum(self):
         single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()

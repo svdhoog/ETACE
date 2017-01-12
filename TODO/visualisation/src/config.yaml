@@ -1,23 +1,23 @@
 timeseries:
     agent: 'Bank'
     analysis: 'parameter'    
-    variables: ['total_credit','equity']
+    variables: ['total_credit']
     set: [1]
-    run: [1,2]
-    major: [range,[6020,26020,20]]
-    minor: [range,[1,20]] 
+    run: [1]
+    major: [range,[6020,6120,20]]
+    minor: [range,[1,5]] 
     plot properties:
         number_plots: 'single'
         plot_label: 'no'
 
-boxplot:
-    agent: 'Bank'
-    analysis: 'agent' 
-    variables: 'total_credit'
-    set: [1]
-    run: [range,[1,2]]
-    major: [range,[6020,26020,20]]
-    minor: [1,5,7,12] 
-    plot properties:
-        number_plots: 'multiple'
-        plot_label: 'yes'
+#boxplot:
+#    agent: 'Bank'
+#    analysis: 'agent' 
+#    variables: 'total_credit'
+#    set: [1]
+#    run: [range,[1,2]]
+#    major: [range,[6020,26020,20]]
+#    minor: [1,5,7,12] 
+#    plot properties:
+#        number_plots: 'multiple'
+#        plot_label: 'yes'

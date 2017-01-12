@@ -2,16 +2,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Timeseries():
-    #N = 1000
-    def __init__(self, data, num_plots):
+
+    def __init__(self, data, num_plots, n):
         self.__data = data
-        self.N = 1000
+        self.__N = n
     def multiple_output(self):
         y =[]
-        for i in range(0,len(self.__data),self.N):
-            y.append(np.array(self.__data[i:i+self.N]))
-        for i in range(0,len(self.__data)/self.N):
-            x = np.linspace(0, self.N, self.N, endpoint=True)
+        for i in range(0,len(self.__data),self.__N):
+            y.append(np.array(self.__data[i:i+self.__N]))
+        for i in range(0,len(self.__data)/self.__N):
+            x = np.linspace(0, self.__N, self.__N, endpoint=True)
             plt.plot(x,y[i])
             plot_name = str(i)+".png"
             plt.savefig(plot_name, bbox_inches='tight')	 
@@ -24,10 +24,10 @@ class Timeseries():
 
     def single_output(self):
         y =[]
-        for i in range(0,len(self.__data),self.N):
-            y.append(np.array(self.__data[i:i+self.N]))
-        for i in range(0,len(self.__data)/self.N):
-            x = np.linspace(0, self.N, self.N, endpoint=True)
+        for i in range(0,len(self.__data),self.__N):
+            y.append(np.array(self.__data[i:i+self.__N]))
+        for i in range(0,len(self.__data)/self.__N):
+            x = np.linspace(0, self.__N, self.__N, endpoint=True)
             plt.plot(x,y[i])          
             plt.hold(True)	 
         plt.savefig('summary_main.png', bbox_inches='tight')

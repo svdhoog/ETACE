@@ -53,9 +53,9 @@ def plt_timeseries(df):
     # instantiate a class with desired analysis type
     P = SummaryStats(df, A.agent)
     # then call the desired method, if no plot wanted
-    # print P.mean() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum        
+    # print P.custom_quantile() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum        
     # instantiate a plot class with desired output (Single, Multiple)
-    Fig = Plot(P.mean(), NP.single) 
+    Fig = Plot(P.custom_quantile(), NP.single) 
     # Calling the plot class instance with the desired kind of plot
     Fig.timeseries()
 
