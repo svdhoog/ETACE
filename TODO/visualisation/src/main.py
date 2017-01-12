@@ -50,22 +50,25 @@ def process_hdf_keys( string_in ):
 
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
+
     # instantiate a class with desired analysis type
     P = SummaryStats(df, A.agent)
-    # then call the desired method, if no plot wanted
-    # print P.custom_quantile() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum        
-    #print P.median()    
+
+    # then call the desired method, if no plot wanted   
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-    #print summary_type[param]()
+
     # instantiate a plot class with desired output (Single, Multiple)
-    Fig = Plot(summary_type[param](), NP.single) 
+    Fig = Plot(summary_type[param](), NP.single) # first argument is one option selected from summary_type dict above
+
     # Calling the plot class instance with the desired kind of plot
     Fig.timeseries()
 
 # Function that calls the boxplot
-def plt_boxplot(df):        
+def plt_boxplot( df ):
+        
     # instantiate a boxplot class
     Fig = Boxplot(df, NP.single, A.agent)  
+
     # call the appropriate method within the class
     Fig.single_output()
 
