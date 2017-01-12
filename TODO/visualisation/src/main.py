@@ -67,12 +67,12 @@ def plt_timeseries( df, param ):
 
 # Function that calls the boxplot
 def plt_boxplot( df, param ):  # param not yet used, used to standardize function for now
-        
+    n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
     # instantiate a boxplot class
-    Fig = Boxplot(df, NP.single, A.agent)  
+    Fig = Boxplot(df, n, NP.single, A.single)  
 
     # call the appropriate method within the class
-    Fig.single_output()
+    Fig.multiple_output()
 
 
 if __name__ == "__main__":
