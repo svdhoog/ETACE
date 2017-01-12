@@ -49,13 +49,16 @@ def process_hdf_keys( string_in ):
 
 
 # Function that calls the timeseries plot
-def plt_timeseries(df):
+def plt_timeseries( df, param ):
     # instantiate a class with desired analysis type
     P = SummaryStats(df, A.agent)
     # then call the desired method, if no plot wanted
     # print P.custom_quantile() # options: mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum        
+    #print P.median()    
+    summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
+    #print summary_type[param]()
     # instantiate a plot class with desired output (Single, Multiple)
-    Fig = Plot(P.mean(), NP.single) 
+    Fig = Plot(summary_type[param](), NP.single) 
     # Calling the plot class instance with the desired kind of plot
     Fig.timeseries()
 
@@ -112,6 +115,6 @@ if __name__ == "__main__":
         df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
         plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot} #dictionary of desired functions
         # calling appropriate function based on read-in key from config file 
-        plot_function[key](df_plot.astype(float))  # need to cast dataframe into float for some strange reason, need to look at it
+        plot_function[key](df_plot.astype(float), param['summary'])  # need to cast dataframe into float for some strange reason, need to look at it
     
     store.close()
