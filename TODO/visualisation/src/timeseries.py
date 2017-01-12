@@ -21,7 +21,8 @@ class Timeseries():
             # plt.cla() # clear current axes
             plt.clf() # clear current figure
             # plt.close() # close the whole plot
-
+        plt.close()    
+    
     def single_output(self):
         y =[]
         for i in range(0,len(self.__data),self.__N):
@@ -31,4 +32,4 @@ class Timeseries():
             plt.plot(x,y[i])          
             plt.hold(True)	 
         plt.savefig('summary_main.png', bbox_inches='tight')
-        plt.show()
+        plt.close()

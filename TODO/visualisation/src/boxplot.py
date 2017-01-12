@@ -25,7 +25,7 @@ class Boxplot():
         bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
         # plt.hold(True)        
         plt.savefig('boxplot_main.png', bbox_inches='tight')  
-        plt.show()
+        plt.close()
 
 
     def multiple_output(self):
@@ -37,13 +37,14 @@ class Boxplot():
         box_df['lower_quartile'] = s.lower_quartile()
         box_df['max'] = s.maximum()
         box_df['min'] = s.minimum()
-        x = 1
-        for i in range(0,len(self.__data)/self.__N,self.__N):
-            # print box_df['mean'][i:i+self.__N]           
-            tmp_df = box_df[i:i+self.__N]
-            bp = tmp_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
-            plot_name = "boxplot_"+str(x)+".png"        
-            plt.savefig(plot_name, bbox_inches='tight')  
-            x = x+1
 
+        count = 0
+        for i in range(0,len(box_df.index)/self.__N):                    
+            tmp_df = box_df[count:count+self.__N]
+            bp = tmp_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
+            plot_name = "boxplot_"+str(i)+".png"        
+            plt.savefig(plot_name, bbox_inches='tight')  
+            plt.clf()           
+            count = count + self.__N
+        plt.close()
 
