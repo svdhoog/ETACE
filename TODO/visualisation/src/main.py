@@ -47,13 +47,16 @@ def process_hdf_keys( string_in ):
     string_out = find_between(tmp_string,"/set_","_iters")
     return list(map(int, string_out.split(',')))
 
+def f_analysis(val):                
+    analysis_values = {'single' : A.single, 'batch' : A.batch, 'parameter' : A.parameter, 'agent' : A.agent}              
+    return analysis_values[val]  
 
 
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
 
     # instantiate a class with desired analysis type
-    P = SummaryStats(df, A.single)
+    P = SummaryStats(df, f_analysis(param['analysis']))
 
     # then call the desired method, if no plot wanted   
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
@@ -69,7 +72,7 @@ def plt_timeseries( df, param ):
 
 
 # Function that calls the boxplot
-def plt_boxplot( df, param ):  # param not yet used, used to standardize function for now
+def plt_boxplot( df, param ):  
     n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
     # instantiate a boxplot class
     Fig = Boxplot(df, n, param['plot properties']['number_plots'], param['analysis'])  
