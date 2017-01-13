@@ -1,32 +1,6 @@
-timeseries:
-    agent: 'Bank'
-    analysis: 'single'    
-    variables: ['total_credit']
-    set: [1]
-    run: [1,2]
-    major: [range,[6020,26020,20]]
-    minor: [range,[1,5]] 
-    summary: 'mean'    
-    plot properties:
-        number_plots: 'multiple'
-        plot_label: 'no'
-
-boxplot:
-    agent: 'Bank'
-    analysis: 'parameter' 
-    variables: 'total_credit'
-    set: [1]
-    run: [range,[1,3]]
-    major: [range,[6020,26020,20]]
-    minor: [1,5,7] 
-    plot properties:
-        number_plots: 'single'
-        plot_label: 'yes'
-
-
-#histogram:
+#timeseries:
 #    agent: 'Bank'
-#    analysis: 'parameter'    
+#    analysis: 'single'    
 #    variables: ['total_credit']
 #    set: [1]
 #    run: [1,2]
@@ -36,3 +10,29 @@ boxplot:
 #    plot properties:
 #        number_plots: 'multiple'
 #        plot_label: 'no'
+
+#boxplot:
+#    agent: 'Bank'
+#    analysis: 'parameter' 
+#    variables: 'total_credit'
+#    set: [1]
+#    run: [range,[1,3]]
+#    major: [range,[6020,26020,20]]
+#    minor: [1,5,7] 
+#    plot properties:
+#        number_plots: 'single'
+#        plot_label: 'yes'
+
+
+histogram:
+    agent: 'Bank'
+    analysis: 'parameter'    
+    variables: ['total_credit']
+    set: [1]
+    run: [1,2]
+    major: [range,[6020,26020,20]]
+    minor: [range,[1,5]] 
+    summary: 'mean'    
+    plot properties:
+        number_plots: 'single'  #multiple, not fixed yet
+        plot_label: 'no'

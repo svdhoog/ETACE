@@ -85,7 +85,7 @@ def plt_boxplot( df, param ):
 def plt_histogram( df, param ):
 
     # instantiate a class with desired analysis type
-    P = SummaryStats(df, A.parameter)
+    P = SummaryStats(df, f_analysis(param['analysis']))
 
     # then call the desired method, if no plot wanted   
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
