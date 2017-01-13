@@ -48,6 +48,7 @@ def process_hdf_keys( string_in ):
     return list(map(int, string_out.split(',')))
 
 
+
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
 
@@ -65,6 +66,8 @@ def plt_timeseries( df, param ):
     # Calling the plot class instance with the desired kind of plot
     Fig.timeseries( n )
 
+
+
 # Function that calls the boxplot
 def plt_boxplot( df, param ):  # param not yet used, used to standardize function for now
     n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
@@ -73,6 +76,27 @@ def plt_boxplot( df, param ):  # param not yet used, used to standardize functio
 
     # call the appropriate method within the class
     Fig.multiple_output()
+
+
+# Function that calls the timeseries plot
+def plt_histogram( df, param ):
+
+    # instantiate a class with desired analysis type
+    P = SummaryStats(df, A.parameter)
+
+    # then call the desired method, if no plot wanted   
+    summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
+    
+    n = len(param['major']) # number of datapoints for x-axis
+    
+    # instantiate a plot class with desired output (Single, Multiple)
+    Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
+
+    # Calling the plot class instance with the desired kind of plot
+    Fig.histogram( n )
+
+
+
 
 
 if __name__ == "__main__":
@@ -118,7 +142,7 @@ if __name__ == "__main__":
         filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))].dropna()
 
         df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
-        plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot} #dictionary of desired functions
+        plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
         # calling appropriate function based on read-in key from config file 
         plot_function[key](df_plot.astype(float), param)  # need to cast dataframe into float for some strange reason, need to look at it
     
