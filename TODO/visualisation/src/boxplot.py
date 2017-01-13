@@ -1,15 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from parameters import NP
+from parameters import NP, A
 
 from summarystats import SummaryStats
 
-class Boxplot(NP):
-    def __init__(self, data, n, n_plots, analysis_type):
+class Boxplot(NP, A):
+    def __init__(self, data, n, n_plots, a_type):
         self.__data = data
         self.__N = n
-        self.__analysis_type = analysis_type
-        self.__n_plots = n_plots        
+        self.__a_type = a_type
+        self.__n_plots = n_plots       
 
     def plot(self):
         n_plot_values = {'single' : NP.single, 'multiple' : NP.multiple} 
@@ -17,11 +17,15 @@ class Boxplot(NP):
         single_plot = lambda : self.single_output()
         multiple_plot = lambda : self.multiple_output()        
         options = {NP.single : single_plot, NP.multiple : multiple_plot}        
-        return options[num_plots]()  
+        return options[num_plots]()
+
+    def f_analysis(self):                
+        analysis_values = {'single' : A.single, 'batch' : A.batch, 'parameter' : A.parameter, 'agent' : A.agent}       
+        return analysis_values[self.__a_type]          
 
 
     def single_output(self):
-        s = SummaryStats(self.__data, self.__analysis_type )    
+        s = SummaryStats(self.__data, self.f_analysis() )    
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
@@ -38,7 +42,7 @@ class Boxplot(NP):
 
 
     def multiple_output(self):
-        s = SummaryStats(self.__data, self.__analysis_type )           
+        s = SummaryStats(self.__data, self.f_analysis() )           
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()

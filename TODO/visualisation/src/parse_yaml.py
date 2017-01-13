@@ -2,7 +2,7 @@ import sys
 import yaml
 from parameters import A, M, NP
 
-with open("./config_file/config.yaml", 'r') as stream:
+with open("config.yaml", 'r') as stream:
     try:
         #print(yaml.load(stream))
         d = yaml.load(stream)
@@ -28,9 +28,10 @@ def process_parsed_values(d):
 for key in d.keys():
     d_plt = d[key] 
     param = process_parsed_values(d_plt)    
-    print param['plot properties']['number_plots']
+    #print param['plot properties']['number_plots']
+    print param['analysis']
 
-print NP.single
+#print NP.single
 
 
 

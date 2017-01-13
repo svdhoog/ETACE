@@ -13,11 +13,11 @@
 
 boxplot:
     agent: 'Bank'
-    analysis: 'agent' 
+    analysis: 'single' 
     variables: 'total_credit'
     set: [1]
     run: [range,[1,3]]
-    major: [range,[6020,6120,20]]
+    major: [range,[6020,26020,20]]
     minor: [1,5,7] 
     plot properties:
         number_plots: 'multiple'
