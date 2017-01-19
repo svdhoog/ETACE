@@ -100,14 +100,11 @@ def plt_histogram( df, param ):
 
 
 
-
-
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
-    df_mean = []
     # Going through sets and runs in the HDF file
     for key in store.keys():
         # getting set and run values from the names: set_1_run_1_iters etc. hardcoded atm
