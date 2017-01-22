@@ -30,8 +30,13 @@ def process_parsed_values(d):
     for i in indices:
         if 'range' in str(d[i][0]):
             x = d[i][1]
+            if len(x)<2:
+                #x.append(x[0]) # adds the same existing value as repetition, if only single value present in input, alterative to sys exit here
+                print " -range not properly defined, check input and retry!"
+                sys.exit(1)            
             if len(x)<3: x.append(1) 
-            d[i] = range(x[0],x[1],x[2])
+            d[i] = range(x[0],x[1]+x[2],x[2])      
+    print d    
     return d
 
 def process_hdf_keys( string_in ):

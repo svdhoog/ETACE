@@ -4,7 +4,7 @@ timeseries:
     variables: ['total_credit']
     set: [1]
     run: [1,2]
-    major: [range,[6020,26020,20]]
+    major: [range,[6020,26000,20]]
     minor: [range,[1,6]] 
     summary: 'mean'    
     plot properties:
