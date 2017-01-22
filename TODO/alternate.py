@@ -36,19 +36,12 @@ for key in store.keys():
     df['run'] = r
     df.set_index('run', append = True, inplace = True)
     df.set_index('set', append = True, inplace = True)
-
-    df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
+    df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))    
     del df
-
+# make sure df on the list have same columns
 d = pd.concat(df_list)
 
-#    # Adding each of the dataframe from panel into a main dataframe which has all the sets and runs        
-#    if d.empty:
-#        d = d_i
-#    else:   
-#        d = pd.concat([d,d_i], axis =0)
-    # Some tweak to get the multiindex working again for the main df        
-##d.index = pd.MultiIndex.from_tuples(d.index,names=['set','run','major','minor'])      
-#del df,d_i   # Deleting sub df's for garbage collection  
-print d['total_credit'].tail(20)   
+# If columns of items in df_list are not same use this instead (not tested yet):
+#d = pd.DataFrame.from_dict(map(dict,df_list))
+
 store.close()

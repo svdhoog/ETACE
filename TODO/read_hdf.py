@@ -45,5 +45,5 @@ for key in store.keys():
     # Some tweak to get the multiindex working again for the main df        
     d.index = pd.MultiIndex.from_tuples(d.index,names=['set','run','major','minor'])      
     del df,d_i   # Deleting sub df's for garbage collection  
-print d.head(5)    
+#print d['total_credit']
 store.close()
