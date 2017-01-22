@@ -106,6 +106,7 @@ if __name__ == "__main__":
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file
+    df_list =[]
     for key in store.keys():
         # getting set and run values from the names: set_1_run_1_iters etc. hardcoded atm
         sets_runs = process_hdf_keys(key)        
@@ -122,16 +123,11 @@ if __name__ == "__main__":
         df['run'] = r
         df.set_index('run', append = True, inplace = True)
         df.set_index('set', append = True, inplace = True)
-        d_i = df.reorder_levels(['set', 'run', 'major', 'minor'])
-
-        # Adding each of the dataframe from panel into a main dataframe which has all the sets and runs        
-        if d.empty:
-            d = d_i
-        else:   
-            d = pd.concat([d,d_i], axis =0)
-        # Some tweak to get the multiindex working again for the main df        
-        d.index = pd.MultiIndex.from_tuples(d.index,names=['set','run','major','minor'])      
-        del df,d_i   # Deleting sub df's for garbage collection  
+        df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
+        del df
+        
+    # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
+    d = pd.concat(df_list)   
 
     # Read the desired input parameters
     x = get_parameters()  
