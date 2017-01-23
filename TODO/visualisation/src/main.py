@@ -35,8 +35,7 @@ def process_parsed_values(d):
                 print " -range not properly defined, check input and retry!"
                 sys.exit(1)            
             if len(x)<3: x.append(1) 
-            d[i] = range(x[0],x[1]+x[2],x[2])      
-    print d    
+            d[i] = range(x[0],x[1]+x[2],x[2])         
     return d
 
 def process_hdf_keys( string_in ):
