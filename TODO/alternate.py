@@ -40,7 +40,7 @@ for key in store.keys():
     del df
 # make sure df on the list have same columns
 d = pd.concat(df_list)
-
+del df_list
 # If columns of items in df_list are not same use this instead (not tested yet):
 #d = pd.DataFrame.from_dict(map(dict,df_list))
 
