@@ -103,7 +103,6 @@ def plt_histogram( df, param ):
     Fig.histogram( n )
 
 
-
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
@@ -138,13 +137,10 @@ if __name__ == "__main__":
     for key in x.keys():
         x_plt = x[key] 
         param = process_parsed_values(x_plt)
-        # filter out the frame based on main parameters read from config file
-        #filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
-              
         
-        #df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
         plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
-        # calling appropriate function based on read-in key from config file 
+        # calling appropriate function based on read-in key from config file
+        # also passing in the filtered dataframe to the function at the same time 
         plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float), param) # need to cast df to float
     
     store.close()
