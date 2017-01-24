@@ -127,7 +127,7 @@ if __name__ == "__main__":
         df.set_index('run', append = True, inplace = True)
         df.set_index('set', append = True, inplace = True)
         df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
-        del df
+        #del df
         
     # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
     d = pd.concat(df_list)   

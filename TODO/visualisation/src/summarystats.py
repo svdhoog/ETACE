@@ -19,7 +19,7 @@ class SummaryStats(A):
 
         #options = {0 : single_analysis, 1 : batch_analysis, 2 : parameter_analysis, 3 : agent_analysis, 4 : error_input} # error needs to be mapped later on
         options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
-        print options[self.__analysis_type]()         
+        # print options[self.__analysis_type]()         
         return options[self.__analysis_type]()
     
     def quantile(self, val):

@@ -8,7 +8,7 @@ timeseries:
     minor: [range,[1,5]] 
     summary: 'mean'    
     plot properties:
-        number_plots: 'multiple'
+        number_plots: 'single'
         plot_label: 'no'
 
 #boxplot:
