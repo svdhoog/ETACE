@@ -132,14 +132,15 @@ if __name__ == "__main__":
         
     # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
     d = pd.concat(df_list)   
-
+    del df_list
     # Read the desired input parameters
     x = get_parameters()  
     for key in x.keys():
         x_plt = x[key] 
         param = process_parsed_values(x_plt)
         # filter out the frame based on main parameters read from config file
-        filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))].dropna()
+        filtered_df = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna()
+        print filtered_df        
         
         df_plot = filtered_df[param['variables']] # choose the variables as defined in config file
         plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
