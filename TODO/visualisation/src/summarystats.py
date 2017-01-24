@@ -23,7 +23,7 @@ class SummaryStats(A):
         return options[self.__analysis_type]()
     
     def quantile(self, val):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).quantile(val).dropna()
+        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).quantile(val).dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).quantile(val).dropna()
         parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).quantile(val).dropna()
         agent_analysis = lambda : self.__data.groupby(level=['major']).quantile(val).dropna()
