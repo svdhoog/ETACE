@@ -11,15 +11,12 @@ class SummaryStats(A):
         #self.__method_type = method_type
 
     def mean(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
+        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean().dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
         parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).mean().dropna()
         agent_analysis = lambda : self.__data.groupby(level=['major']).mean().dropna()
-        #error_input = lambda: [None, sys.stdout.write("Unexpected input value! Check again and retry... "), sys.exit(0)][0]
 
-        #options = {0 : single_analysis, 1 : batch_analysis, 2 : parameter_analysis, 3 : agent_analysis, 4 : error_input} # error needs to be mapped later on
-        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
-        # print options[self.__analysis_type]()         
+        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis}          
         return options[self.__analysis_type]()
     
     def quantile(self, val):
@@ -62,15 +59,16 @@ class SummaryStats(A):
 
 
     def maximum(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
+        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).max().dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
         parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).max().dropna()
         agent_analysis = lambda : self.__data.groupby(level=['major']).max().dropna()
+
         options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
         return options[self.__analysis_type]()
 
     def minimum(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major']).min().dropna()
+        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).min().dropna()
         batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).min().dropna()
         parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).min().dropna()
         agent_analysis = lambda : self.__data.groupby(level=['major']).min().dropna()
