@@ -52,7 +52,7 @@ def process_hdf_keys( string_in ):
     return list(map(int, string_out.split(',')))
 
 def f_analysis(val):                
-    analysis_values = {'single' : A.single, 'batch' : A.batch, 'parameter' : A.parameter, 'agent' : A.agent}              
+    analysis_values = {'single' : A.single, 'batch' : A.batch, 'parameter' : A.parameter, 'agent' : A.agent}    
     return analysis_values[val]  
 
 
@@ -64,10 +64,11 @@ def plt_timeseries( df, param ):
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
     
     n = len(param['major']) # number of datapoints for x-axis
+    step = len(param['minor'])
     # instantiate a plot class with desired output (Single, Multiple)
     Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
     # Calling the plot class instance with the desired kind of plot
-    Fig.timeseries( n )
+    Fig.timeseries( n, step, f_analysis(param['analysis']))
 
 
 # Function that calls the boxplot

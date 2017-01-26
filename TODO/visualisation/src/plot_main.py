@@ -9,10 +9,10 @@ class Plot(NP):
         self.__data = data
         self.__n_plots = n_plots    
         
-    def timeseries( self, n ):   
+    def timeseries( self, n, step, analysis_type ):   
         n_plot_values = {'single' : NP.single, 'multiple' : NP.multiple} 
         num_plots = n_plot_values[self.__n_plots]        
-        T = Timeseries(self.__data, num_plots, n)      
+        T = Timeseries(self.__data, num_plots, n, step, analysis_type)      
         single_plot = lambda : T.single_output()
         multiple_plot = lambda : T.multiple_output()        
         options = {NP.single : single_plot, NP.multiple : multiple_plot}        
