@@ -1,6 +1,6 @@
 timeseries:
     agent: 'Bank'
-    analysis: 'batch'    
+    analysis: 'single'    
     variables: ['total_credit']
     set: [1]
     run: [1,2]
@@ -8,7 +8,7 @@ timeseries:
     minor: [range,[1,5]] 
     summary: 'mean'    
     plot properties:
-        number_plots: 'single'
+        number_plots: 'multiple'
         plot_label: 'no'
 
 #boxplot:

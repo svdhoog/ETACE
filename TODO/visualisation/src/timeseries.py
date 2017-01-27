@@ -13,7 +13,16 @@ class Timeseries(A):
                 
     def multiple_output(self):
         if self.__analysistype == A.single:
-            print "Quitting!! Reason: too many plots will be printed, please choose wisely and retry"
+            print "Quitting!! Reason: too many plots will be printed..."
+            #y = self.__data.iloc[::self.__stepsize]
+            #print y
+            #for i in range(0,len(self.__data)/self.__N):
+            #    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+            #    plt.plot(x,y[i])
+            #    plot_name = "timeseries_"+str(i)+".png"
+            #    plt.savefig(plot_name, bbox_inches='tight')	 
+            #    plt.clf() # clear current figure
+            #plt.close()    
             sys.exit(1)
 
         else:
