@@ -10,28 +10,28 @@ class Plot(NP):
         self.__n_plots = n_plots    
         
     def timeseries( self, n, step, analysis_type ):   
-        n_plot_values = {'single' : NP.single, 'multiple' : NP.multiple} 
+        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
         num_plots = n_plot_values[self.__n_plots]        
         T = Timeseries(self.__data, num_plots, n, step, analysis_type)      
-        single_plot = lambda : T.single_output()
-        multiple_plot = lambda : T.multiple_output()        
-        options = {NP.single : single_plot, NP.multiple : multiple_plot}        
+        one_plot = lambda : T.one_output()
+        many_plot = lambda : T.many_output()        
+        options = {NP.one : one_plot, NP.many : many_plot}        
         return options[num_plots]()
 
 
     def histogram( self, n ):   
-        n_plot_values = {'single' : NP.single, 'multiple' : NP.multiple} 
+        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
         num_plots = n_plot_values[self.__n_plots]        
         H = Histogram(self.__data, num_plots, n)      
-        single_plot = lambda : H.single_output()
-        multiple_plot = lambda : H.multiple_output()        
-        options = {NP.single : single_plot, NP.multiple : multiple_plot}        
+        one_plot = lambda : H.one_output()
+        many_plot = lambda : H.many_output()        
+        options = {NP.one : one_plot, NP.many : many_plot}        
         return options[num_plots]()
 
 
     def boxplot(self):
         B = Boxplot(self.__data,num_plots,self.__analysis_type)      
-        single_plot = lambda : B.single_output()
-        multiple_plot = lambda : B.multiple_output()        
-        options = {NP.single : single_plot, NP.multiple : multiple_plot} 
+        one_plot = lambda : B.one_output()
+        many_plot = lambda : B.many_output()        
+        options = {NP.one : one_plot, NP.many : many_plot} 
         return options[num_plots]()

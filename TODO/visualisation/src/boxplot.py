@@ -12,19 +12,18 @@ class Boxplot(NP, A):
         self.__n_plots = n_plots       
 
     def plot(self):
-        n_plot_values = {'single' : NP.single, 'multiple' : NP.multiple} 
+        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
         num_plots = n_plot_values[self.__n_plots]
-        single_plot = lambda : self.single_output()
-        multiple_plot = lambda : self.multiple_output()        
-        options = {NP.single : single_plot, NP.multiple : multiple_plot}        
+        one_plot = lambda : self.one_output()
+        many_plot = lambda : self.many_output()        
+        options = {NP.one : one_plot, NP.many : many_plot}        
         return options[num_plots]()
 
     def f_analysis(self):                
-        analysis_values = {'single' : A.single, 'batch' : A.batch, 'parameter' : A.parameter, 'agent' : A.agent}       
-        return analysis_values[self.__a_type]          
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}       
+        return analysis_values[self.__a_type]       
 
-
-    def single_output(self):
+    def one_output(self):
         s = SummaryStats(self.__data, self.f_analysis() )    
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
@@ -41,7 +40,7 @@ class Boxplot(NP, A):
         plt.clf()
 
 
-    def multiple_output(self):
+    def many_output(self):
         s = SummaryStats(self.__data, self.f_analysis() )           
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()

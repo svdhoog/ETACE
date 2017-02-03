@@ -2,7 +2,7 @@
 
 class A:
     # Types of analysis
-    single, batch, parameter, agent = range(4)
+    agent, multiple_run, multiple_batch, multiple_set = range(4)
     # 0, 1, 2, 3
 
 class M:
@@ -12,5 +12,5 @@ class M:
 
 class NP:
     # Nature of Plots i.e. single output per analysis or multiple outputs per analysis
-    single, multiple = range(2)
+    one, many = range(2)
     # 0, 1

@@ -7,7 +7,7 @@ class Histogram():
         self.__data = data
         self.__N = n
 
-    def multiple_output(self): ####TODO###
+    def many_output(self): ####TODO###
         print "histogram multiple ma aaipugiyo"
         return
         y =[]
@@ -30,7 +30,7 @@ class Histogram():
             # plt.close() # close the whole plot
         plt.close()    
     
-    def single_output(self):
+    def one_output(self):
         self.__data.hist(bins = 50)
         plt.savefig('histogram_main.png', bbox_inches='tight')
         plt.close()

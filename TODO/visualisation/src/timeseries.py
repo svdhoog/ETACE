@@ -8,11 +8,11 @@ class Timeseries(A):
     def __init__(self, data, num_plots, n, s, a):
         self.__data = data
         self.__N = n
-        self.__stepsize = s # stepsize not yet used, to be used for single analysis
+        self.__stepsize = s # stepsize not yet used, to be used for agent analysis
         self.__analysistype = a
                 
-    def multiple_output(self):
-        if self.__analysistype == A.single:
+    def many_output(self):
+        if self.__analysistype == A.agent:
             print "Quitting!! Reason: too many plots will be printed..."
             #y = self.__data.iloc[::self.__stepsize]
             #print y
@@ -43,8 +43,8 @@ class Timeseries(A):
                 # plt.close() # close the whole plot
             plt.close()    
     
-    def single_output(self):
-        if self.__analysistype == A.single:
+    def one_output(self):
+        if self.__analysistype == A.agent:
             print "Quitting!! Reason: too many lines will be printed in a single plot, please choose wisely and retry"
             sys.exit(1)
 

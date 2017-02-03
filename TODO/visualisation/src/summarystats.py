@@ -11,22 +11,22 @@ class SummaryStats(A):
         #self.__method_type = method_type
 
     def mean(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean().dropna()
-        batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
-        parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).mean().dropna()
-        agent_analysis = lambda : self.__data.groupby(level=['major']).mean().dropna()
+        agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean().dropna()
+        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
+        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).mean().dropna()
+        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).mean().dropna()
 
-        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis}          
+        options = {A.agent : agent_analysis, A.multiple_run : multiple_run_analysis, A.multiple_batch : multiple_batch_analysis, A.multiple_set : multiple_set_analysis}          
         return options[self.__analysis_type]()
     
     def quantile(self, val):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).quantile(val).dropna()
-        batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).quantile(val).dropna()
-        parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).quantile(val).dropna()
-        agent_analysis = lambda : self.__data.groupby(level=['major']).quantile(val).dropna()
+        agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).quantile(val).dropna()
+        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).quantile(val).dropna()
+        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).quantile(val).dropna()
+        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).quantile(val).dropna()
         
-        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
-        return options[self.__analysis_type]()   
+        options = {A.agent : agent_analysis, A.multiple_run : multiple_run_analysis, A.multiple_batch : multiple_batch_analysis, A.multiple_set : multiple_set_analysis}          
+        return options[self.__analysis_type]()  
     
     def custom_quantile(self):
         try:
@@ -59,22 +59,22 @@ class SummaryStats(A):
 
 
     def maximum(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).max().dropna()
-        batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
-        parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).max().dropna()
-        agent_analysis = lambda : self.__data.groupby(level=['major']).max().dropna()
+        agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).max().dropna()
+        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).max().dropna()
+        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).max().dropna()
+        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).max().dropna()
 
-        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
-        return options[self.__analysis_type]()
+        options = {A.agent : agent_analysis, A.multiple_run : multiple_run_analysis, A.multiple_batch : multiple_batch_analysis, A.multiple_set : multiple_set_analysis}          
+        return options[self.__analysis_type]() 
 
     def minimum(self):
-        single_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).min().dropna()
-        batch_analysis = lambda : self.__data.groupby(level = ['set','run','major']).min().dropna()
-        parameter_analysis = lambda : self.__data.groupby(level = ['set','major']).min().dropna()
-        agent_analysis = lambda : self.__data.groupby(level=['major']).min().dropna()
+        agent_analysis  = lambda : self.__data.groupby(level = ['set','run','major','minor']).min().dropna()
+        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).min().dropna()
+        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).min().dropna()
+        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).min().dropna()
         
-        options = {A.single : single_analysis, A.batch : batch_analysis, A.parameter : parameter_analysis, A.agent : agent_analysis} 
-        return options[self.__analysis_type]()
+        options = {A.agent : agent_analysis, A.multiple_run : multiple_run_analysis, A.multiple_batch : multiple_batch_analysis, A.multiple_set : multiple_set_analysis}          
+        return options[self.__analysis_type]() 
 
     def median(self):
         return self.quantile(0.50)
