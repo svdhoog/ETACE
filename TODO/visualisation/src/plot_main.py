@@ -1,4 +1,7 @@
-from parameters import NP
+#import sys
+#import numpy as np
+#import matplotlib.pyplot as plt
+from parameters import NP, A
 #from summarystats import SummaryStats
 from timeseries import Timeseries
 from boxplot import Boxplot
@@ -35,3 +38,6 @@ class Plot(NP):
         many_plot = lambda : B.many_output()        
         options = {NP.one : one_plot, NP.many : many_plot} 
         return options[num_plots]()
+
+
+
