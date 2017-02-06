@@ -136,15 +136,14 @@ if __name__ == "__main__":
             
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
 
-        print filtered.head(20)
-        #filtered = filtered[(filtered[param['variables']] >= 700) & (df[param['variables']] <= 1000)]
-        filtered = filtered[(filtered[param['variables']] >= 700)].dropna()
-        print filtered.head(10)
+        # print filtered.head(20)
+        
+        # filtered = filtered[(filtered[param['variables']] >= 700)].dropna() # use this to filter variables based on range
+        
 
-
-        ###plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+        plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
         # calling appropriate function based on read-in key from config file
         # also passing in the filtered dataframe to the function at the same time 
-        ###plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float), param) # need to cast df to float
+        plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float), param) # need to cast df to float
     
     store.close()

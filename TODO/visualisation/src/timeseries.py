@@ -14,8 +14,17 @@ class Timeseries(A):
     def many_output(self):
         if self.__analysistype == A.agent:
             print "Quitting!! Reason: too many plots will be printed..."
+            #List = []            
+            for i in range(0,self.__stepsize):
+                List = []
+                for j in range(i,len(self.__data),self.__stepsize):
+                    List.append(j)        
+            #print len(self.__data)
             #y = self.__data.iloc[::self.__stepsize]
+            #List = [1,3,5]            
+            #y = self.__data.ix[List]          
             #print y
+
             #for i in range(0,len(self.__data)/self.__N):
             #    x = np.linspace(0, self.__N, self.__N, endpoint=True)
             #    plt.plot(x,y[i])
