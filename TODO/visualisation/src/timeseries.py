@@ -13,6 +13,7 @@ class Timeseries(A):
                 
     def many_output(self):
         if self.__analysistype == A.agent:
+            print " -Warning: too many plots will be produced !!! " 
             count = 0                        
             for i in range(1,self.__stepsize+1):
                 D = self.__data.xs( int(i) , level='minor')    
@@ -43,8 +44,16 @@ class Timeseries(A):
     
     def one_output(self):
         if self.__analysistype == A.agent:
-            print "Quitting!! Reason: too many lines will be printed in a single plot, please choose wisely and retry"
-            sys.exit(1)
+            print " -Warning: too many lines will be printed in a single plot !!! "                      
+            for i in range(1,self.__stepsize+1):
+                D = self.__data.xs( int(i) , level='minor')    
+                for i in range(0,len(D),self.__N):
+                    y = np.array(D[i:i+self.__N])                
+                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                    plt.plot(x,y)
+                    plt.hold(True) 
+            plt.savefig('summary_main.png', bbox_inches='tight')
+            plt.close()
 
         else:
             y =[]
