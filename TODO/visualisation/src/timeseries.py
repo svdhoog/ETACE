@@ -13,30 +13,21 @@ class Timeseries(A):
                 
     def many_output(self):
         if self.__analysistype == A.agent:
-            print " -Warning: too many plots will be printed !!! "
-            print self.__data
-            count = 0
-                        
+            count = 0                        
             for i in range(1,self.__stepsize+1):
-                print self.__data.xs( int(i) , level='minor')    
-                ##List = []
-                ##for j in range(i,len(self.__data),self.__stepsize):
-                ##    List.append(j)        
-                ##    D = self.__data.ix[List]          
-                #for i in range(0,len(D),self.__N):
-                #    y = np.array(D[i:i+self.__N])                
-                #    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                #    plt.plot(x,y)
-                #    plot_name = "timeseries_"+str(count)+".png"
-                #    plt.savefig(plot_name, bbox_inches='tight')
-                #    plt.close()
-                #    count = count + 1	                
-
+                D = self.__data.xs( int(i) , level='minor')    
+                for i in range(0,len(D),self.__N):
+                    y = np.array(D[i:i+self.__N])                
+                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                    plt.plot(x,y)
+                    plot_name = "timeseries_"+str(count)+".png"
+                    plt.savefig(plot_name, bbox_inches='tight')
+                    plt.close()
+                    count = count + 1	                
         else:
             y =[]
             for i in range(0,len(self.__data),self.__N):
-                y.append(np.array(self.__data[i:i+self.__N]))
-            #print y[0:5]        
+                y.append(np.array(self.__data[i:i+self.__N]))        
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
                 plt.plot(x,y[i])
