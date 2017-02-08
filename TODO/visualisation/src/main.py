@@ -101,7 +101,9 @@ def plt_histogram( df, param ):
 
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
-    store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
+    #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/2_set_10_run_Eurostat/Eurostat.h5')    
+    print store
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file
@@ -113,10 +115,10 @@ if __name__ == "__main__":
         r = sets_runs[1]
         # Opening Panel the particular set and run        
         pnl = store.select(key)
-
+        #print pnl
         # Converting panel to Dataframe        
         df = pnl.to_frame()
-
+        #print df.head(4)
         # Adding two columns for set and run into the dataframe for two added level of indexing  
         df['set'] = s
         df['run'] = r
@@ -133,14 +135,11 @@ if __name__ == "__main__":
     for key in x.keys():
         x_plt = x[key] 
         param = process_parsed_values(x_plt)
-            
+     
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
-
-        # print filtered.head(20)
         
         # filtered = filtered[(filtered[param['variables']] >= 700)].dropna() # use this to filter variables based on range
         
-
         plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
         # calling appropriate function based on read-in key from config file
         # also passing in the filtered dataframe to the function at the same time 

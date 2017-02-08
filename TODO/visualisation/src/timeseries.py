@@ -7,6 +7,7 @@ class Timeseries(A):
 
     def __init__(self, data, num_plots, n, s, a):
         self.__data = data
+        print self.__data.head(10)
         self.__N = n
         self.__stepsize = s # stepsize not yet used, to be used for agent analysis
         self.__analysistype = a
@@ -15,7 +16,7 @@ class Timeseries(A):
         if self.__analysistype == A.agent:
             print " -Warning: too many plots will be produced !!! " 
             count = 0                        
-            for i in range(1,self.__stepsize+1):
+            for i in range(0,self.__stepsize):
                 D = self.__data.xs( int(i) , level='minor')    
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
@@ -44,14 +45,14 @@ class Timeseries(A):
     
     def one_output(self):
         if self.__analysistype == A.agent:
-            print " -Warning: too many lines will be printed in a single plot !!! "                      
-            for i in range(1,self.__stepsize+1):
-                D = self.__data.xs( int(i) , level='minor')    
-                for i in range(0,len(D),self.__N):
-                    y = np.array(D[i:i+self.__N])                
-                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y)
-                    plt.hold(True) 
+            print " -Warning: too many lines will be printed in a single plot !!! "
+            for i in range(0,self.__stepsize):
+                D = self.__data.xs( int(i) , level='minor')                
+	    for i in range(0,len(D),self.__N):	    
+		y = np.array(D[i:i+self.__N])
+		x = np.linspace(0, self.__N, self.__N, endpoint=True)
+		plt.plot(x,y)
+		plt.hold(True)
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
 
