@@ -2,4 +2,4 @@ set it such that if no range or data specified for set, run etc. in yaml file th
 
 
 
-Q: In the batch of runs, which run is taken for the plot....10 runs, but one plot so!!
+Q: Starting a major architecture overhaul!
