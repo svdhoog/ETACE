@@ -11,17 +11,17 @@ timeseries:
         number_plots: 'one'
         plot_label: 'no'
 
-#boxplot:
-#    agent: 'Bank'
-#    analysis: 'parameter' 
-#    variables: 'total_credit'
-#    set: [1]
-#    run: [range,[1,3]]
-#    major: [range,[6020,26020,20]]
-#    minor: [1,5,7] 
-#    plot properties:
-#        number_plots: 'single'
-#        plot_label: 'yes'
+boxplot:
+    agent: 'Bank'
+    analysis: 'multiple_set' 
+    variables: 'total_credit'
+    set: [1]
+    run: [range,[1,3]]
+    major: [range,[6020,26020,20]]
+    minor: [1,5,7] 
+    plot properties:
+        number_plots: 'one'
+        plot_label: 'yes'
 
 
 histogram:

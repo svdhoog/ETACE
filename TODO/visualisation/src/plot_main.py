@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 from parameters import NP, A
 from summarystats import SummaryStats
 #from timeseries import Timeseries
-from boxplot import Boxplot
+#from boxplot import Boxplot
 #from histogram import Histogram
 
 class Plot(NP):
