@@ -1,11 +1,11 @@
 timeseries:
     agent: 'Bank'
     analysis: 'multiple_batch'
-    variables: ['stock_index_price']
+    variables: ['total_credit']
     set: [1,2]
     run: [1,2,3,4,5,6]
     major: [range,[6020,26000,20]]
-    minor: [0] 
+    minor: [1] 
     summary: 'mean'
     plot properties:
         number_plots: 'one'

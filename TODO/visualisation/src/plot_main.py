@@ -44,7 +44,7 @@ class Timeseries(A):
 
     def __init__(self, data, num_plots, n, s, a):
         self.__data = data
-        print self.__data.head(10)
+        #print self.__data.head(10)
         self.__N = n
         self.__stepsize = s # stepsize not yet used, to be used for agent analysis
         self.__analysistype = a

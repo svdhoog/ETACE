@@ -101,9 +101,9 @@ def plt_histogram( df, param ):
 
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
-    store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
-    #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/2_set_10_run_Eurostat/Eurostat.h5')    
-    print store
+    #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
+    store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')    
+    #print store
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file
@@ -118,7 +118,7 @@ if __name__ == "__main__":
         #print pnl
         # Converting panel to Dataframe        
         df = pnl.to_frame()
-        #print df.head(4)
+        #print df.head(3)
         # Adding two columns for set and run into the dataframe for two added level of indexing  
         df['set'] = s
         df['run'] = r
