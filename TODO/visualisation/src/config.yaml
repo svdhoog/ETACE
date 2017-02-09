@@ -24,15 +24,15 @@ timeseries:
 #        plot_label: 'yes'
 
 
-#histogram:
-#    agent: 'Bank'
-#    analysis: 'parameter'    
-#    variables: ['total_credit']
-#    set: [1]
-#    run: [1,2]
-#    major: [range,[6020,26020,20]]
-#    minor: [range,[1,5]] 
-#    summary: 'mean'    
-#    plot properties:
-#        number_plots: 'single'  #multiple, not fixed yet
-#        plot_label: 'no'
+histogram:
+    agent: 'Bank'
+    analysis: 'multiple_set'    
+    variables: ['total_credit']
+    set: [1]
+    run: [1,2]
+    major: [range,[6020,26020,20]]
+    minor: [range,[1,5]] 
+    summary: 'mean'    
+    plot properties:
+        number_plots: 'one'  #multiple, not fixed yet
+        plot_label: 'no'
