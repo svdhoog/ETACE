@@ -25,7 +25,7 @@ def get_parameters():
     with f as stream:
         try:
             p = yaml.load(stream)
-        except yaml.YAMLError, exc:
+        except yaml.YAMLError, exc: # error-check for incorrect yaml syntax
             if hasattr(exc, 'problem_mark'):
                 mark = exc.problem_mark
                 print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, config_fname)
@@ -39,28 +39,28 @@ def get_parameters():
 def process_parameters(p): 
     indices = ['set','run','major','minor']    
     for i in indices:
-        if 'range' in str(p[i][0]):  # check if range defined
+        if 'range' in str(p[i][0]):  # check if range defined in input
             x = p[i][1]
             try:              
-                if len(x)<3: x.append(1) 
-                p[i] = range(x[0],x[1]+x[2],x[2])
+                if len(x)<3: x.append(1) # for some cases, add default stepsize of one
+                p[i] = range(x[0],x[1]+x[2],x[2]) # include last value, to make range of yaml file inclusive
             except:
                 raise AssertionError("In file %s: range expects a list, single value given instead" % config_fname)
     return p
 
 
-def process_hdf_keys( string_in ):
+def process_hdf_keys( string_in ): # extract set and run values from set_*_run_* string
     def find_between( s, first, last ):
         try:
             start = s.index( first ) + len( first )
             end = s.index( last, start )
             return s[start:end]
         except ValueError:
-            return ""
-    
+            return ""    
     tmp_string = string_in.replace('_run_', ',')        
     string_out = find_between(tmp_string,"/set_","_iters")
     return list(map(int, string_out.split(',')))
+
 
 def f_analysis(val):                
     analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
