@@ -9,18 +9,22 @@ from parameters import A, M, NP
 from summarystats import SummaryStats
 from plot_main import Plot, Boxplot
 
-config_fname = 'config1.yaml'
+config_fname = 'config.yaml'
 
-# Function that gets user input parameters from the config file
+def erf(msg):
+    print " >> Error: %s" % msg
+    sys.exit()
+
+# Function to parse input parameters from the config file
 def get_parameters():
     try:
         f = open(config_fname, 'r')
     except IOError:
-        print " >> Error reading %s file" % config_fname
-        sys.exit()
+        erf("unable to read file: %s" % config_fname)
+
     with f as stream:
         try:
-            d = yaml.load(stream)
+            p = yaml.load(stream)
         except yaml.YAMLError, exc:
             if hasattr(exc, 'problem_mark'):
                 mark = exc.problem_mark
@@ -28,22 +32,24 @@ def get_parameters():
             else:
                 print " >> Unknown problem with %s file:" % config_fname
             sys.exit()
-        return d                
+        return p                
 
 
 # Function to process the parsed config file values to make them usable
-def process_parsed_values(d): 
+def process_parameters(p): 
     indices = ['set','run','major','minor']    
     for i in indices:
-        if 'range' in str(d[i][0]):
-            x = d[i][1]
-            if len(x)<2:
-                #x.append(x[0]) # adds the same existing value as repetition, if only single value present in input, alterative to sys exit here
-                print " -range not properly defined, check input and retry!"
-                sys.exit(1)            
-            if len(x)<3: x.append(1) 
-            d[i] = range(x[0],x[1]+x[2],x[2])         
-    return d
+        if 'range' in str(p[i][0]):  # check if range defined
+            x = p[i][1]
+            try:
+                #if len(x)<2:
+                #    erf("in file %s, range incorrectly defined" % config_fname)                
+                if len(x)<3: x.append(1) 
+                p[i] = range(x[0],x[1]+x[2],x[2])
+            except:
+                raise AssertionError("In file %s: range expects a list, single value given instead" % config_fname)
+    return p
+
 
 def process_hdf_keys( string_in ):
     def find_between( s, first, last ):
@@ -141,7 +147,7 @@ if __name__ == "__main__":
     x = get_parameters()  
     for key in x.keys():
         x_plt = x[key] 
-        param = process_parsed_values(x_plt)
+        param = process_parameters(x_plt)
      
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
         
