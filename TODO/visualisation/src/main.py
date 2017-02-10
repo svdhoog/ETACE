@@ -41,9 +41,7 @@ def process_parameters(p):
     for i in indices:
         if 'range' in str(p[i][0]):  # check if range defined
             x = p[i][1]
-            try:
-                #if len(x)<2:
-                #    erf("in file %s, range incorrectly defined" % config_fname)                
+            try:              
                 if len(x)<3: x.append(1) 
                 p[i] = range(x[0],x[1]+x[2],x[2])
             except:
