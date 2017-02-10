@@ -1,28 +1,35 @@
 #!/usr/bin/env python
-import sys, os, argparse
+import sys, os, argparse, yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import operator
-import yaml
 
-# Custom calsses written locally, import as needed
+# helper classes, import from same directory
 from parameters import A, M, NP
 from summarystats import SummaryStats
-from plot_main import Plot
-from boxplot import Boxplot
+from plot_main import Plot, Boxplot
+
+config_fname = 'config1.yaml'
 
 # Function that gets user input parameters from the config file
 def get_parameters():
-    with open("config.yaml", 'r') as stream:
+    try:
+        f = open(config_fname, 'r')
+    except IOError:
+        print " >> Error reading %s file" % config_fname
+        sys.exit()
+    with f as stream:
         try:
-            #print(yaml.load(stream))
             d = yaml.load(stream)
-            #print a.keys()
-        except yaml.YAMLError as exc:
-            print(exc)
-    #print d['timeseries'] 
-    return d                
+        except yaml.YAMLError, exc:
+            if hasattr(exc, 'problem_mark'):
+                mark = exc.problem_mark
+                print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, config_fname)
+            else:
+                print " >> Unknown problem with %s file:" % config_fname
+            sys.exit()
+        return d                
+
 
 # Function to process the parsed config file values to make them usable
 def process_parsed_values(d): 
