@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 # helper classes, import from same directory
 from parameters import A, M, NP
 from summarystats import SummaryStats
-from plot_main import Plot, Boxplot
+from plots import Plot, Boxplot
 
 config_fname = 'config.yaml'
 
