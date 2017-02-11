@@ -61,8 +61,7 @@ def process_hdf_keys( string_in ): # extract set and run values from set_*_run_*
     string_out = find_between(tmp_string,"/set_","_iters")
     return list(map(int, string_out.split(',')))
 
-
-def f_analysis(val):                
+def map_analysis(val): # map analysis type from user input to parameter class             
     analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
     return analysis_values[val]  
 
@@ -70,7 +69,7 @@ def f_analysis(val):
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
     # instantiate a class with desired analysis type
-    P = SummaryStats(df, f_analysis(param['analysis']))
+    P = SummaryStats(df, map_analysis(param['analysis']))
     # then call the desired method, if no plot wanted   
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
     
@@ -79,7 +78,7 @@ def plt_timeseries( df, param ):
     # instantiate a plot class with desired output (One, Many)
     Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
     # Calling the plot class instance with the desired kind of plot
-    Fig.timeseries( n, step, f_analysis(param['analysis']))
+    Fig.timeseries( n, step, map_analysis(param['analysis']))
 
 
 # Function that calls the boxplot
@@ -96,7 +95,7 @@ def plt_boxplot( df, param ):
 def plt_histogram( df, param ):
 
     # instantiate a class with desired analysis type
-    P = SummaryStats(df, f_analysis(param['analysis']))
+    P = SummaryStats(df, map_analysis(param['analysis']))
 
     # then call the desired method, if no plot wanted   
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
