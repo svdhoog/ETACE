@@ -5,7 +5,7 @@ with open("config.yaml", 'r') as stream:
     try:
         #print(yaml.load(stream))
         d = yaml.load(stream)
-        print d.keys()
+        #print d.keys()
     except yaml.YAMLError as exc:
         print(exc)
 
@@ -23,17 +23,20 @@ def process_parsed_values(d):
                 print("Required parameters missing in the config.yaml file!")
                 sys.exit(1)
         except AttributeError:
+            print "error bhayo bhai"
             # some inputs are not a dict, but just a string i.e. input, output path so skipping
             pass
     return d
 
-
 for key in d.keys():
-    print key
-    d_plt = d[key] 
-    param = process_parsed_values(d_plt)    
+    if key not in'i/o':
+        inner_d = d[key]        
+        for k in inner_d.keys():
+            d_plt = inner_d[k]
+            #print d_plt 
+            param = process_parsed_values(d_plt)    
     #print param['plot properties']['number_plots']
-    print param['analysis']
+    #print param['analysis']
 
 #print NP.single
 

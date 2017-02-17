@@ -1,21 +1,17 @@
-#input_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/R_script_configuration_files/timeseries_classify_LS_input'
+i/o:
+    input_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/R_script_configuration_files/timeseries_classify_LS_input'
 
-#output_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/R_script_configuration_files/timeseries_classify_LS_output'
+    output_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/R_script_configuration_files/timeseries_classify_LS_output'
 
-#plot1:
-timeseries:
-    agent: Bank
-    analysis: multiple_batch
-    variables: 
-        var1: [total_credit, '>[700]', '<=[1500]']      
-        var2: [unemploymet_rate, no]                          
-    set: [1,2]
-    run: [1,2,3,4,5,6]
-    major: [range,[6020,26000,20]]
-    minor: [range,[1,2]] 
-    summary: mean
-    
-
-
-
-http://stackoverflow.com/questions/28807935/attributeerror-str-object-has-no-attribute-get
+plot1:
+    timeseries:
+        agent: Bank
+        analysis: multiple_batch
+        variables: 
+            var1: [total_credit, '>[700]', '<=[1500]']      
+            var2: [unemploymet_rate, no]                          
+        set: [1,2]
+        run: [1,2,3,4,5,6]
+        major: [range,[6020,26000,20]]
+        minor: [range,[1,2]] 
+        summary: mean
