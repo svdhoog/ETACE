@@ -34,6 +34,20 @@ def process_parameters(d):
                 sys.exit(1)
         return d
 
+def process_string( string_in ): # extract set and run values from set_*_run_* string
+    print string_in
+    def find_between( s, first, last ):
+        try:
+            start = s.index( first ) + len( first )
+            end = s.index( last, start )
+            return s[start:end]
+        except ValueError:
+            return ""    
+    tmp_string = string_in.replace('(', '')
+    print tmp_string        
+    string_out = find_between(tmp_string,"[","]")
+    #return list(map(int, string_out.split(','))) 
+
 x = get_parameters()
 for key in x.keys():
     if key not in'i/o':
@@ -42,17 +56,35 @@ for key in x.keys():
             d_plt = inner_d[k]
             #print d_plt 
             param = process_parameters(d_plt)    
+            #print param['variables']
             #print param['variables']['var2']
-            print param['variables']['var2']
             ########################################################
             ###TODO### check for length and parse the string    
-            print len(param['variables']['var2'])
+            #print len(param['variables']['var2'])
             ############################################################            
             var_list =[]
+            var_dic = {}
             for k in param['variables'].keys():
+                #print param['variables'][k]
+                if len(param['variables'][k])==2:
+                    var_dic[param['variables'][k][0]] = param['variables'][k][1]
+                elif len(param['variables'][k])==3:
+                    process_string(param['variables'][k][1])
+                    var_dic[param['variables'][k][0]] = param['variables'][k][1],param['variables'][k][2]
+                else:
+                    var_dic[param['variables'][k][0]] = ''
+                    
                 var_list.append(param['variables'][k][0])
             #print var_list
+            ###print var_dic['total_credit']
             # call the filtering part here, and then delete the list
             del var_list[:]
             #print param['analysis']
- 
+
+
+
+
+
+
+
+
