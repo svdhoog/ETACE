@@ -34,8 +34,7 @@ def process_parameters(d):
                 sys.exit(1)
         return d
 
-def process_string( string_in ): # extract set and run values from set_*_run_* string
-    print string_in
+def process_string( string_in ):
     def find_between( s, first, last ):
         try:
             start = s.index( first ) + len( first )
@@ -43,43 +42,35 @@ def process_string( string_in ): # extract set and run values from set_*_run_* s
             return s[start:end]
         except ValueError:
             return ""    
-    tmp_string = string_in.replace('(', '')
-    print tmp_string        
-    string_out = find_between(tmp_string,"[","]")
-    #return list(map(int, string_out.split(','))) 
+    operator = string_in.partition("[")[0]
+    string_out = find_between(string_in,"[","]")
+    return list([operator,int(string_out)])
+
 
 x = get_parameters()
 for key in x.keys():
     if key not in'i/o':
         inner_d = x[key]        
         for k in inner_d.keys():
-            d_plt = inner_d[k]
-            #print d_plt 
+            d_plt = inner_d[k] 
             param = process_parameters(d_plt)    
             #print param['variables']
-            #print param['variables']['var2']
-            ########################################################
-            ###TODO### check for length and parse the string    
-            #print len(param['variables']['var2'])
-            ############################################################            
-            var_list =[]
+            #print param['analysis']
+            #print param['variables']['var2']         
             var_dic = {}
             for k in param['variables'].keys():
                 #print param['variables'][k]
-                if len(param['variables'][k])==2:
-                    var_dic[param['variables'][k][0]] = param['variables'][k][1]
-                elif len(param['variables'][k])==3:
-                    process_string(param['variables'][k][1])
-                    var_dic[param['variables'][k][0]] = param['variables'][k][1],param['variables'][k][2]
+                if len(param['variables'][k])>1:
+                    var_filter_list = []
+                    for i in range(1,len(param['variables'][k])):
+                        var_filter_list.append(process_string(param['variables'][k][i]))
+                    var_dic[param['variables'][k][0]] = var_filter_list
                 else:
-                    var_dic[param['variables'][k][0]] = ''
-                    
-                var_list.append(param['variables'][k][0])
-            #print var_list
-            ###print var_dic['total_credit']
-            # call the filtering part here, and then delete the list
-            del var_list[:]
-            #print param['analysis']
+                    var_dic[param['variables'][k][0]] = []                
+            # call the filtering part here, and then clear the dict
+            #print var_dic
+            var_dic.clear()
+            
 
 
 
