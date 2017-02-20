@@ -55,11 +55,13 @@ for key in x.keys():
             d_plt = inner_d[k] 
             param = process_parameters(d_plt)    
             #print param['variables']
-            #print param['analysis']
+            #print param['variables'].keys()
+            
             #print param['variables']['var2']         
             var_dic = {}
+            var_list = []
             for k in param['variables'].keys():
-                #print param['variables'][k]
+                var_list.append(param['variables'][k][0])
                 if len(param['variables'][k])>1:
                     var_filter_list = []
                     for i in range(1,len(param['variables'][k])):
@@ -68,8 +70,10 @@ for key in x.keys():
                 else:
                     var_dic[param['variables'][k][0]] = []                
             # call the filtering part here, and then clear the dict
-            #print var_dic
-            var_dic.clear()
+            #print var_dic # var dict has now the mapping and the filtering as a list
+            #var_dic.clear()
+            #print var_list
+            #del var_list[:]
             
 
 

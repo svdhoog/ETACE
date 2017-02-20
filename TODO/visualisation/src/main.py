@@ -9,7 +9,7 @@ from parameters import A, M, NP
 from summarystats import SummaryStats
 from plots import Plot, Boxplot
 
-config_fname = 'config.yaml'
+config_fname = 'config1.yaml'
 
 def erf(msg):
     print " >> Error: %s" % msg
@@ -60,6 +60,21 @@ def process_hdf_keys( string_in ): # extract set and run values from set_*_run_*
     tmp_string = string_in.replace('_run_', ',')        
     string_out = find_between(tmp_string,"/set_","_iters")
     return list(map(int, string_out.split(',')))
+
+def process_string( string_in ):
+    def find_between( s, first, last ):
+        try:
+            start = s.index( first ) + len( first )
+            end = s.index( last, start )
+            return s[start:end]
+        except ValueError:
+            return ""    
+    operator = string_in.partition("[")[0]
+    string_out = find_between(string_in,"[","]")
+    return list([operator,int(string_out)])
+
+
+
 
 def map_analysis(val): # map analysis type from user input to parameter class             
     analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
@@ -141,18 +156,51 @@ if __name__ == "__main__":
     d = pd.concat(df_list)   
     del df_list
     # Read the desired input parameters
-    x = get_parameters()  
-    for key in x.keys():
-        x_plt = x[key] 
-        param = process_parameters(x_plt)
-     
-        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
+
+##########################################################################################################################################################################
+#    x = get_parameters()  
+#    for key in x.keys():
+#        x_plt = x[key] 
+#        param = process_parameters(x_plt)
+        #print param['variables']
+#        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
         
         # filtered = filtered[(filtered[param['variables']] >= 700)].dropna() # use this to filter variables based on range
-        
-        plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
-        # calling appropriate function based on read-in key from config file
-        # also passing in the filtered dataframe to the function at the same time 
-        plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float), param) # need to cast df to float
-    
+############################################################################################################################################################################
+
+    x = get_parameters()
+    for idx in x.keys():
+        if idx not in'i/o':
+            inner_d = x[idx]
+                    
+            for key in inner_d.keys():
+                print key
+                
+                d_plt = inner_d[key] 
+                param = process_parameters(d_plt)        
+                var_dic = {}
+                var_list =[]
+                for k in param['variables'].keys():
+                    var_list.append(param['variables'][k][0])
+                    if len(param['variables'][k])>1:
+                        var_filter_list = []
+                        for i in range(1,len(param['variables'][k])):
+                            var_filter_list.append(process_string(param['variables'][k][i]))
+                        var_dic[param['variables'][k][0]] = var_filter_list
+                    else:
+                        var_dic[param['variables'][k][0]] = []                
+                
+                filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
+                # call the filtering part here, and then clear the dict
+                #print var_dic # var dict has now the mapping and the filtering as a list
+                var_dic.clear()
+  
+
+##################################################################################################################################################################################     
+                plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+                
+                # calling appropriate function based on read-in key from config file
+                # also passing in the filtered dataframe to the function at the same time 
+                plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+            
     store.close()
