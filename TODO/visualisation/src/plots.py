@@ -146,7 +146,7 @@ class Boxplot(NP, A):
         self.__data = data
         self.__N = n
         self.__a_type = a_type
-        self.__n_plots = n_plots       
+        self.__n_plots = n_plots   
 
     def plot(self):
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
@@ -161,15 +161,16 @@ class Boxplot(NP, A):
         return analysis_values[self.__a_type]       
 
     def one_output(self):
-        s = SummaryStats(self.__data, self.f_analysis() )    
+        s = SummaryStats(self.__data, self.f_analysis() )   
         box_df = pd.DataFrame()
-        box_df['mean'] = s.mean()
-        box_df['median'] = s.median()
-        box_df['upper_quartile'] = s.upper_quartile()
-        box_df['lower_quartile'] = s.lower_quartile()
-        box_df['max'] = s.maximum()
-        box_df['min'] = s.minimum()
-        
+        box_df['mean'] = [x for sublist in s.mean().values for x in sublist]  # [x for sublist in s.mean().values for x in sublist] done to flatten a 2D list to 1D so pandas accepts it
+        # box_df['mean'] = s.mean() # this was the old simpler method which did not work once the config file variables was turned to a hierarchy with filters (bug in df, see for new patches)
+        box_df['median'] = [x for sublist in s.median().values for x in sublist]
+        box_df['upper_quartile'] = [x for sublist in s.upper_quartile().values for x in sublist]
+        box_df['lower_quartile'] = [x for sublist in s.lower_quartile().values for x in sublist]
+        box_df['max'] = [x for sublist in s.maximum().values for x in sublist]
+        box_df['min'] = [x for sublist in s.minimum().values for x in sublist]
+
         bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
         # plt.hold(True)        
         plt.savefig('boxplot_main.png', bbox_inches='tight')  
