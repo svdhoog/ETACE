@@ -3,11 +3,14 @@ import sys, os, argparse, yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+import operator
 
 # helper classes, import from same directory
 from parameters import A, M, NP
 from summarystats import SummaryStats
 from plots import Plot, Boxplot
+
+
 
 config_fname = 'config1.yaml'
 
@@ -71,7 +74,7 @@ def process_string( string_in ):
             return ""    
     operator = string_in.partition("[")[0]
     string_out = find_between(string_in,"[","]")
-    return list([operator,int(string_out)])
+    return list([operator,float(string_out)])
 
 
 
@@ -156,26 +159,11 @@ if __name__ == "__main__":
     d = pd.concat(df_list)   
     del df_list
     # Read the desired input parameters
-
-##########################################################################################################################################################################
-#    x = get_parameters()  
-#    for key in x.keys():
-#        x_plt = x[key] 
-#        param = process_parameters(x_plt)
-        #print param['variables']
-#        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][param['variables']].dropna().astype(float)
-        
-        # filtered = filtered[(filtered[param['variables']] >= 700)].dropna() # use this to filter variables based on range
-############################################################################################################################################################################
-
     x = get_parameters()
     for idx in x.keys():
         if idx not in'i/o':
-            inner_d = x[idx]
-                    
+            inner_d = x[idx]        
             for key in inner_d.keys():
-                print key
-                
                 d_plt = inner_d[key] 
                 param = process_parameters(d_plt)        
                 var_dic = {}
@@ -188,15 +176,20 @@ if __name__ == "__main__":
                             var_filter_list.append(process_string(param['variables'][k][i]))
                         var_dic[param['variables'][k][0]] = var_filter_list
                     else:
-                        var_dic[param['variables'][k][0]] = []                
+                        var_dic[param['variables'][k][0]] = None               
                 
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
-                # call the filtering part here, and then clear the dict
-                #print var_dic # var dict has now the mapping and the filtering as a list
+                # call the filtering part here, and then clear the dict               
+                if var_dic.values()[0] is not None:
+                    for s in range(0,len(var_dic.values())):
+                        options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
+                        val = str(var_dic.values()[s][0][0])
+                        filtered = filtered[options[val](filtered[var_list],var_dic.values()[s][0][1])].dropna()
+                        print filtered             
                 var_dic.clear()
-  
+             
+###TODO: currently the filtering is done in two steps, same filtering for two variables
 
-##################################################################################################################################################################################     
                 plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
                 
                 # calling appropriate function based on read-in key from config file
