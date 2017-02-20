@@ -164,6 +164,7 @@ if __name__ == "__main__":
         if idx not in'i/o':
             inner_d = x[idx]        
             for key in inner_d.keys():
+                print key
                 d_plt = inner_d[key] 
                 param = process_parameters(d_plt)        
                 var_dic = {}
@@ -177,23 +178,35 @@ if __name__ == "__main__":
                         var_dic[param['variables'][k][0]] = var_filter_list
                     else:
                         var_dic[param['variables'][k][0]] = None               
-                
+                print var_dic
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
                 # call the filtering part here, and then clear the dict               
-                if var_dic.values()[0] is not None:
-                    for s in range(0,len(var_dic.values())):
-                        options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
-                        val = str(var_dic.values()[s][0][0])
-                        filtered = filtered[options[val](filtered[var_list],var_dic.values()[s][0][1])].dropna()
-                        print filtered             
+                for dkey, dval in var_dic.iteritems():
+                    print dkey
+                    print dval                
+                    if dval is not None:
+                        print "milyo yaha"
+                        count = 0
+                        #print p[0][0]
+                        #print p[0][1]
+                        while count < len(dval):
+                            options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
+                            val = str(dval[count][0])
+                            #print val
+                            ##TODO: create separate dataframe for each dkey and put the resp values                            
+                            filtered+str(dkey) = pd.DataFrame()
+                            #filtered = filtered[dkey]
+                            #print filtered[options[val](filtered[var_list],dval[count][1])].dropna()
+                            count = count + 1             
                 var_dic.clear()
+                del var_list[:]
              
 ###TODO: currently the filtering is done in two steps, same filtering for two variables
 
-                plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+                #plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
                 
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
-                plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                #plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
             
     store.close()
