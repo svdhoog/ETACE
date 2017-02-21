@@ -11,6 +11,7 @@ from summarystats import SummaryStats
 class Plot(NP):
     def __init__(self, data, n_plots):
         self.__data = data
+        #print self.__data
         self.__n_plots = n_plots    
 
     def timeseries( self, n, step, analysis_type ): 
@@ -84,13 +85,17 @@ class Timeseries(A):
     def one_output(self):
         if self.__analysistype == A.agent:
             print " -Warning: too many lines will be printed in a single plot !!! "
-            for i in range(0,self.__stepsize):
-                D = self.__data.xs( int(i) , level='minor')                
+            minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+            for i in minor_index:
+            #for i in range(0,self.__stepsize):
+                D = self.__data.xs( int(i) , level='minor')
+                print D.head(3)
+                      
 	    for i in range(0,len(D),self.__N):	    
-		y = np.array(D[i:i+self.__N])
-		x = np.linspace(0, self.__N, self.__N, endpoint=True)
-		plt.plot(x,y)
-		plt.hold(True)
+		    y = np.array(D[i:i+self.__N])
+		    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+		    plt.plot(x,y)
+		    plt.hold(True)
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
 
