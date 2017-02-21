@@ -46,16 +46,15 @@ class Timeseries(A):
 
     def __init__(self, data, num_plots, n, s, a):
         self.__data = data
-        #print self.__data.head(10)
         self.__N = n
-        self.__stepsize = s # stepsize not yet used, to be used for agent analysis
         self.__analysistype = a
                 
     def many_output(self):
         if self.__analysistype == A.agent:
             print " -Warning: too many plots will be produced !!! " 
             count = 0                        
-            for i in range(0,self.__stepsize):
+            minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+            for i in minor_index:
                 D = self.__data.xs( int(i) , level='minor')    
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
