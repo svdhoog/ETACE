@@ -86,6 +86,7 @@ def map_analysis(val): # map analysis type from user input to parameter class
 
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
+    print df.head(5)
     # instantiate a class with desired analysis type
     P = SummaryStats(df, map_analysis(param['analysis']))
     # then call the desired method, if no plot wanted   
@@ -131,7 +132,6 @@ if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
     store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')    
-    #print store
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file
@@ -143,71 +143,62 @@ if __name__ == "__main__":
         r = sets_runs[1]
         # Opening Panel the particular set and run        
         pnl = store.select(key)
-        #print pnl
         # Converting panel to Dataframe        
         df = pnl.to_frame()
-        #print df.head(3)
         # Adding two columns for set and run into the dataframe for two added level of indexing  
         df['set'] = s
         df['run'] = r
         df.set_index('run', append = True, inplace = True)
         df.set_index('set', append = True, inplace = True)
         df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
-        #del df
         
     # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
     d = pd.concat(df_list)   
     del df_list
     # Read the desired input parameters
     x = get_parameters()
-    for idx in x.keys():
-        if idx not in'i/o':
-            inner_d = x[idx]
-            frames= []        
-            for key in inner_d.keys():
-                print key
+    for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
+        if idx not in'i/o': #skipping i/o value
+            inner_d = x[idx] # required alues are in lower hierarchy, so inner dictionary
+            frames= []       # initialize list to store filtered dataframes according to variables 
+            for key in inner_d.keys(): # looping through inner dict read from config file, here timeseries, boxplot etc
                 d_plt = inner_d[key] 
                 param = process_parameters(d_plt)        
-                var_dic = {}
-                var_list =[]
+                var_dic = {}  # dictionary to map plot variables, and the desired operator with filter values
+                var_list =[]  # to collect list of variables, if later need to pass without any filtering, also used in first stage filtering
                 for k in param['variables'].keys():
-                    var_list.append(param['variables'][k][0])
-                    if len(param['variables'][k])>1:
+                    var_list.append(param['variables'][k][0]) # variables are the first element so index 0 used
+                    if len(param['variables'][k])>1: # check if filter condition specified, if not then the argument is just of length one, as seen in check
                         var_filter_list = []
                         for i in range(1,len(param['variables'][k])):
                             var_filter_list.append(process_string(param['variables'][k][i]))
                         var_dic[param['variables'][k][0]] = var_filter_list
                     else:
-                        var_dic[param['variables'][k][0]] = None               
-                print var_dic
+                        var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present               
+                # first stage filtering, where all input variables are sliced with the desired set and run values
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
-                # call the filtering part here, and then clear the dict               
-                for dkey, dval in var_dic.iteritems():
-                    print dkey
-                    print dval                
+                # second stage of filtering for filtering the variables according to the values               
+                for dkey, dval in var_dic.iteritems():              
                     if dval is not None:
-                        print "milyo yaha"
                         count = 0
-                        #print p[0][0]
-                        #print p[0][1]
-                        #filtered_df = pd.DataFrame()
                         while count < len(dval):
                             options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
                             val = str(dval[count][0])
                             index = dkey
                             dkey = pd.DataFrame(filtered[index])
-                            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna())
+                            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna()) #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
                             count = count + 1
-###TODO: currently each variable has an individual dataframe appended to a list, instead make a single dataframe with all variables appended, that will make it uniform with the unfiltered case, and also the plotting need not be redone###                                     
-                var_dic.clear()
-                del var_list[:]      
+###TODO: currently each variable has an individual dataframe appended to a list, instead make a single dataframe with all variables appended, that will make it uniform with the unfiltered case, and also the plotting need not be redone                                    
+                     
 
-###TODO: currently the filtering is done in two steps, same filtering for two variables
+###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
-                #plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
-                
+                plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+                print "variable list hai ta:",var_list
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
-                #plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
-            
+                plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                
+                var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
+                del var_list[:] # clearing the list of variables for next cycle
     store.close()
