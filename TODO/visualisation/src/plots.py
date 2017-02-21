@@ -12,8 +12,8 @@ class Plot(NP):
     def __init__(self, data, n_plots):
         self.__data = data
         self.__n_plots = n_plots    
-        
-    def timeseries( self, n, step, analysis_type ):   
+
+    def timeseries( self, n, step, analysis_type ): 
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
         num_plots = n_plot_values[self.__n_plots]        
         T = Timeseries(self.__data, num_plots, n, step, analysis_type)      

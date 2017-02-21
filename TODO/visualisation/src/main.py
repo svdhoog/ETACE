@@ -86,7 +86,7 @@ def map_analysis(val): # map analysis type from user input to parameter class
 
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
-    print df.head(5)
+    print df.head(5) 
     # instantiate a class with desired analysis type
     P = SummaryStats(df, map_analysis(param['analysis']))
     # then call the desired method, if no plot wanted   

@@ -6,7 +6,7 @@ i/o:
 plot1:
     timeseries:
         agent: Bank
-        analysis: multiple_set
+        analysis: multiple_batch
         variables: 
 #            var1: [total_credit, '>[700]', '==[731.537383]']
             var1: [total_credit]       
