@@ -1,0 +1,12 @@
+plot1:
+    plot_type: timeseries
+    variables: total_credit
+    number_plots: one
+    plot_name: summary.png
+    l_lim: no
+    u_lim: no
+    tmin: no
+    tmax: no
+    plt_legend: no
+    
+
