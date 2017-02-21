@@ -162,7 +162,8 @@ if __name__ == "__main__":
     x = get_parameters()
     for idx in x.keys():
         if idx not in'i/o':
-            inner_d = x[idx]        
+            inner_d = x[idx]
+            frames= []        
             for key in inner_d.keys():
                 print key
                 d_plt = inner_d[key] 
@@ -189,18 +190,18 @@ if __name__ == "__main__":
                         count = 0
                         #print p[0][0]
                         #print p[0][1]
+                        #filtered_df = pd.DataFrame()
                         while count < len(dval):
                             options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
                             val = str(dval[count][0])
-                            #print val
-                            ##TODO: create separate dataframe for each dkey and put the resp values                            
-                            filtered+str(dkey) = pd.DataFrame()
-                            #filtered = filtered[dkey]
-                            #print filtered[options[val](filtered[var_list],dval[count][1])].dropna()
-                            count = count + 1             
+                            index = dkey
+                            dkey = pd.DataFrame(filtered[index])
+                            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna())
+                            count = count + 1
+###TODO: currently each variable has an individual dataframe appended to a list, instead make a single dataframe with all variables appended, that will make it uniform with the unfiltered case, and also the plotting need not be redone###                                     
                 var_dic.clear()
-                del var_list[:]
-             
+                del var_list[:]      
+
 ###TODO: currently the filtering is done in two steps, same filtering for two variables
 
                 #plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions

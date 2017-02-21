@@ -9,7 +9,7 @@ plot1:
         analysis: multiple_batch
         variables: 
 #            var1: [total_credit, '>[700]', '==[731.537383]']
-            var1: [total_credit, '>[600]']       
+            var1: [total_credit, '>[700]']       
             var2: [equity, '>[900]']
         set: [1]
         run: [1,2]
