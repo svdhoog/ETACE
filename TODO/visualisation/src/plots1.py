@@ -98,13 +98,26 @@ class Timeseries(A):
             plt.close()
 
         else:
+            print "yehi ta ho ni hainta?"
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N]))
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                plt.plot(x,y[i])          
-                plt.hold(True)	 
+            
+                ########################################################################################################################    
+                #plt.plot(x,y[i], label = 'monthly output', color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'blue', markersize =12)          
+                plt.hold(True)
+                #line1 = plt.legend(loc='best', fancybox=True, shadow=True)
+                #line2 = plt.legend(loc='best', fancybox=True, shadow=True)
+                line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
+                line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                 
+        
+                #plt.legend((line1, line2), ('label1', 'label2'))
+                                
+                #plt.legend([line1,line2],["plot 1", "plot 2"],loc='best', fancybox=True, shadow=True) #alternative           
+                
+                ########################################################################################################################            
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
 
@@ -200,4 +213,11 @@ class Boxplot(NP, A):
             plt.clf()           
             count = count + self.__N
         plt.close()
+
+
+
+
+###helpful pages:
+# http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot
+
 
