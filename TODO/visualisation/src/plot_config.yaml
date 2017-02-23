@@ -7,6 +7,9 @@ plot1:
     u_lim: no
     tmin: no
     tmax: no
-    plt_legend: no
+    plot_legend: yes
+    legend_loc: out
+    x-axis label: some x label
+    y-axis label: some y label
     
 

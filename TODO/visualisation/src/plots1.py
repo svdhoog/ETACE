@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from parameters import NP, A
 from summarystats import SummaryStats
+from matplotlib.font_manager import FontProperties
 #from timeseries import Timeseries
 #from boxplot import Boxplot
 #from histogram import Histogram
@@ -108,15 +109,17 @@ class Timeseries(A):
                 ########################################################################################################################    
                 #plt.plot(x,y[i], label = 'monthly output', color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'blue', markersize =12)          
                 plt.hold(True)
-                #line1 = plt.legend(loc='best', fancybox=True, shadow=True)
-                #line2 = plt.legend(loc='best', fancybox=True, shadow=True)
-                line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
-                line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                 
-        
-                #plt.legend((line1, line2), ('label1', 'label2'))
                                 
+                line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
+                #line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
+                #plt.legend((line1, line2), ('label1', 'label2'))
                 #plt.legend([line1,line2],["plot 1", "plot 2"],loc='best', fancybox=True, shadow=True) #alternative           
                 
+                fontP = FontProperties()
+                fontP.set_size('small')
+                plt.legend([line1], "title", prop = fontP)                
+    
+
                 ########################################################################################################################            
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
@@ -220,4 +223,6 @@ class Boxplot(NP, A):
 ###helpful pages:
 # http://matplotlib.org/api/_as_gen/matplotlib.axes.Axes.plot.html#matplotlib.axes.Axes.plot
 
+# legend outside the plot:
+# http://stackoverflow.com/questions/4700614/how-to-put-the-legend-out-of-the-plot
 
