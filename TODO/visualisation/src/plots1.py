@@ -9,11 +9,45 @@ from matplotlib.font_manager import FontProperties
 #from boxplot import Boxplot
 #from histogram import Histogram
 
+class Parameter_mapper():
+    def __init__(self, param):
+        self.__param = param
+         
+    def legend(self, key):
+        return self.__param[key]['plot_legend']
+
+    def plot_type(self, key):
+        return self.__param[key]['plot_type']
+
+    def num_plots(self, key):
+        return self.__param[key]['number_plots']
+
+    def y_label(self, key):
+        return self.__param[key]['y-axis label']
+
+    def x_label(self, key):
+        return self.__param[key]['x-axis label']
+
+    def plot_name(self, key):
+        return self.__param[key]['plot_name']
+
+    def llim(self, key):
+        return self.__param[key]['l_lim']
+
+    def ulim(self, key):
+        return self.__param[key]['u_lim']
+
+    
+                      
+
 class Plot(NP):
-    def __init__(self, data, n_plots):
+    def __init__(self, data, n_plots, parameter):
         self.__data = data
         #print self.__data
-        self.__n_plots = n_plots    
+        self.__n_plots = n_plots
+        self.__parameter = parameter
+        P_M = Parameter_mapper(parameter) 
+        print P_M.plot_name('plot2')   
 
     def timeseries( self, n, step, analysis_type ): 
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
@@ -103,25 +137,26 @@ class Timeseries(A):
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N]))
+            count = 0
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
                 ########################################################################################################################    
                 #plt.plot(x,y[i], label = 'monthly output', color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'blue', markersize =12)          
-                plt.hold(True)
-                c = i                
+                plt.hold(True)                
                 #line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
                 #line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
-                i, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
-
+                plt.plot(x,y[i],color = 'blue', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =4, label = "plot "+str(count))                         
+                count = count + 1
                 #plt.legend((line1, line2), ('label1', 'label2'))
-                plt.legend([i],["plot"+str(c)],loc='best', fancybox=True, shadow=True) #alternative           
+                #plt.legend(loc='best', fancybox=True, shadow=True) #alternative           
                 
                 #fontP = FontProperties()
                 #fontP.set_size('small')
                 #plt.legend([line1], "title", prop = fontP)                
     
 
-                ########################################################################################################################            
+                ########################################################################################################################
+            plt.legend(loc='best', fancybox=True, shadow=True)             
             plt.savefig('summary_main1.png', bbox_inches='tight')
             plt.close()
 
