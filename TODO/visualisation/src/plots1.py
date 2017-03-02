@@ -41,17 +41,18 @@ class Parameter_mapper():
                       
 
 class Plot(NP):
-    def __init__(self, data, n_plots, parameter):
+    def __init__(self, data, parameter): # n_plots removed from older version, replaced by the mapper class method
         self.__data = data
         #print self.__data
-        self.__n_plots = n_plots
+        #self.__n_plots = n_plots #redundant because of new method
+        self.key = 'plot2'
         self.__parameter = parameter
-        P_M = Parameter_mapper(parameter) 
-        print P_M.plot_name('plot2')   
+        self.__param_map = Parameter_mapper(self.__parameter) 
+        print self.__param_map.num_plots(self.key)   
 
     def timeseries( self, n, step, analysis_type ): 
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__n_plots]        
+        num_plots = n_plot_values[self.__param_map.num_plots(self.key)]        
         T = Timeseries(self.__data, num_plots, n, step, analysis_type)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
@@ -61,7 +62,7 @@ class Plot(NP):
 
     def histogram( self, n ):   
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__n_plots]        
+        num_plots = n_plot_values[self.__param_map.num_plots(self.key)]          
         H = Histogram(self.__data, num_plots, n)      
         one_plot = lambda : H.one_output()
         many_plot = lambda : H.many_output()        
