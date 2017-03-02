@@ -86,14 +86,15 @@ class Timeseries(A):
             print " -Warning: too many lines will be printed in a single plot !!! "
             minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
             for i in minor_index:
-            #for i in range(0,self.__stepsize):
                 D = self.__data.xs( int(i) , level='minor')
-                      
-	    for i in range(0,len(D),self.__N):	    
-		    y = np.array(D[i:i+self.__N])
-		    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-		    plt.plot(x,y)
-		    plt.hold(True)
+            count = 0          
+            for i in range(0,len(D),self.__N):
+                y = np.array(D[i:i+self.__N])
+                x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                plt.plot(x,y, linestyle='solid', marker='o', markerfacecolor = 'green', markersize =1, label = "line "+str(count))
+                count = count + 1
+                plt.hold(True)
+            plt.legend(loc='best', fancybox=True, shadow=True) 
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
 
@@ -103,13 +104,11 @@ class Timeseries(A):
                 y.append(np.array(self.__data[i:i+self.__N]))
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                
-                ##line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)         
+                label_num = i
+                i, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)         
                 plt.hold(True)
-                ##fontP = FontProperties()
-                ##fontP.set_size('small')
-                ##plt.legend([line1], "title", prop = fontP) 	 
-            plt.savefig('summary_main.png', bbox_inches='tight')
+                plt.legend([i],["plot"+str(label_num)],loc='best', fancybox=True, shadow=True) 	 
+            plt.savefig('summary_main1.png', bbox_inches='tight')
             plt.close()
 
 
