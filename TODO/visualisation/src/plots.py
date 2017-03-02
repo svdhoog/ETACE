@@ -103,8 +103,12 @@ class Timeseries(A):
                 y.append(np.array(self.__data[i:i+self.__N]))
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                plt.plot(x,y[i])          
-                plt.hold(True)	 
+                
+                ##line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)         
+                plt.hold(True)
+                ##fontP = FontProperties()
+                ##fontP.set_size('small')
+                ##plt.legend([line1], "title", prop = fontP) 	 
             plt.savefig('summary_main.png', bbox_inches='tight')
             plt.close()
 

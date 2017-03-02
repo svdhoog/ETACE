@@ -90,13 +90,13 @@ class Timeseries(A):
             #for i in range(0,self.__stepsize):
                 D = self.__data.xs( int(i) , level='minor')
                       
-	    for i in range(0,len(D),self.__N):	    
-		    y = np.array(D[i:i+self.__N])
-		    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-		    plt.plot(x,y)
-		    plt.hold(True)
-            plt.savefig('summary_main.png', bbox_inches='tight')
-            plt.close()
+	        for i in range(0,len(D),self.__N):	    
+		        y = np.array(D[i:i+self.__N])
+		        x = np.linspace(0, self.__N, self.__N, endpoint=True)
+		        plt.plot(x,y)
+		        plt.hold(True)
+                plt.savefig('summary_main.png', bbox_inches='tight')
+                plt.close()
 
         else:
             print "yehi ta ho ni hainta?"
@@ -105,23 +105,24 @@ class Timeseries(A):
                 y.append(np.array(self.__data[i:i+self.__N]))
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-            
                 ########################################################################################################################    
                 #plt.plot(x,y[i], label = 'monthly output', color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'blue', markersize =12)          
                 plt.hold(True)
-                                
-                line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
+                c = i                
+                #line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
                 #line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
+                i, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
+
                 #plt.legend((line1, line2), ('label1', 'label2'))
-                #plt.legend([line1,line2],["plot 1", "plot 2"],loc='best', fancybox=True, shadow=True) #alternative           
+                plt.legend([i],["plot"+str(c)],loc='best', fancybox=True, shadow=True) #alternative           
                 
-                fontP = FontProperties()
-                fontP.set_size('small')
-                plt.legend([line1], "title", prop = fontP)                
+                #fontP = FontProperties()
+                #fontP.set_size('small')
+                #plt.legend([line1], "title", prop = fontP)                
     
 
                 ########################################################################################################################            
-            plt.savefig('summary_main.png', bbox_inches='tight')
+            plt.savefig('summary_main1.png', bbox_inches='tight')
             plt.close()
 
 
