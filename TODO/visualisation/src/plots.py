@@ -177,7 +177,14 @@ class Boxplot(NP, A):
         box_df['max'] = [x for sublist in s.maximum().values for x in sublist]
         box_df['min'] = [x for sublist in s.minimum().values for x in sublist]
 
-        bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
+        # box_df['mean'].plot() # shortcut pandas method to plot the whole thing
+        # box_df.plot()
+        # plt.show()
+        
+        t_df = box_df.T
+        t_df = t_df.mean(axis =1)
+        bp = t_df.to_frame().boxplot()
+        #bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
         # plt.hold(True)        
         plt.savefig('boxplot_main.png', bbox_inches='tight')  
         #plt.show()        
