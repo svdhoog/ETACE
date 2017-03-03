@@ -20,16 +20,16 @@ plot1:
             number_plots: one
             plot_label: no
 
-#plot2:
-#    boxplot:
-#        agent: Eurostat
-#        analysis: multiple_set
-#        variables:      
-#            var1: [total_credit]                          
-#        set: [1]
-#        run: [range,[1,3]]
-#        major: [range,[6020,6100,20]]
-#        minor: [1,5,7] 
-#        plot properties:
-#            number_plots: one
-#            plot_label: yes
+plot2:
+    boxplot:
+        agent: Eurostat
+        analysis: multiple_set
+        variables:      
+            var1: [total_credit]                          
+        set: [1]
+        run: [range,[1,3]]
+        major: [range,[6020,6100,20]]
+        minor: [1,5,7] 
+        plot properties:
+            number_plots: one
+            plot_label: yes
