@@ -9,14 +9,15 @@ from matplotlib.font_manager import FontProperties
 #from boxplot import Boxplot
 #from histogram import Histogram
 
-
-
 class Parameter_mapper():
     def __init__(self, param):
         self.__param = param
          
     def legend(self, key):
         return self.__param[key]['plot_legend']
+
+    def legend_label(self, key):
+        return self.__param[key]['legend_label']
 
     def plot_type(self, key):
         return self.__param[key]['plot_type']
@@ -39,15 +40,19 @@ class Parameter_mapper():
     def ulim(self, key):
         return self.__param[key]['u_lim']
 
-    
-                      
+    def linestyle(self, key):
+        return self.__param[key]['linestyle']
+
+
+
+               
 
 class Plot(NP):
     def __init__(self, data, parameter): # n_plots removed from older version, replaced by the mapper class method
         self.__data = data
         #print self.__data
         #self.__n_plots = n_plots #redundant because of new method
-        self.key = 'plot2'
+        self.key = 'plot1'
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter) 
        
@@ -99,7 +104,8 @@ class Timeseries(A):
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y)
+                    #plt.plot(x,y)
+                    plt.plot(x,y,color = 'blue', linestyle=self.__param_map.x_label(self.key)['linestyle'], marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.x_label(self.key)['legend_label']) 
                     plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"                    
                     plt.savefig(plot_name, bbox_inches='tight')
                     plt.close()
@@ -150,8 +156,10 @@ class Timeseries(A):
                 #plt.plot(x,y[i], label = 'monthly output', color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'blue', markersize =12)          
                 plt.hold(True)                
                 #line1, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)
-                #line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)                         
-                plt.plot(x,y[i],color = 'blue', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =4, label = "plot "+str(count))                         
+                #line2, = plt.plot(x,y[i],color = 'green', linestyle='dashed', marker='o', markerfacecolor = 'green', markersize =9)
+                plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key))                 
+                
+                #plt.plot(x,y[i],color = 'blue', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key))                         
                 count = count + 1
                 #plt.legend((line1, line2), ('label1', 'label2'))
                 #plt.legend(loc='best', fancybox=True, shadow=True) #alternative           

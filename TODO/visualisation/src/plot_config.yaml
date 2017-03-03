@@ -9,8 +9,10 @@ plot1:
     tmax: no
     plot_legend: yes
     legend_loc: out
+    legend_label: total credit
     x-axis label: some x label
     y-axis label: some y label
+    linestyle: dashed
     
 
 plot2:
