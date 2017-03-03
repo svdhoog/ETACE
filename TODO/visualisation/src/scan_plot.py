@@ -17,11 +17,11 @@ def plt_timeseries( df, param ):
     summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
     
     n = 5 # number of datapoints for x-axis
-    step = 4 # minor axis number of values
+    #step = 4 # minor axis number of values
     # instantiate a plot class with desired output (One, Many)
     Fig = Plot(summary_type['mean'](), param) # first argument is one option selected from summary_type dict above
     # Calling the plot class instance with the desired kind of plot  
-    Fig.timeseries( n, step, 2)
+    Fig.timeseries( n, 2)
 
 
 def process_hdf_keys( string_in ): 

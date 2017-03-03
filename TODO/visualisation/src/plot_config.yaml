@@ -2,7 +2,7 @@ plot1:
     plot_type: timeseries
     variables: total_credit
     number_plots: one
-    plot_name: summary.png
+    plot_name: first_one.png
     l_lim: no
     u_lim: no
     tmin: no
@@ -17,7 +17,7 @@ plot2:
     plot_type: timeseries
     variables: total_credit
     number_plots: one
-    plot_name: summary.png
+    plot_name: second_one.png
     l_lim: no
     u_lim: no
     tmin: no

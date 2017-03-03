@@ -9,6 +9,8 @@ from matplotlib.font_manager import FontProperties
 #from boxplot import Boxplot
 #from histogram import Histogram
 
+
+
 class Parameter_mapper():
     def __init__(self, param):
         self.__param = param
@@ -48,12 +50,11 @@ class Plot(NP):
         self.key = 'plot2'
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter) 
-        print self.__param_map.num_plots(self.key)   
-
-    def timeseries( self, n, step, analysis_type ): 
+       
+    def timeseries( self, n, analysis_type ): # TODO: remove NP.one and NP.many, coz they are redundant and too confusing
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
         num_plots = n_plot_values[self.__param_map.num_plots(self.key)]        
-        T = Timeseries(self.__data, num_plots, n, step, analysis_type)      
+        T = Timeseries(self.__data, n, analysis_type, self.__parameter)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
         options = {NP.one : one_plot, NP.many : many_plot}        
@@ -80,10 +81,13 @@ class Plot(NP):
 
 class Timeseries(A):
 
-    def __init__(self, data, num_plots, n, s, a):
+    def __init__(self, data, n, a, parameter):
         self.__data = data
         self.__N = n
         self.__analysistype = a
+        self.__parameter = parameter
+        self.__param_map = Parameter_mapper(self.__parameter)
+        self.key = 'plot1' 
                 
     def many_output(self):
         if self.__analysistype == A.agent:
@@ -96,19 +100,21 @@ class Timeseries(A):
                     y = np.array(D[i:i+self.__N])                
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
                     plt.plot(x,y)
-                    plot_name = "timeseries_"+str(count)+".png"
+                    plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"                    
                     plt.savefig(plot_name, bbox_inches='tight')
                     plt.close()
                     count = count + 1	                
         else:
             y =[]
             for i in range(0,len(self.__data),self.__N):
-                y.append(np.array(self.__data[i:i+self.__N]))        
+                y.append(np.array(self.__data[i:i+self.__N]))
+            count = 0         
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
                 plt.plot(x,y[i])
-                plot_name = "timeseries_"+str(i)+".png"
+                plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"
                 plt.savefig(plot_name, bbox_inches='tight')	 
+                count = count + 1
                 
                 # plt.show() # reset the plot, but gives output in display
                 # So, alternatively:
@@ -122,7 +128,6 @@ class Timeseries(A):
             print " -Warning: too many lines will be printed in a single plot !!! "
             minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
             for i in minor_index:
-            #for i in range(0,self.__stepsize):
                 D = self.__data.xs( int(i) , level='minor')
                       
 	        for i in range(0,len(D),self.__N):	    
@@ -130,11 +135,11 @@ class Timeseries(A):
 		        x = np.linspace(0, self.__N, self.__N, endpoint=True)
 		        plt.plot(x,y)
 		        plt.hold(True)
-                plt.savefig('summary_main.png', bbox_inches='tight')
+                plot_name = self.__param_map.plot_name(self.key)
+                plt.savefig(plot_name, bbox_inches='tight')
                 plt.close()
 
         else:
-            print "yehi ta ho ni hainta?"
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N]))
@@ -157,8 +162,9 @@ class Timeseries(A):
     
 
                 ########################################################################################################################
-            plt.legend(loc='best', fancybox=True, shadow=True)             
-            plt.savefig('summary_main1.png', bbox_inches='tight')
+            plt.legend(loc='best', fancybox=True, shadow=True)
+            plot_name = self.__param_map.plot_name(self.key)            
+            plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
 
 
@@ -169,8 +175,6 @@ class Histogram():
         self.__N = n
 
     def many_output(self): ####TODO###
-        print "histogram multiple ma aaipugiyo"
-        return
         y =[]
         for i in range(0,len(self.__data),self.__N):
             y.append(np.array(self.__data[i:i+self.__N]))
