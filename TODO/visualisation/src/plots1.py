@@ -48,23 +48,18 @@ class Parameter_mapper():
                
 
 class Plot(NP):
-    def __init__(self, data, parameter): # n_plots removed from older version, replaced by the mapper class method
+    def __init__(self, data, parameter): 
         self.__data = data
-        #print self.__data
-        #self.__n_plots = n_plots #redundant because of new method
         self.key = 'plot1'
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter) 
        
-    def timeseries( self, n, analysis_type ): # TODO: remove NP.one and NP.many, coz they are redundant and too confusing
-        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__param_map.num_plots(self.key)]        
+    def timeseries( self, n, analysis_type ):       
         T = Timeseries(self.__data, n, analysis_type, self.__parameter)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot}        
-        return options[num_plots]()
-
+        options = {'one' : one_plot, 'many' : many_plot}
+        return options[self.__param_map.num_plots(self.key)]()                
 
     def histogram( self, n ):   
         n_plot_values = {'one' : NP.one, 'many' : NP.many} 
@@ -95,6 +90,7 @@ class Timeseries(A):
         self.key = 'plot1' 
                 
     def many_output(self):
+        print "yaha aayo many bhanne ma"
         if self.__analysistype == A.agent:
             print " -Warning: too many plots will be produced !!! " 
             count = 0                        
@@ -130,6 +126,7 @@ class Timeseries(A):
             plt.close()    
     
     def one_output(self):
+        print "yaha ni aayo, one bhanne ma"
         if self.__analysistype == A.agent:
             print " -Warning: too many lines will be printed in a single plot !!! "
             minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
