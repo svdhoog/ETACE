@@ -61,14 +61,12 @@ class Plot(NP):
         options = {'one' : one_plot, 'many' : many_plot}
         return options[self.__param_map.num_plots(self.key)]()                
 
-    def histogram( self, n ):   
-        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__param_map.num_plots(self.key)]          
+    def histogram( self, n ):           
         H = Histogram(self.__data, num_plots, n)      
         one_plot = lambda : H.one_output()
         many_plot = lambda : H.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot}        
-        return options[num_plots]()
+        options = {'one' : one_plot, 'many' : many_plot}        
+        return options[self.__param_map.num_plots(self.key)]()
 
 
     def boxplot(self):
