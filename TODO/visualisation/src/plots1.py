@@ -42,10 +42,7 @@ class Parameter_mapper():
 
     def linestyle(self, key):
         return self.__param[key]['linestyle']
-
-
-
-               
+           
 
 class Plot(NP):
     def __init__(self, data, parameter): 

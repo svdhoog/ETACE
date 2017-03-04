@@ -4,35 +4,62 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from parameters import NP, A
 from summarystats import SummaryStats
-#from timeseries import Timeseries
-#from boxplot import Boxplot
-#from histogram import Histogram
+
+class Parameter_mapper():
+    def __init__(self, param):
+        self.__param = param
+         
+    def legend(self, key):
+        return self.__param[key]['plot_legend']
+
+    def legend_label(self, key):
+        return self.__param[key]['legend_label']
+
+    def plot_type(self, key):
+        return self.__param[key]['plot_type']
+
+    def num_plots(self, key):
+        return self.__param[key]['number_plots']
+
+    def y_label(self, key):
+        return self.__param[key]['y-axis label']
+
+    def x_label(self, key):
+        return self.__param[key]['x-axis label']
+
+    def plot_name(self, key):
+        return self.__param[key]['plot_name']
+
+    def llim(self, key):
+        return self.__param[key]['l_lim']
+
+    def ulim(self, key):
+        return self.__param[key]['u_lim']
+
+    def linestyle(self, key):
+        return self.__param[key]['linestyle']
+
 
 class Plot(NP):
-    def __init__(self, data, n_plots):
+    def __init__(self, data, parameter):
         self.__data = data
-        #print self.__data
-        self.__n_plots = n_plots    
+        self.key = 'plot1'
+        self.__parameter = parameter
+        self.__param_map = Parameter_mapper(self.__parameter)   
 
-    def timeseries( self, n, step, analysis_type ): 
-        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__n_plots]        
-        T = Timeseries(self.__data, num_plots, n, step, analysis_type)      
+    def timeseries( self, n, analysis_type ):     
+        T = Timeseries(self.__data, n, analysis_type, self.__parameter)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot}        
-        return options[num_plots]()
+        options = {'one' : one_plot, 'many' : many_plot}        
+        return options[self.__param_map.num_plots(self.key)]()
 
-
-    def histogram( self, n ):   
-        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__n_plots]        
+    def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      
         one_plot = lambda : H.one_output()
         many_plot = lambda : H.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot}        
-        return options[num_plots]()
-
+        options = {'one' : one_plot, 'many' : many_plot}        
+        return options[self.__param_map.num_plots(self.key)]()
 
     def boxplot(self):
         B = Boxplot(self.__data,num_plots,self.__analysis_type)      
@@ -44,10 +71,13 @@ class Plot(NP):
 
 class Timeseries(A):
 
-    def __init__(self, data, num_plots, n, s, a):
+    def __init__(self, data, n, a, parameter):
         self.__data = data
         self.__N = n
         self.__analysistype = a
+        self.__parameter = parameter
+        self.__param_map = Parameter_mapper(self.__parameter)
+        self.key = 'plot1' 
                 
     def many_output(self):
         if self.__analysistype == A.agent:
@@ -59,8 +89,8 @@ class Timeseries(A):
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y)
-                    plot_name = "timeseries_"+str(count)+".png"
+                    plt.plot(x,y,color = 'blue', linestyle=self.__param_map.x_label(self.key)['linestyle'], marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.x_label(self.key)['legend_label']) 
+                    plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
                     plt.savefig(plot_name, bbox_inches='tight')
                     plt.close()
                     count = count + 1	                
@@ -68,17 +98,15 @@ class Timeseries(A):
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N]))        
+            count = 0            
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                ## TODO: replace plot command below
                 plt.plot(x,y[i])
-                plot_name = "timeseries_"+str(i)+".png"
+                plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"
                 plt.savefig(plot_name, bbox_inches='tight')	 
-                
-                # plt.show() # reset the plot, but gives output in display
-                # So, alternatively:
-                # plt.cla() # clear current axes
+                count = count + 1
                 plt.clf() # clear current figure
-                # plt.close() # close the whole plot
             plt.close()    
     
     def one_output(self):
@@ -91,24 +119,28 @@ class Timeseries(A):
             for i in range(0,len(D),self.__N):
                 y = np.array(D[i:i+self.__N])
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                #TODO: replace with the param mapper vals
                 plt.plot(x,y, linestyle='solid', marker='o', markerfacecolor = 'green', markersize =1, label = "line "+str(count))
                 count = count + 1
                 plt.hold(True)
-            plt.legend(loc='best', fancybox=True, shadow=True) 
-            plt.savefig('summary_main.png', bbox_inches='tight')
+            plt.legend(loc='best', fancybox=True, shadow=True)
+            plot_name = self.__param_map.plot_name(self.key) 
+            plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
 
         else:
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N]))
+            count = 0
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                label_num = i
-                i, = plt.plot(x,y[i],color = 'green', linestyle='solid', marker='o', markerfacecolor = 'green', markersize =9)         
-                plt.hold(True)
-                plt.legend([i],["plot"+str(label_num)],loc='best', fancybox=True, shadow=True) 	 
-            plt.savefig('summary_main1.png', bbox_inches='tight')
+            plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key)) 
+            plt.hold(True)
+            count = count + 1     	 
+            plt.legend(loc='best', fancybox=True, shadow=True)
+            plot_name = self.__param_map.plot_name(self.key)            
+            plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
 
 
