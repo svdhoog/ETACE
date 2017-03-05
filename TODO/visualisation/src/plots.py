@@ -1,14 +1,28 @@
-import sys
+import sys,os,yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from parameters import NP, A
 from summarystats import SummaryStats
 
+class Process_parameters():    
+    def plot_parameters(self):
+        with open("plot_config.yaml", 'r') as stream:
+            try:
+                param = yaml.load(stream)
+            except yaml.YAMLError as exc:
+                print(exc)
+        #for key, value in param.iteritems():           
+        #print param[key]['plot_type']
+        #print value 
+        return param   
+
+
 class Parameter_mapper():
+
     def __init__(self, param):
         self.__param = param
-         
+        
     def legend(self, key):
         return self.__param[key]['plot_legend']
 
@@ -40,19 +54,23 @@ class Parameter_mapper():
         return self.__param[key]['linestyle']
 
 
-class Plot(NP):
-    def __init__(self, data, parameter):
+class Plot(NP,Parameter_mapper):
+    def __init__(self, data):
         self.__data = data
         self.key = 'plot1'
-        self.__parameter = parameter
+        PP = Process_parameters()
+        self.__parameter = PP.plot_parameters()
+        print self.__parameter
         self.__param_map = Parameter_mapper(self.__parameter)   
 
     def timeseries( self, n, analysis_type ):     
         T = Timeseries(self.__data, n, analysis_type, self.__parameter)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}        
-        return options[self.__param_map.num_plots(self.key)]()
+        options = {'one' : one_plot, 'many' : many_plot}
+        print self.__param_map.num_plots(self.key)
+        return options['one']()      
+        #return options[self.__param_map.num_plots(self.key)]()
 
     def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      

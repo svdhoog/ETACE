@@ -37,11 +37,6 @@ def process_hdf_keys( string_in ):
     return list(map(int, string_out.split(',')))
 
 
-
-
-
-
-
 with open("plot_config.yaml", 'r') as stream:
     try:
         param = yaml.load(stream)

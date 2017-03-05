@@ -95,9 +95,10 @@ def plt_timeseries( df, param ):
     n = len(param['major']) # number of datapoints for x-axis
     step = len(param['minor'])
     # instantiate a plot class with desired output (One, Many)
-    Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
+    Fig = Plot(summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
     # Calling the plot class instance with the desired kind of plot
-    Fig.timeseries( n, step, map_analysis(param['analysis']))
+
+    Fig.timeseries( n, map_analysis(param['analysis'])) 
 
 
 # Function that calls the boxplot
