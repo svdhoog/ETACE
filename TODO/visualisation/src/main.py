@@ -5,20 +5,20 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import operator
 
-# helper classes, import from same directory
+# helper classes, imported from same directory
 from parameters import A, M, NP
 from summarystats import SummaryStats
 from plots import Plot, Boxplot
 
-
-
+# the main configuration file 
 config_fname = 'config1.yaml'
 
+# function to output the error message and exit
 def erf(msg):
     print " >> Error: %s" % msg
     sys.exit()
 
-# Function to parse input parameters from the config file
+# Function to parse input parameters from the main configuration file
 def get_parameters():
     try:
         f = open(config_fname, 'r')
@@ -37,22 +37,20 @@ def get_parameters():
             sys.exit()
         return p                
 
-
-# Function to process the parsed config file values to make them usable
+# Function to process the parsed configuration file values to make them usable
 def process_parameters(p): 
     indices = ['set','run','major','minor']    
     for i in indices:
-        if 'range' in str(p[i][0]):  # check if range defined in input
+        if 'range' in str(p[i][0]):  # check if range defined in input configuration file
             x = p[i][1]
             try:              
-                if len(x)<3: x.append(1) # for some cases, add default stepsize of one
+                if len(x)<3: x.append(1) # if no step size defined in input, add default stepsize of one
                 p[i] = range(x[0],x[1]+x[2],x[2]) # include last value, to make range of yaml file inclusive
             except:
                 raise AssertionError("In file %s: range expects a list, single value given instead" % config_fname)
     return p
 
-
-def process_hdf_keys( string_in ): # extract set and run values from set_*_run_* string
+def process_hdf_keys( string_in ): # extract set and run values from set_*_run_* string 
     def find_between( s, first, last ):
         try:
             start = s.index( first ) + len( first )
@@ -86,7 +84,7 @@ def map_analysis(val): # map analysis type from user input to parameter class
 
 # Function that calls the timeseries plot
 def plt_timeseries( df, param ):
-    print df.head(5) 
+    #print df.head(5) 
     # instantiate a class with desired analysis type
     P = SummaryStats(df, map_analysis(param['analysis']))
     # then call the desired method, if no plot wanted   
@@ -195,7 +193,6 @@ if __name__ == "__main__":
 ###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
                 plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
-                print "variable list hai ta:",var_list
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
                 plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float

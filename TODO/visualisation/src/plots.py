@@ -60,7 +60,6 @@ class Plot(NP,Parameter_mapper):
         self.key = 'plot2'
         PP = Process_parameters()
         self.__parameter = PP.plot_parameters()
-        print self.__parameter
         self.__param_map = Parameter_mapper(self.__parameter)   
 
     def timeseries( self, n, analysis_type ):     
@@ -68,7 +67,6 @@ class Plot(NP,Parameter_mapper):
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}
-        print self.__param_map.num_plots(self.key)
         return options['one']()      
         #return options[self.__param_map.num_plots(self.key)]()
 
@@ -168,7 +166,6 @@ class Histogram():
         self.__N = n
 
     def many_output(self): ####TODO###
-        print "histogram multiple ma aaipugiyo"
         return
         y =[]
         for i in range(0,len(self.__data),self.__N):
