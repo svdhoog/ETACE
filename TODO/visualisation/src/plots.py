@@ -57,7 +57,7 @@ class Parameter_mapper():
 class Plot(NP,Parameter_mapper):
     def __init__(self, data):
         self.__data = data
-        self.key = 'plot1'
+        self.key = 'plot2'
         PP = Process_parameters()
         self.__parameter = PP.plot_parameters()
         print self.__parameter
@@ -95,7 +95,7 @@ class Timeseries(A):
         self.__analysistype = a
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter)
-        self.key = 'plot1' 
+        self.key = 'plot2' 
                 
     def many_output(self):
         if self.__analysistype == A.agent:
@@ -119,8 +119,7 @@ class Timeseries(A):
             count = 0            
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                ## TODO: replace plot command below
-                plt.plot(x,y[i])
+                plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key)) 
                 plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"
                 plt.savefig(plot_name, bbox_inches='tight')	 
                 count = count + 1
@@ -137,8 +136,8 @@ class Timeseries(A):
             for i in range(0,len(D),self.__N):
                 y = np.array(D[i:i+self.__N])
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                #TODO: replace with the param mapper vals
-                plt.plot(x,y, linestyle='solid', marker='o', markerfacecolor = 'green', markersize =1, label = "line "+str(count))
+
+                plt.plot(x,y, linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(count))
                 count = count + 1
                 plt.hold(True)
             plt.legend(loc='best', fancybox=True, shadow=True)

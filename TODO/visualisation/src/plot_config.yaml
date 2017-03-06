@@ -1,7 +1,7 @@
 plot1:
     plot_type: timeseries
     variables: total_credit
-    number_plots: many
+    number_plots: one
     plot_name: first_one.png
     l_lim: no
     u_lim: no
@@ -26,6 +26,7 @@ plot2:
     tmax: no
     plot_legend: no
     legend_loc: out
-    x-axis label: some x label
+    legend_label: second_option
+    x-axis label: not yet done
     y-axis label: some y label
-
+    linestyle: solid
