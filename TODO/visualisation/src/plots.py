@@ -67,8 +67,8 @@ class Plot(NP,Parameter_mapper):
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}
-        return options['one']()      
-        #return options[self.__param_map.num_plots(self.key)]()
+        #return options['one']()      
+        return options[self.__param_map.num_plots(self.key)]()
 
     def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      
@@ -77,12 +77,12 @@ class Plot(NP,Parameter_mapper):
         options = {'one' : one_plot, 'many' : many_plot}        
         return options[self.__param_map.num_plots(self.key)]()
 
-    def boxplot(self):
-        B = Boxplot(self.__data,num_plots,self.__analysis_type)      
+    def boxplot( self, n, analysis_type ):
+        B = Boxplot(self.__data, n, analysis_type, self.__parameter)      
         one_plot = lambda : B.one_output()
         many_plot = lambda : B.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot} 
-        return options[num_plots]()
+        options = {'one' : one_plot, 'many' : many_plot} 
+        return options[self.__param_map.num_plots(self.key)]()
 
 
 class Timeseries(A):
@@ -105,7 +105,7 @@ class Timeseries(A):
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y,color = 'blue', linestyle=self.__param_map.x_label(self.key)['linestyle'], marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.x_label(self.key)['legend_label']) 
+                    plt.plot(x,y,color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.x_label(self.key)) 
                     plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
                     plt.savefig(plot_name, bbox_inches='tight')
                     plt.close()
@@ -194,26 +194,16 @@ class Histogram():
 
 
 class Boxplot(NP, A):
-    def __init__(self, data, n, n_plots, a_type):
+    def __init__(self, data, n, a_type, parameter):
         self.__data = data
         self.__N = n
         self.__a_type = a_type
-        self.__n_plots = n_plots   
-
-    def plot(self):
-        n_plot_values = {'one' : NP.one, 'many' : NP.many} 
-        num_plots = n_plot_values[self.__n_plots]
-        one_plot = lambda : self.one_output()
-        many_plot = lambda : self.many_output()        
-        options = {NP.one : one_plot, NP.many : many_plot}        
-        return options[num_plots]()
-
-    def f_analysis(self):                
-        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}       
-        return analysis_values[self.__a_type]       
+        self.__parameter = parameter
+        self.__param_map = Parameter_mapper(self.__parameter)    
+  
 
     def one_output(self):
-        s = SummaryStats(self.__data, self.f_analysis() )   
+        s = SummaryStats(self.__data, self.__a_type )   
         box_df = pd.DataFrame()
         box_df['mean'] = [x for sublist in s.mean().values for x in sublist]  # [x for sublist in s.mean().values for x in sublist] done to flatten a 2D list to 1D so pandas accepts it
         # box_df['mean'] = s.mean() # this was the old simpler method which did not work once the config file variables was turned to a hierarchy with filters (bug in df, see for new patches)
@@ -238,7 +228,8 @@ class Boxplot(NP, A):
 
 
     def many_output(self):
-        s = SummaryStats(self.__data, self.f_analysis() )           
+        print "many ma ni aaucha ta?"
+        s = SummaryStats(self.__data, self.__a_type )           
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
