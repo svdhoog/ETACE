@@ -82,49 +82,63 @@ def map_analysis(val): # map analysis type from user input to parameter class
     return analysis_values[val]  
 
 
-# Function that calls the timeseries plot
-def plt_timeseries( df, param ):
-    #print df.head(5) 
-    # instantiate a class with desired analysis type
-    P = SummaryStats(df, map_analysis(param['analysis']))
-    # then call the desired method, if no plot wanted   
-    summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-    
-    n = len(param['major']) # number of datapoints for x-axis
-    step = len(param['minor'])
-    # instantiate a plot class with desired output (One, Many)
-    Fig = Plot(summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
-    # Calling the plot class instance with the desired kind of plot
 
-    Fig.timeseries( n, map_analysis(param['analysis'])) 
+def summary_and_plot(key, df, param):  
+    # Function that calls the timeseries plot
+    def plt_timeseries( df, param ):
+        #print df.head(5) 
+        # instantiate a class with desired analysis type
+        P = SummaryStats(df, map_analysis(param['analysis']))
+        # then call the desired method, if no plot wanted   
+        summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
+        
+        n = len(param['major']) # number of datapoints for x-axis
+        step = len(param['minor'])
+        # instantiate a plot class with desired output (One, Many)
+        Fig = Plot(summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
+        # Calling the plot class instance with the desired kind of plot
 
-
-# Function that calls the boxplot
-def plt_boxplot( df, param ):  
-    n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
-    # instantiate a boxplot class
-    Fig = Boxplot(df, n, param['plot properties']['number_plots'], param['analysis'])  
-
-    # call the appropriate method within the class
-    Fig.plot()
+        Fig.timeseries( n, map_analysis(param['analysis'])) 
 
 
-# Function that calls the timeseries plot
-def plt_histogram( df, param ):
+    # Function that calls the boxplot
+    def plt_boxplot( df, param ):  
+        n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
+        # instantiate a boxplot class
+        #Fig = Boxplot(df, n, param['analysis'])  
+        Fig = Plot(df)
 
-    # instantiate a class with desired analysis type
-    P = SummaryStats(df, map_analysis(param['analysis']))
+        Fig.boxplot( n, map_analysis(param['analysis'])) 
+        # call the appropriate method within the class
+        #Fig.plot()
 
-    # then call the desired method, if no plot wanted   
-    summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-    
-    n = len(param['major']) # number of datapoints for x-axis
-    
-    # instantiate a plot class with desired output (One, Many)
-    Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
 
-    # Calling the plot class instance with the desired kind of plot
-    Fig.histogram( n )
+    # Function that calls the timeseries plot
+    def plt_histogram( df, param ):
+
+        # instantiate a class with desired analysis type
+        P = SummaryStats(df, map_analysis(param['analysis']))
+
+        # then call the desired method, if no plot wanted   
+        summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
+        
+        n = len(param['major']) # number of datapoints for x-axis
+        
+        # instantiate a plot class with desired output (One, Many)
+        Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
+
+        # Calling the plot class instance with the desired kind of plot
+        Fig.histogram( n )
+
+
+    plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+    # calling appropriate function based on read-in key from config file
+    # also passing in the filtered dataframe to the function at the same time 
+    return plot_function[key](df, param) # need to cast df to float
+                
+
+
+
 
 
 if __name__ == "__main__":
@@ -192,10 +206,9 @@ if __name__ == "__main__":
 
 ###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
-                plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
-                plot_function[key](d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                summary_and_plot(key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
                 
                 var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
