@@ -80,17 +80,19 @@ def map_analysis(val): # map analysis type from user input to parameter class
     return analysis_values[val]  
 
 
-def filter_by_value(dval, filtered):           
+def filter_by_value(dkey, dval, filtered):       
     if dval is not None:
         count = 0
+        index = dkey
+        df = pd.DataFrame(filtered[index])        
         while count < len(dval):
             options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
             val = str(dval[count][0])
-            index = dkey
-            dkey = pd.DataFrame(filtered[index])
-            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna()) #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
+            #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
+            df = df[options[val](filtered[index],dval[count][1])].dropna()
+            # TODO: for line above, check how to replace warning (warning because df size before and after unequal)
             count = count + 1
-        return frames
+        return df
     else:
         return filtered
 
@@ -201,17 +203,22 @@ if __name__ == "__main__":
                         var_dic[param['variables'][k][0]] = var_filter_list
                     else:
                         var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present
-               
                 # first stage filtering, where all input variables are sliced with the desired set and run values
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
                 # second stage of filtering for filtering the variables according to the values
 
+                df_main = pd.DataFrame()
                 # function call to filter based on variable value
                 for dkey, dval in var_dic.iteritems():
-                    print dkey, dval
-                    print filter_by_value(dval, filtered)
-                                  
-      
+                    df = filter_by_value(dkey, dval, filtered)
+                    if dval is not None:
+                        if df_main.empty:
+                            df_main = df
+                        else:
+                            df_main = pd.concat([df_main,df], axis = 1)
+                    else:
+                        df_main = df
+                        del df              
 ###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
                 # calling appropriate function based on read-in key from config file
