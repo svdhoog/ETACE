@@ -1,6 +1,4 @@
 plot1:
-    plot_type: timeseries
-    variables: total_credit
     number_plots: one
     plot_name: first_one.png
     l_lim: no
@@ -9,15 +7,13 @@ plot1:
     tmax: no
     plot_legend: yes
     legend_loc: out
-    legend_label: total credit
+    legend_label: timeseriesA
     x-axis label: some x label
     y-axis label: some y label
     linestyle: dashed
     
 
 plot2:
-    plot_type: timeseries
-    variables: total_credit
     number_plots: one
     plot_name: second_one.png
     l_lim: no
@@ -30,3 +26,18 @@ plot2:
     x-axis label: not yet done
     y-axis label: some y label
     linestyle: solid
+
+plot3:
+    number_plots: one
+    plot_name: third_one.png
+    l_lim: no
+    u_lim: no
+    tmin: no
+    tmax: no
+    plot_legend: no
+    legend_loc: out
+    legend_label: third_option
+    x-axis label: not yet done
+    y-axis label: some y label
+    linestyle: solid
+
