@@ -55,15 +55,15 @@ class Parameter_mapper():
 
 
 class Plot(NP,Parameter_mapper):
-    def __init__(self, data):
+    def __init__(self, idx, data):
         self.__data = data
-        self.key = 'plot2'
+        self.key = idx
         PP = Process_parameters()
         self.__parameter = PP.plot_parameters()
         self.__param_map = Parameter_mapper(self.__parameter)   
 
     def timeseries( self, n, analysis_type ):     
-        T = Timeseries(self.__data, n, analysis_type, self.__parameter)      
+        T = Timeseries(self.__data, n, analysis_type, self.__parameter, self.key)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}
@@ -78,7 +78,7 @@ class Plot(NP,Parameter_mapper):
         return options[self.__param_map.num_plots(self.key)]()
 
     def boxplot( self, n, analysis_type ):
-        B = Boxplot(self.__data, n, analysis_type, self.__parameter)      
+        B = Boxplot(self.__data, n, analysis_type, self.__parameter, self.key)      
         one_plot = lambda : B.one_output()
         many_plot = lambda : B.many_output()        
         options = {'one' : one_plot, 'many' : many_plot} 
@@ -87,13 +87,13 @@ class Plot(NP,Parameter_mapper):
 
 class Timeseries(A):
 
-    def __init__(self, data, n, a, parameter):
+    def __init__(self, data, n, a, parameter, key):
         self.__data = data
         self.__N = n
         self.__analysistype = a
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter)
-        self.key = 'plot2' 
+        self.key = key
                 
     def many_output(self):
         if self.__analysistype == A.agent:
@@ -194,12 +194,13 @@ class Histogram():
 
 
 class Boxplot(NP, A):
-    def __init__(self, data, n, a_type, parameter):
+    def __init__(self, data, n, a_type, parameter, key):
         self.__data = data
         self.__N = n
         self.__a_type = a_type
         self.__parameter = parameter
-        self.__param_map = Parameter_mapper(self.__parameter)    
+        self.__param_map = Parameter_mapper(self.__parameter)
+        self.key = key     
   
 
     def one_output(self):
@@ -221,11 +222,10 @@ class Boxplot(NP, A):
         t_df = t_df.mean(axis =1)
         bp = t_df.to_frame().boxplot()
         #bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
-        # plt.hold(True)        
-        plt.savefig('boxplot_main.png', bbox_inches='tight')  
-        #plt.show()        
+        # plt.hold(True)   
+        plot_name = self.__param_map.plot_name(self.key)            
+        plt.savefig(plot_name, bbox_inches='tight')      
         plt.clf()
-
 
     def many_output(self):
         print "many ma ni aaucha ta?"
