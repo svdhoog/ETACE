@@ -8,7 +8,7 @@ plot1:
         agent: Bank
         analysis: agent
         variables: 
-#            var1: [total_credit, '>[700]'] #, '<[1500]']
+#            var1: [total_credit, '>[700]', '<[800]']
             var1: [total_credit]       
 #            var2: [equity, '>[900]']
         set: [1]
