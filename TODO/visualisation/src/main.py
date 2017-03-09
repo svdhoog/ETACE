@@ -80,9 +80,27 @@ def map_analysis(val): # map analysis type from user input to parameter class
     return analysis_values[val]  
 
 
+def filter_by_value(dval, filtered):           
+    if dval is not None:
+        count = 0
+        while count < len(dval):
+            options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
+            val = str(dval[count][0])
+            index = dkey
+            dkey = pd.DataFrame(filtered[index])
+            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna()) #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
+            count = count + 1
+        return frames
+    else:
+        return filtered
+
+
+
+
 # Function to bridge other classes (summarystats, and plot)
 
-def summary_and_plot(idx, key, df, param):  
+def summary_and_plot(idx, key, df, param):
+    print df.head(10)  
     # Function that calls the timeseries plot
     def plt_timeseries( idx, df, param ):
         #print df.head(5) 
@@ -186,25 +204,19 @@ if __name__ == "__main__":
                
                 # first stage filtering, where all input variables are sliced with the desired set and run values
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
-                # second stage of filtering for filtering the variables according to the values               
-                for dkey, dval in var_dic.iteritems():              
-                    if dval is not None:
-                        count = 0
-                        while count < len(dval):
-                            options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
-                            val = str(dval[count][0])
-                            index = dkey
-                            dkey = pd.DataFrame(filtered[index])
-                            frames.append(dkey[options[val](filtered[var_list],dval[count][1])].dropna()) #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
-                            count = count + 1
-###TODO: currently each variable has an individual dataframe appended to a list, instead make a single dataframe with all variables appended, that will make it uniform with the unfiltered case, and also the plotting need not be redone                                    
-                     
+                # second stage of filtering for filtering the variables according to the values
 
+                # function call to filter based on variable value
+                for dkey, dval in var_dic.iteritems():
+                    print dkey, dval
+                    print filter_by_value(dval, filtered)
+                                  
+      
 ###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
-                summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
                 
                 var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
