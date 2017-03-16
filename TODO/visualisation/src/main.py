@@ -80,7 +80,7 @@ def map_analysis(val): # map analysis type from user input to parameter class
     return analysis_values[val]  
 
 
-def filter_by_value(dkey, dval, filtered):       
+def filter_by_value(dkey, dval, filtered): # Function to filter the variables based on values      
     if dval is not None:
         count = 0
         index = dkey
@@ -96,11 +96,7 @@ def filter_by_value(dkey, dval, filtered):
     else:
         return filtered
 
-
-
-
 # Function to bridge other classes (summarystats, and plot)
-
 def summary_and_plot(idx, key, df, param):
     print df.head(10)  
     # Function that calls the timeseries plot
@@ -224,6 +220,7 @@ if __name__ == "__main__":
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
                 #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                summary_and_plot(idx,key, df_main, param)                
                 
                 var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
