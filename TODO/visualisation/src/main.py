@@ -90,7 +90,7 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
             val = str(dval[count][0])
             #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
             df = df[options[val](filtered[index],dval[count][1])].dropna()
-            # TODO: for line above, check how to replace warning (warning because df size before and after unequal)
+            # TODO: for line above, check how to replace warning (warning because df size before and after assignment is unequal)
             count = count + 1
         return df
     else:
