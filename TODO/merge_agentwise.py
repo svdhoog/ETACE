@@ -4,6 +4,9 @@ import pandas as pd
 from glob import glob as g
 pd.set_option('io.hdf.default_format','table')  # Commenting this line out will write HDF5 as a fixed format, and not as a table format
                                                 # Writing as a fixed format is faster than writing as a table, but the file cannot be 'modified/appended to' later on 
+#TODO: serious fixes, when writing from multiple separate to agent based HDF5 files, minor axis is not copied correctly, i.e. only one of 20 axis is copied
+
+#TODO: frame gives error when trying to store in HDF store, due to unicode problem, you can either port this code to python3 or convert the frame to unicode
 
 DB_SUFFIX = '.h5'
 agentname = "Eurostat"
