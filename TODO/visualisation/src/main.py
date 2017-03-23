@@ -97,11 +97,9 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
         return filtered
 
 # Function to bridge other classes (summarystats, and plot)
-def summary_and_plot(idx, key, df, param):
-    print df.head(10)  
+def summary_and_plot(idx, key, df, param): 
     # Function that calls the timeseries plot
     def plt_timeseries( idx, df, param ):
-        #print df.head(5) 
         # instantiate a class with desired analysis type
         P = SummaryStats(df, map_analysis(param['analysis']))
         # then call the desired method, if no plot wanted   
@@ -187,8 +185,7 @@ if __name__ == "__main__":
             frames= []       # initialize list to store filtered dataframes according to variables 
             for key in inner_d.keys(): # looping through inner dict read from config file, here timeseries, boxplot etc
                 d_plt = inner_d[key] 
-                param = process_parameters(d_plt)
-                #print param['conditional_filtering']['yes/no']        
+                param = process_parameters(d_plt)     
                 var_dic = {}  # dictionary to map plot variables, and the desired operator with filter values
                 var_list =[]  # to collect list of variables, if later need to pass without any filtering, also used in first stage filtering
                 for k in param['variables'].keys():

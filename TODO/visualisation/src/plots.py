@@ -88,8 +88,6 @@ class Timeseries(A):
 
     def __init__(self, data, n, a, parameter, key):
         self.__data = data
-        print self.__data.head(10)
-        print len(self.__data.columns)
         self.__N = n
         self.__analysistype = a
         self.__parameter = parameter
@@ -147,21 +145,13 @@ class Timeseries(A):
             plt.close()
 
         else:
-            self.__data.plot(kind = 'line')
-            plt.show()
-            print "aba main kaam kuro"
             y =[]
             for i in range(0,len(self.__data),self.__N):
                 y.append(np.array(self.__data[i:i+self.__N])) # y values are appended here, if dataframe has more than one columns, all the columns are appended           
-            count = 0
-            print len(self.__data)
-            print self.__N
-            
+            count = 0            
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-            print "i ko value hai",i
-            print len(y)            
-            print len(y[0])
+
             #TODO: separate plotting from here, and add separate legend, now same legend, also add fill in
             # when plotting, if df has two cols, in case of two quantiles, both plotted simultaneously, i.e. x against array y of 2 values
             plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)) 
@@ -235,15 +225,12 @@ class Boxplot(NP, A):
         
         t_df = box_df.T
         t_df = t_df.mean(axis =1)
-        bp = t_df.to_frame().boxplot()
-        #bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
-        # plt.hold(True)   
+        bp = t_df.to_frame().boxplot() 
         plot_name = self.__param_map.plot_name(self.key)            
         plt.savefig(plot_name, bbox_inches='tight')      
         plt.clf()
 
     def many_output(self):
-        print "many ma ni aaucha ta?"
         s = SummaryStats(self.__data, self.__a_type )           
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
