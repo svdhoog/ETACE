@@ -148,34 +148,35 @@ class Timeseries(A):
             plt.close()
 
         else:
-            self.__data.plot(linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(0))
+            #self.__data.plot(linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(0))
                         
-            f1 = self.__data['lower_quantile (0.1)'].tolist()
-            f2 = self.__data['upper_quantile (0.9)'].tolist()
+            #f1 = self.__data['lower_quantile (0.1)'].tolist()
+            #f2 = self.__data['upper_quantile (0.9)'].tolist()
 
-            plt.fill_between(f1,f2)
-            plt.show()
+            #plt.fill_between(f1,f2)
+            #plt.show()
             print "aba main kaam kuro"
             y =[]
-            for i in range(0,len(self.__data),self.__N):
-                y.append(np.array(self.__data[i:i+self.__N])) # y values are appended here, if dataframe has more than one columns, all the columns are appended           
-            count = 0
-            print len(self.__data)
-            print self.__N
-            
-            for i in range(0,len(self.__data)/self.__N):
-                x = np.linspace(0, self.__N, self.__N, endpoint=True)
-            print "i ko value hai",i
-            print len(y)            
-            print len(y[0])
-            #TODO: separate plotting from here, and add separate legend, now same legend, also add fill in
-            # when plotting, if df has two cols, in case of two quantiles, both plotted simultaneously, i.e. x against array y of 2 values
-            plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)) 
-            
-            plt.hold(True)
-            count = count + 1     	 
+            for s in range (0, len(self.__data.columns)):
+                di = self.__data[self.__data.columns[s]]
+                print di
+                for i in range(0,len(self.__data),self.__N):
+                    y.append(np.array(di[i:i+self.__N])) 
+                count = 0
+                
+                for i in range(0,len(self.__data)/self.__N):
+                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                    print y[i]
+                #TODO: separate plotting from here, and add separate legend, now same legend, also add fill in
+                # when plotting, if df has two cols, in case of two quantiles, both plotted simultaneously, i.e. x against array y of 2 values
+                    plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)) 
+                    y = []
+                    plt.hold(True)
+                
+                count = count + 1     	 
             plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__param_map.plot_name(self.key)            
+            plot_name = self.__param_map.plot_name(self.key)
+            #plt.show()            
             plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
 

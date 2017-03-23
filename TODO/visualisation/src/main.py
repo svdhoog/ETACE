@@ -155,7 +155,8 @@ def summary_and_plot(idx, key, df, param):
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
-    store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')    
+    #store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file
