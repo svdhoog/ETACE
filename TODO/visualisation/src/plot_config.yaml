@@ -10,7 +10,7 @@ plot1:
     legend_label: timeseriesA
     x-axis label: some x label
     y-axis label: some y label
-    linestyle: dashed
+    linestyle: solid
     
 
 plot2:

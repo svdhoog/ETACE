@@ -17,7 +17,6 @@ class Process_parameters():
         #print value 
         return param   
 
-
 class Parameter_mapper():
 
     def __init__(self, param):
@@ -89,6 +88,8 @@ class Timeseries(A):
 
     def __init__(self, data, n, a, parameter, key):
         self.__data = data
+        print self.__data.head(10)
+        print len(self.__data.columns)
         self.__N = n
         self.__analysistype = a
         self.__parameter = parameter
@@ -101,7 +102,8 @@ class Timeseries(A):
             count = 0                        
             minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
             for i in minor_index:
-                D = self.__data.xs( int(i) , level='minor')    
+                D = self.__data.xs( int(i) , level='minor')
+                   
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])                
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
@@ -134,6 +136,7 @@ class Timeseries(A):
             for i in range(0,len(D),self.__N):
                 y = np.array(D[i:i+self.__N])
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                #print x
 
                 plt.plot(x,y, linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(count))
                 count = count + 1
@@ -144,13 +147,25 @@ class Timeseries(A):
             plt.close()
 
         else:
+            self.__data.plot(kind = 'line')
+            plt.show()
+            print "aba main kaam kuro"
             y =[]
             for i in range(0,len(self.__data),self.__N):
-                y.append(np.array(self.__data[i:i+self.__N]))
+                y.append(np.array(self.__data[i:i+self.__N])) # y values are appended here, if dataframe has more than one columns, all the columns are appended           
             count = 0
+            print len(self.__data)
+            print self.__N
+            
             for i in range(0,len(self.__data)/self.__N):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
-            plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key)) 
+            print "i ko value hai",i
+            print len(y)            
+            print len(y[0])
+            #TODO: separate plotting from here, and add separate legend, now same legend, also add fill in
+            # when plotting, if df has two cols, in case of two quantiles, both plotted simultaneously, i.e. x against array y of 2 values
+            plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)) 
+            
             plt.hold(True)
             count = count + 1     	 
             plt.legend(loc='best', fancybox=True, shadow=True)

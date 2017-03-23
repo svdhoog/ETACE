@@ -187,7 +187,8 @@ if __name__ == "__main__":
             frames= []       # initialize list to store filtered dataframes according to variables 
             for key in inner_d.keys(): # looping through inner dict read from config file, here timeseries, boxplot etc
                 d_plt = inner_d[key] 
-                param = process_parameters(d_plt)        
+                param = process_parameters(d_plt)
+                #print param['conditional_filtering']['yes/no']        
                 var_dic = {}  # dictionary to map plot variables, and the desired operator with filter values
                 var_list =[]  # to collect list of variables, if later need to pass without any filtering, also used in first stage filtering
                 for k in param['variables'].keys():
@@ -206,7 +207,8 @@ if __name__ == "__main__":
                 df_main = pd.DataFrame()
                 # function call to filter based on variable value
                 for dkey, dval in var_dic.iteritems():
-                    df = filter_by_value(dkey, dval, filtered)
+                    #print dkey,dval
+                    df = filter_by_value(dkey, dval, filtered)   
                     if dval is not None:
                         if df_main.empty:
                             df_main = df
@@ -214,7 +216,14 @@ if __name__ == "__main__":
                             df_main = pd.concat([df_main,df], axis = 1)
                     else:
                         df_main = df
-                        del df              
+                        del df
+                #####################################################################                
+                #if param['conditional_filtering']['yes/no'] == True:
+                #    print "lau hai"
+                #    for k in param['conditional_filtering']['operation_var']:
+                #        print k
+                #####################################################################              
+
 ###TODO: currently the filtering is done in two steps, find a way to do it in a single step
 
                 # calling appropriate function based on read-in key from config file
