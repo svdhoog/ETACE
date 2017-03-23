@@ -88,6 +88,7 @@ class Timeseries(A):
 
     def __init__(self, data, n, a, parameter, key):
         self.__data = data
+        print "main data received from summary module: "
         print self.__data.head(10)
         print len(self.__data.columns)
         self.__N = n
@@ -147,7 +148,12 @@ class Timeseries(A):
             plt.close()
 
         else:
-            self.__data.plot(kind = 'line')
+            self.__data.plot(linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(0))
+                        
+            f1 = self.__data['lower_quantile (0.1)'].tolist()
+            f2 = self.__data['upper_quantile (0.9)'].tolist()
+
+            plt.fill_between(f1,f2)
             plt.show()
             print "aba main kaam kuro"
             y =[]
