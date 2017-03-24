@@ -42,10 +42,12 @@ class SummaryStats(A):
             except Exception:        
                 print ("Unrecognized input. Check input and try again!")
                 sys.exit(1)
-            return s.append(self.quantile(Q)) # N is the custom value for Quantile that is needed        
-                       
+            s = s.append(self.quantile(Q)) # N is the custom value for Quantile that is needed
+            s.rename(columns = {list(s)[0]: "quantile ("+str(Q)+")"}, inplace = True)        
+            return s
+           
         elif N == 2:
-            s1 = pd.DataFrame()
+            s1 = pd.DataFrame() # two df needed because df[xy] = z does not work as desired with multi-index
             s2 = pd.DataFrame()
             try:
                 Q1 = float(raw_input("Input the desired Lower quantile. Input format: 0.XX, where XX is the numeric quantile value you want: "))
@@ -53,8 +55,13 @@ class SummaryStats(A):
             except Exception:        
                 print ("Unrecognized input. Check input and try again!")
                 sys.exit(1)
-            s1 = s1.append(self.quantile(Q1))
-            s2 = s2.append(self.quantile(Q2))
+            
+            s1 = s1.append(self.quantile(Q1)) # data frame for lower quantile
+            s1.rename(columns = {list(s1)[0]: "lower_quantile ("+str(Q1)+")"}, inplace = True)
+
+            s2 = s2.append(self.quantile(Q2)) # data frame for upper quantile
+            s2.rename(columns = {list(s2)[0]: "upper_quantile ("+str(Q2)+")"}, inplace = True)
+
             return pd.concat([s1,s2], axis = 1)
 
 
