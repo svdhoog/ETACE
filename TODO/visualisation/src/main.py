@@ -145,8 +145,23 @@ def summary_and_plot(idx, key, df, param):
         # Calling the plot class instance with the desired kind of plot
         Fig.histogram( n )
 
+    def plt_scatterplot( idx, df, param ):
+            #print df.head(5) 
+            # instantiate a class with desired analysis type
+            P = SummaryStats(df, map_analysis(param['analysis']))
+            # then call the desired method, if no plot wanted   
+            summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
+            
+            n = len(param['major']) # number of datapoints for x-axis
+            step = len(param['minor'])
+            # instantiate a plot class with desired output (One, Many)
+            Fig = Plot(idx, summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
+            # Calling the plot class instance with the desired kind of plot
 
-    plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram} #dictionary of desired functions
+            Fig.scatterplot( n, map_analysis(param['analysis'])) 
+
+
+    plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot} #dictionary of desired functions
     # calling appropriate function based on read-in key from config file
     # also passing in the filtered dataframe to the function at the same time 
     return plot_function[key](idx, df, param) # need to cast df to float
@@ -155,8 +170,8 @@ def summary_and_plot(idx, key, df, param):
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
-    #store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
-    store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
+    store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    #store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
     # Main dataframe to hold all the dataframes of each instance    
     d = pd.DataFrame()
     # Going through sets and runs in the HDF file

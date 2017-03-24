@@ -83,6 +83,14 @@ class Plot(NP,Parameter_mapper):
         options = {'one' : one_plot, 'many' : many_plot} 
         return options[self.__param_map.num_plots(self.key)]()
 
+    def scatterplot( self, n, analysis_type ):     
+        S = Scatterplot(self.__data, n, analysis_type, self.__parameter, self.key)      
+        one_plot = lambda : S.one_output()
+        many_plot = lambda : S.many_output()        
+        options = {'one' : one_plot, 'many' : many_plot}
+        #return options['one']()      
+        return options[self.__param_map.num_plots(self.key)]()
+
 
 class Timeseries(A):
 
@@ -148,37 +156,43 @@ class Timeseries(A):
             plt.close()
 
         else:
-            #self.__data.plot(linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(0))
-                        
-            #f1 = self.__data['lower_quantile (0.1)'].tolist()
-            #f2 = self.__data['upper_quantile (0.9)'].tolist()
-
-            #plt.fill_between(f1,f2)
-            #plt.show()
-            print "aba main kaam kuro"
-            y =[]
-            for s in range (0, len(self.__data.columns)):
-                di = self.__data[self.__data.columns[s]]
-                print di
+            # TODO: this part after else block is working as intended
+            if len(self.__data.columns) == 2:
+                y1 = []
+                y2 = []
+                col_A = self.__data[self.__data.columns[0]]
+                col_B = self.__data[self.__data.columns[1]]
                 for i in range(0,len(self.__data),self.__N):
-                    y.append(np.array(di[i:i+self.__N])) 
-                count = 0
+                    y1.append(np.array(col_A[i:i+self.__N]))
+                
+                for i in range(0,len(self.__data),self.__N):
+                    y2.append(np.array(col_B[i:i+self.__N]))  
+
+                for i in range(0,len(self.__data)/self.__N):
+                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                    plt.plot(x,y1[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__data.columns[0])
+                    plt.plot(x,y2[i],color = 'red', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'blue', markersize =1, label = self.__data.columns[1])  
+                    plt.hold(True)
+                    plt.fill_between(x, y1[i],y2[i],color='k',alpha=.5)
+       	 
+                plt.legend(loc='best', fancybox=True, shadow=True)
+                plot_name = self.__param_map.plot_name(self.key)           
+                plt.savefig(plot_name, bbox_inches='tight')
+                plt.close()
+            else:
+                y1 = []
+                col_A = self.__data[self.__data.columns[0]]
+                for i in range(0,len(self.__data),self.__N):
+                    y1.append(np.array(col_A[i:i+self.__N]))
                 
                 for i in range(0,len(self.__data)/self.__N):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    print y[i]
-                #TODO: separate plotting from here, and add separate legend, now same legend, also add fill in
-                # when plotting, if df has two cols, in case of two quantiles, both plotted simultaneously, i.e. x against array y of 2 values
-                    plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)) 
-                    y = []
+                    plt.plot(x,y1[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__data.columns[0]) 
                     plt.hold(True)
-                
-                count = count + 1     	 
-            plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__param_map.plot_name(self.key)
-            #plt.show()            
-            plt.savefig(plot_name, bbox_inches='tight')
-            plt.close()
+                plt.legend(loc='best', fancybox=True, shadow=True)
+                plot_name = self.__param_map.plot_name(self.key)           
+                plt.savefig(plot_name, bbox_inches='tight')
+                plt.close()
 
 
 class Histogram():
@@ -270,3 +284,64 @@ class Boxplot(NP, A):
             count = count + self.__N
         plt.close()
 
+
+
+class Scatterplot(A):
+
+    def __init__(self, data, n, a, parameter, key):
+        print "la hai aaiyo scatterplot samma"
+        self.__data = data
+        print "main data received from summary module: "
+        print self.__data.head(10)
+        print len(self.__data.columns)
+        self.__N = n
+        self.__analysistype = a
+        self.__parameter = parameter
+        self.__param_map = Parameter_mapper(self.__parameter)
+        self.key = key                
+    
+    def one_output(self):
+        if self.__analysistype == A.agent:
+            print " -Warning: too many lines will be printed in a single plot !!! "
+            minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+            for i in minor_index:
+                D = self.__data.xs( int(i) , level='minor')
+            count = 0          
+            for i in range(0,len(D),self.__N):
+                y = np.array(D[i:i+self.__N])
+                x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                #print x
+
+                plt.plot(x,y, linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(count))
+                count = count + 1
+                plt.hold(True)
+            plt.legend(loc='best', fancybox=True, shadow=True)
+            plot_name = self.__param_map.plot_name(self.key) 
+            plt.savefig(plot_name, bbox_inches='tight')
+            plt.close()
+
+        else:
+            y1 = []
+            y2 = []
+            col_A = self.__data[self.__data.columns[0]]
+            col_B = self.__data[self.__data.columns[1]]
+            for i in range(0,len(self.__data),self.__N):
+                y1.append(np.array(col_A[i:i+self.__N]))
+            
+            for i in range(0,len(self.__data),self.__N):
+                y2.append(np.array(col_B[i:i+self.__N]))  
+
+            for i in range(0,len(self.__data)/self.__N):                    
+                colors = (0,0,0)
+                area = np.pi*3
+                
+                plt.scatter(y1[i], y2[i], s=area, c=colors, alpha=0.5)
+                plt.title('Scatter plot')
+                plt.xlabel('x')
+                plt.ylabel('y')
+                
+            plt.legend(loc='best', fancybox=True, shadow=True)
+            plot_name = self.__param_map.plot_name(self.key)           
+            plt.savefig(plot_name, bbox_inches='tight')
+            plt.close()
+            

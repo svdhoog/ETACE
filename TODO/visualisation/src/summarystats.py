@@ -42,8 +42,10 @@ class SummaryStats(A):
             except Exception:        
                 print ("Unrecognized input. Check input and try again!")
                 sys.exit(1)
-            return s.append(self.quantile(Q)) # N is the custom value for Quantile that is needed        
-                       
+            s = s.append(self.quantile(Q)) # N is the custom value for Quantile that is needed
+            s.rename(columns = {list(s)[0]: "quantile ("+str(Q)+")"}, inplace = True)        
+            return s
+           
         elif N == 2:
             s1 = pd.DataFrame() # two df needed because df[xy] = z does not work as desired with multi-index
             s2 = pd.DataFrame()
