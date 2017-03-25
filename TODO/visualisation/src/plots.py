@@ -231,7 +231,9 @@ class Histogram():
 
 class Boxplot(NP, A):
     def __init__(self, data, n, a_type, parameter, key):
+        print "data received inside boxplot module"
         self.__data = data
+        print self.__data
         self.__N = n
         self.__a_type = a_type
         self.__parameter = parameter
@@ -253,12 +255,9 @@ class Boxplot(NP, A):
         # box_df['mean'].plot() # shortcut pandas method to plot the whole thing
         # box_df.plot()
         # plt.show()
-        
         t_df = box_df.T
-        t_df = t_df.mean(axis =1)
-        bp = t_df.to_frame().boxplot()
-        #bp = box_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
-        # plt.hold(True)   
+        
+        bp = t_df.boxplot(column = [100,250,500,750,999], positions =[1,2,3,4,5])           
         plot_name = self.__param_map.plot_name(self.key)            
         plt.savefig(plot_name, bbox_inches='tight')      
         plt.clf()
@@ -340,7 +339,7 @@ class Scatterplot(A):
                 plt.xlabel('x')
                 plt.ylabel('y')
                 
-            plt.legend(loc='best', fancybox=True, shadow=True)
+            #plt.legend(loc='best', fancybox=True, shadow=True)
             plot_name = self.__param_map.plot_name(self.key)           
             plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
