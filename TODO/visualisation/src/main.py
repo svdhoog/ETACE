@@ -9,6 +9,8 @@ import operator
 from parameters import A, M, NP
 from summarystats import SummaryStats
 from plots import Plot, Boxplot
+from transform import Transform
+
 
 # the main configuration file 
 config_fname = 'config1.yaml'
@@ -113,15 +115,15 @@ def summary_and_plot(idx, key, df, param):
         P = SummaryStats(df, map_analysis(param['analysis']))
         # then call the desired method, if no plot wanted   
         summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-        print "Dataframe before rolling transform, after summarystats:"
+        #print "Dataframe before rolling transform, after summarystats:"
         dfo = summary_type[param['summary']]()
-        print dfo
-        print "\n"
-        print "Rolling window test \n"
-        print dfo.rolling(window=2,min_periods=2).mean()
-        print "tespachi"
-        
+        T = Transform(dfo)
     
+        # call the function and test each of it        
+        
+        T.annual_quaterly('sum')     
+
+   
 
     def plt_timeseries( idx, df, param ):
         #print df.head(5) 
