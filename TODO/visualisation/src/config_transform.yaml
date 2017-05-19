@@ -1,0 +1,8 @@
+i/o:
+    output_path: '/home/susupta/Desktop/GitHub/ETACE/TODO/visualisation/transform_out'
+
+plot2:
+    variables: 
+        var1: [total_credit]        
+    transform_function: m_o_m
+    

@@ -1,12 +1,39 @@
 #!/usr/bin/env python
 import sys, os
+import yaml
 import numpy as np
 import pandas as pd
 
 class Transform():
-    def __init__(self, data):
+    def __init__(self, data, idx):
         self.__data = data
-        print self.__data
+        self.__idx = idx
+        print self.__idx
+        #print self.__data
+        # the main configuration file 
+        self.__config_fname = 'config_transform.yaml'
+
+
+    # Function to parse transformation parameters from the configuration file
+    def get_parameters(self):
+        try:
+            f = open(self.__config_fname, 'r')
+        except IOError:
+            erf("unable to read file: %s" % self.__config_fname)
+
+        with f as stream:
+            try:
+                p = yaml.load(stream)
+            except yaml.YAMLError, exc: # error-check for incorrect yaml syntax
+                if hasattr(exc, 'problem_mark'):
+                    mark = exc.problem_mark
+                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, self.__config_fname)
+                else:
+                    print " >> Unknown problem with %s file:" % self.__config_fname
+                sys.exit()
+            print p[self.__idx]
+            return p      
+
     
     def q_o_q(self,fn): # method to print quaterly growth rate (quarter on quarter)
         def mean():

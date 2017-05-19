@@ -117,15 +117,19 @@ def summary_and_plot(idx, key, df, param):
         summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
         #print "Dataframe before rolling transform, after summarystats:"
         dfo = summary_type[param['summary']]()
-        T = Transform(dfo)
+        T = Transform(dfo, idx)
     
         # call the function and test each of it        
-        
+################################################################################################################       
         #T.q_o_q('sum')  
-        print T.m_o_m_ONE_CYCLE()
+        #print T.m_o_m_ONE_CYCLE()
         #print T.annual_P_I_T('mean')   
         #print T.q_o_q_ONE_CYCLE('mean')
-   
+        print T.get_parameters()
+##################################################################################################################
+
+
+
 
     def plt_timeseries( idx, df, param ):
         #print df.head(5) 
