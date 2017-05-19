@@ -121,8 +121,10 @@ def summary_and_plot(idx, key, df, param):
     
         # call the function and test each of it        
         
-        T.annual_quaterly('sum')     
-
+        #T.q_o_q('sum')  
+        print T.m_o_m_ONE_CYCLE()
+        #print T.annual_P_I_T('mean')   
+        #print T.q_o_q_ONE_CYCLE('mean')
    
 
     def plt_timeseries( idx, df, param ):
