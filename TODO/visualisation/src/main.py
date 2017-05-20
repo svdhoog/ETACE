@@ -188,18 +188,17 @@ def summary_and_plot(idx, key, df, param):
                 
 
 if __name__ == "__main__":
-    # Opening the store to get the HDF file for Agent-type
-    store1 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
-    store1_fn = "Bank"
-    store2 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
-    store2_fn = "Bank2"
-    agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name
-    agent_storelist[store1_fn] = store1
-    agent_storelist[store2_fn] = store2
 
-    #TODO: Fix agent store properties above to parse and fill automatically
-
-    #print agent_store_list.keys()
+    # Get parameters from the yaml file to read the i/o information
+    x = get_parameters()
+    for ix in x.keys(): 
+        if ix in'i/o':
+            fp = x[ix]['input_path']
+    agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name 
+    for key, value in fp.iteritems():
+        agent_storelist[key] = pd.io.pytables.HDFStore(value)
+               
+    #TODO: Fix agent store properties above to parse/ read from terminal 
 
     agent_dframes = {} # dictonary to hold all the main dataframes of different agenttypes
 
@@ -228,11 +227,12 @@ if __name__ == "__main__":
         d = pd.concat(df_list)   
         del df_list
         agent_dframes[agentname] = d
+        agentstore.close()
 
     print agent_dframes.keys()
 
     # Read the desired input parameters
-    x = get_parameters()
+    # x = get_parameters()
     for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
         if idx not in'i/o': #skipping i/o value
             inner_d = x[idx] # required values are in lower hierarchy, so inner dictionary
@@ -252,6 +252,10 @@ if __name__ == "__main__":
                         var_dic[param['variables'][k][0]] = var_filter_list
                     else:
                         var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present
+                
+                #TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse  
+
+                d = agent_dframes[param['agent']] #comment: this can be replaced in line below to save memory, here now just for simplicity 
                 # first stage filtering, where all input variables are sliced with the desired set and run values
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
                 # second stage of filtering for filtering the variables according to the values
@@ -269,9 +273,7 @@ if __name__ == "__main__":
                     else:
                         df_main = df
                         del df
-                    
-
-
+                   
                 #####################################################################                
                 #if param['conditional_filtering']['yes/no'] == True:
                 #    print "lau hai"
@@ -288,4 +290,4 @@ if __name__ == "__main__":
                 
                 var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
-    store.close()
+    #store.close() #replaced above

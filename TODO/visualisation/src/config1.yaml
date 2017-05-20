@@ -1,5 +1,8 @@
 i/o:
-    input_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/timeseries_classify_LS_input'
+    input_path: 
+        Bank: '/home/susupta/Desktop/GitHub/Bank/Bank.h5' # please name the key as the agent name
+        Eurostat: '/home/susupta/Desktop/GitHub/Bank/Eurostat.h5'
+
 
     output_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/timeseries_classify_LS_output'
 
