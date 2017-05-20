@@ -117,8 +117,7 @@ def summary_and_plot(idx, key, df, param):
     
         # call the function and test each of it        
 
-        print T.get_parameters()
-
+        #print T.get_parameters()
 
 
     def plt_timeseries( idx, df, param ):
@@ -191,31 +190,52 @@ def summary_and_plot(idx, key, df, param):
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
     #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
-    store = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
-    #store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
-    # Main dataframe to hold all the dataframes of each instance    
-    d = pd.DataFrame()
-    # Going through sets and runs in the HDF file
-    df_list =[]
-    for key in store.keys():
-        # getting set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
-        sets_runs = process_hdf_keys(key)        
-        s = sets_runs[0]
-        r = sets_runs[1]
-        # Opening Panel the particular set and run        
-        pnl = store.select(key)
-        # Converting panel to Dataframe        
-        df = pnl.to_frame()
-        # Adding two columns for set and run into the dataframe for two added level of indexing  
-        df['set'] = s
-        df['run'] = r
-        df.set_index('run', append = True, inplace = True)
-        df.set_index('set', append = True, inplace = True)
-        df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
-        
-    # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
-    d = pd.concat(df_list)   
-    del df_list
+    store1 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    store2 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    agent_store_list = []
+    agent_store_list.append(store1)
+    agent_store_list.append(store2)
+    tmp_agent_dframes = {}
+    N = 1
+    for store in agent_store_list:
+        tmp_agent_dframes['df'+str(N)] = pd.DataFrame()
+        N = N +1
+    #print agent_dframes
+    agent_dframes = {}
+
+    for d in tmp_agent_dframes:
+        name = d        
+        #print store_list[1].keys()
+        #print store_list[0].keys()
+        #store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
+        # Main dataframe to hold all the dataframes of each instance    
+        #####d = pd.DataFrame()
+        # Going through sets and runs in the HDF file
+        df_list =[]
+        for key in store.keys():
+            # getting set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
+            sets_runs = process_hdf_keys(key)        
+            s = sets_runs[0]
+            r = sets_runs[1]
+            # Opening Panel the particular set and run        
+            pnl = store.select(key)
+            # Converting panel to Dataframe        
+            df = pnl.to_frame()
+            # Adding two columns for set and run into the dataframe for two added level of indexing  
+            df['set'] = s
+            df['run'] = r
+            df.set_index('run', append = True, inplace = True)
+            df.set_index('set', append = True, inplace = True)
+            df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
+
+            
+        # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
+        d = pd.concat(df_list)   
+        del df_list
+        agent_dframes[name] = d
+
+    print agent_dframes
+
     # Read the desired input parameters
     x = get_parameters()
     for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
@@ -254,6 +274,9 @@ if __name__ == "__main__":
                     else:
                         df_main = df
                         del df
+                    
+
+
                 #####################################################################                
                 #if param['conditional_filtering']['yes/no'] == True:
                 #    print "lau hai"

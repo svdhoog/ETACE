@@ -8,7 +8,7 @@ class Transform():
     def __init__(self, data, idx):
         self.__data = data
         self.__idx = idx
-        print self.__idx
+        #print self.__idx
         #print self.__data
         # the main configuration file 
         self.__config_fname = 'config_transform.yaml'
@@ -33,8 +33,8 @@ class Transform():
                 sys.exit()
 
             variables = p[self.__idx]['variables']
-            print variables.values()
-            print self.__data[variables.values()]              
+            #print variables.values()
+            #print self.__data[variables.values()]              
             return p[self.__idx]['variables']      
 
 #TODO: Change the data in below functions with the data returned from get_parameters function above
