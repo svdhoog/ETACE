@@ -189,36 +189,32 @@ def summary_and_plot(idx, key, df, param):
 
 if __name__ == "__main__":
     # Opening the store to get the HDF file for Agent-type
-    #store = pd.io.pytables.HDFStore('/home/etaceguest/Krishna/visualisation_test/Data/correct_data/agent_separated/ClearingHouse.h5')
     store1 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
+    store1_fn = "Bank"
     store2 = pd.io.pytables.HDFStore('/home/susupta/Desktop/GitHub/Bank/Bank.h5')
-    agent_store_list = []
-    agent_store_list.append(store1)
-    agent_store_list.append(store2)
-    tmp_agent_dframes = {}
-    N = 1
-    for store in agent_store_list:
-        tmp_agent_dframes['df'+str(N)] = pd.DataFrame()
-        N = N +1
-    #print agent_dframes
-    agent_dframes = {}
+    store2_fn = "Bank2"
+    agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name
+    agent_storelist[store1_fn] = store1
+    agent_storelist[store2_fn] = store2
 
-    for d in tmp_agent_dframes:
-        name = d        
-        #print store_list[1].keys()
-        #print store_list[0].keys()
-        #store = pd.io.pytables.HDFStore('/home/etace-conquaire/Desktop/Github_KD/Bank/Bank.h5')    
-        # Main dataframe to hold all the dataframes of each instance    
-        #####d = pd.DataFrame()
+    #TODO: Fix agent store properties above to parse and fill automatically
+
+    #print agent_store_list.keys()
+
+    agent_dframes = {} # dictonary to hold all the main dataframes of different agenttypes
+
+    for agentname, agentstore in agent_storelist.iteritems():
+        # Main dataframe to hold all the dataframes of each instance (one agenttype)   
+        d = pd.DataFrame()
         # Going through sets and runs in the HDF file
         df_list =[]
-        for key in store.keys():
+        for key in agentstore.keys():
             # getting set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
             sets_runs = process_hdf_keys(key)        
             s = sets_runs[0]
             r = sets_runs[1]
             # Opening Panel the particular set and run        
-            pnl = store.select(key)
+            pnl = agentstore.select(key)
             # Converting panel to Dataframe        
             df = pnl.to_frame()
             # Adding two columns for set and run into the dataframe for two added level of indexing  
@@ -227,14 +223,13 @@ if __name__ == "__main__":
             df.set_index('run', append = True, inplace = True)
             df.set_index('set', append = True, inplace = True)
             df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
-
-            
+    
         # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
         d = pd.concat(df_list)   
         del df_list
-        agent_dframes[name] = d
+        agent_dframes[agentname] = d
 
-    print agent_dframes
+    print agent_dframes.keys()
 
     # Read the desired input parameters
     x = get_parameters()
