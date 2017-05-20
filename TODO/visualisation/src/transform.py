@@ -31,10 +31,14 @@ class Transform():
                 else:
                     print " >> Unknown problem with %s file:" % self.__config_fname
                 sys.exit()
-            print p[self.__idx]
-            return p      
 
-    
+            variables = p[self.__idx]['variables']
+            print variables.values()
+            print self.__data[variables.values()]              
+            return p[self.__idx]['variables']      
+
+#TODO: Change the data in below functions with the data returned from get_parameters function above
+
     def q_o_q(self,fn): # method to print quaterly growth rate (quarter on quarter)
         def mean():
             roll_mean = self.__data.rolling(window=3,min_periods=3).mean().dropna() # first get rolling window values with step 3 and initial buffer 3

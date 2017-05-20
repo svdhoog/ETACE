@@ -98,10 +98,6 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
     else:
         return filtered
 
-def super_test(v):
-    v = v*(-1)
-    return v
-        
 
 # Function to bridge other classes (summarystats, and plot)
 def summary_and_plot(idx, key, df, param):
@@ -120,14 +116,8 @@ def summary_and_plot(idx, key, df, param):
         T = Transform(dfo, idx)
     
         # call the function and test each of it        
-################################################################################################################       
-        #T.q_o_q('sum')  
-        #print T.m_o_m_ONE_CYCLE()
-        #print T.annual_P_I_T('mean')   
-        #print T.q_o_q_ONE_CYCLE('mean')
-        print T.get_parameters()
-##################################################################################################################
 
+        print T.get_parameters()
 
 
 

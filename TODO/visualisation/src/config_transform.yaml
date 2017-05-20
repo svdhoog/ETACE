@@ -3,6 +3,7 @@ i/o:
 
 plot2:
     variables: 
-        var1: [total_credit]        
+        var1: total_credit
+        var2: total_credit        
     transform_function: m_o_m
     
