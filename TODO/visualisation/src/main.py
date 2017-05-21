@@ -116,8 +116,8 @@ def summary_and_plot(idx, key, df, param):
         T = Transform(dfo, idx)
     
         # call the function and test each of it        
-
-        #print T.get_parameters()
+        print T.m_o_m()
+        print T.get_variables()
 
 
     def plt_timeseries( idx, df, param ):

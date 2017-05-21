@@ -6,4 +6,11 @@ plot2:
         var1: total_credit
         var2: total_credit        
     transform_function: m_o_m
-    
+
+
+plot1:
+    variables: 
+        var1: doshro
+        var2: yo hai ta        
+    transform_function: m_o_m
+        
