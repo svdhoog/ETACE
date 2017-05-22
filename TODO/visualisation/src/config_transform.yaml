@@ -1,16 +1,13 @@
-i/o:
-    output_path: '/home/susupta/Desktop/GitHub/ETACE/TODO/visualisation/transform_out'
 
 plot2:
     variables: 
         var1: total_credit
         var2: total_credit        
-    transform_function: m_o_m
+    transform_function: m_o_m_ONE_CYCLE
+    aggregate: mean    
+ 
+    write_file: yes
+    output_path: '/home/susupta/Desktop/GitHub/ETACE/TODO/visualisation/transform_out/outsent.h5'
+    hdf_groupname: 'total_credit_ratio'   
+    
 
-
-plot1:
-    variables: 
-        var1: doshro
-        var2: yo hai ta        
-    transform_function: m_o_m
-        

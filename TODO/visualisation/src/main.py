@@ -99,14 +99,10 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
         return filtered
 
 
-# Function to bridge other classes (summarystats, and plot)
+# Function to bridge other classes (summarystats, transform, and plot)
 def summary_and_plot(idx, key, df, param):
-    #print key
-    #print df 
-    # Function that calls the timeseries plot
-    
+        
     def var_transform(idx,df,param):
-        print "arrived in transform module, in main.py"
         # instantiate a class with desired analysis type
         P = SummaryStats(df, map_analysis(param['analysis']))
         # then call the desired method, if no plot wanted   
@@ -116,12 +112,12 @@ def summary_and_plot(idx, key, df, param):
         T = Transform(dfo, idx)
     
         # call the function and test each of it        
-        print T.m_o_m()
-        print T.get_variables()
+        #print T.m_o_m()
+        #print T.get_parameters()
+        T.main_method()
 
 
     def plt_timeseries( idx, df, param ):
-        #print df.head(5) 
         # instantiate a class with desired analysis type
         P = SummaryStats(df, map_analysis(param['analysis']))
         # then call the desired method, if no plot wanted   
@@ -228,9 +224,7 @@ if __name__ == "__main__":
         del df_list
         agent_dframes[agentname] = d
         agentstore.close()
-
-    print agent_dframes.keys()
-
+    
     # Read the desired input parameters
     # x = get_parameters()
     for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
