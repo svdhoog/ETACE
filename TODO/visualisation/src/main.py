@@ -189,12 +189,13 @@ if __name__ == "__main__":
     x = get_parameters()
     for ix in x.keys(): 
         if ix in'i/o':
-            fp = x[ix]['input_path']
+            fp = x[ix]['input_path'] # get input file path
     agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name 
     for key, value in fp.iteritems():
-        agent_storelist[key] = pd.io.pytables.HDFStore(value)
-               
-    #TODO: Fix agent store properties above to parse/ read from terminal 
+        
+        agent_storelist[key] = pd.io.pytables.HDFStore(value) # all the agent HDF files are stored in this dict
+         
+    
 
     agent_dframes = {} # dictonary to hold all the main dataframes of different agenttypes
 
@@ -222,9 +223,12 @@ if __name__ == "__main__":
         # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
         d = pd.concat(df_list)   
         del df_list
-        agent_dframes[agentname] = d
+        agent_dframes[agentname] = d # this dict contains agent-type names as keys, and the corresponding dataframes as values
         agentstore.close()
-    
+    del agent_storelist
+    #print sys.getsizeof(agent_storelist)
+    #print sys.getsizeof(agent_dframes)
+    ################################################################(memory profiling, and rest from here)
     # Read the desired input parameters
     # x = get_parameters()
     for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
@@ -244,9 +248,10 @@ if __name__ == "__main__":
                         for i in range(1,len(param['variables'][k])):
                             var_filter_list.append(process_string(param['variables'][k][i]))
                         var_dic[param['variables'][k][0]] = var_filter_list
+                        
                     else:
                         var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present
-                
+                        
                 #TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse  
 
                 d = agent_dframes[param['agent']] #comment: this can be replaced in line below to save memory, here now just for simplicity 

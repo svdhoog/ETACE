@@ -6,37 +6,37 @@ i/o:
 
     output_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/timeseries_classify_LS_output'
 
-#plot1:
-#    timeseries:
-#        agent: Bank
-#        analysis: multiple_set
-#        variables: 
-##            var1: [total_credit, '>[700]', '<[800]']
-#            var1: [total_credit]       
-##            var2: [equity, '>[900]']
-#        set: [1]
-#        run: [1,2]
-#        major: [range,[6020,26000,20]]
-#        minor: [1,5,7] 
-#        summary: mean
-#        conditional_filtering:
-#            yes/no: yes
-#            condition_var: [total_credit, '>[700]']
-#            operation_var: [total_credit, '>[700]', '<[800]']
-
-plot2:
-    transform:
+plot1:
+    timeseries:
         agent: Bank
         analysis: multiple_set
         variables: 
-            var1: [total_credit]       
+#            var1: [total_credit, '>[700]', '<[800]']
+             var1: [total_credit]       
+#            var2: [equity, '>[900]']
         set: [1]
-        run: [1]
-        major: [range,[6020,6300,20]]
-        minor: [1,5] 
+        run: [1,2]
+        major: [range,[6020,26000,20]]
+        minor: [1,5,7] 
         summary: mean
         conditional_filtering:
-            yes/no: no
+            yes/no: yes
+            condition_var: [total_credit, '>[700]']
+            operation_var: [total_credit, '>[700]', '<[800]']
+
+#plot2:
+#    transform:
+#        agent: Bank
+#        analysis: multiple_set
+#        variables: 
+#            var1: [total_credit]       
+#        set: [1]
+#        run: [1]
+#        major: [range,[6020,6300,20]]
+#        minor: [1,5] 
+#        summary: mean
+#        conditional_filtering:
+#            yes/no: no
             
 
 #plot3:
