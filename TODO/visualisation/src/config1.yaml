@@ -11,9 +11,9 @@ plot1:
         agent: Bank
         analysis: multiple_set
         variables: 
-#            var1: [total_credit, '>[700]', '<[800]']
-             var1: [total_credit]       
-#            var2: [equity, '>[900]']
+#              var1: [total_credit, '>[700]', '<[800]']
+              var1: [total_credit]       
+#             var2: [equity, '>[900]']
         set: [1]
         run: [1,2]
         major: [range,[6020,26000,20]]

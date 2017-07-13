@@ -20,6 +20,7 @@ def erf(msg):
     print " >> Error: %s" % msg
     sys.exit()
 
+
 # Function to parse input parameters from the main configuration file
 def get_parameters():
     try:
@@ -38,6 +39,7 @@ def get_parameters():
                 print " >> Unknown problem with %s file:" % config_fname
             sys.exit()
         return p                
+
 
 # Function to process the parsed configuration file values to make them usable
 def process_parameters(p): 
@@ -63,6 +65,7 @@ def process_hdf_keys( string_in ): # Function to extract set and run values from
     tmp_string = string_in.replace('_run_', ',')        
     string_out = find_between(tmp_string,"/set_","_iters")
     return list(map(int, string_out.split(',')))
+
 
 def process_string( string_in ):
     def find_between( s, first, last ):
@@ -96,8 +99,8 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
             count = count + 1
         return df
     else:
-        return filtered
-
+        df = pd.DataFrame(filtered[dkey]) 
+        return df  
 
 # Function to bridge other classes (summarystats, transform, and plot)
 def summary_and_plot(idx, key, df, param):
@@ -184,7 +187,7 @@ def summary_and_plot(idx, key, df, param):
                 
 
 if __name__ == "__main__":
-
+    
     # Get parameters from the yaml file to read the i/o information
     x = get_parameters()
     for ix in x.keys(): 
@@ -198,7 +201,7 @@ if __name__ == "__main__":
     
 
     agent_dframes = {} # dictonary to hold all the main dataframes of different agenttypes
-
+    
     for agentname, agentstore in agent_storelist.iteritems():
         # Main dataframe to hold all the dataframes of each instance (one agenttype)   
         d = pd.DataFrame()
@@ -241,8 +244,11 @@ if __name__ == "__main__":
                 #print param['conditional_filtering']['yes/no']        
                 var_dic = {}  # dictionary to map plot variables, and the desired operator with filter values
                 var_list =[]  # to collect list of variables, if later need to pass without any filtering, also used in first stage filtering
+
                 for k in param['variables'].keys():
+                                       
                     var_list.append(param['variables'][k][0]) # variables are the first element so index 0 used
+                    
                     if len(param['variables'][k])>1: # check if filter condition specified, if not then the argument is just of length one, as seen in check
                         var_filter_list = []
                         for i in range(1,len(param['variables'][k])):
@@ -252,17 +258,18 @@ if __name__ == "__main__":
                     else:
                         var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present
                         
+
                 #TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse  
 
                 d = agent_dframes[param['agent']] #comment: this can be replaced in line below to save memory, here now just for simplicity 
                 # first stage filtering, where all input variables are sliced with the desired set and run values
+
                 filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
                 # second stage of filtering for filtering the variables according to the values
 
                 df_main = pd.DataFrame()
                 # function call to filter based on variable value
                 for dkey, dval in var_dic.iteritems():
-                    #print dkey,dval
                     df = filter_by_value(dkey, dval, filtered)   
                     if dval is not None:
                         if df_main.empty:
