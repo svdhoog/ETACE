@@ -1,5 +1,5 @@
 plot1:
-    number_plots: one
+    number_plots: many
     plot_name: first_one.png
     l_lim: no
     u_lim: no

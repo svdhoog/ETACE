@@ -106,36 +106,53 @@ class Timeseries(A):
         self.key = key
                 
     def many_output(self):
-        if self.__analysistype == A.agent:
-            print " -Warning: too many plots will be produced !!! " 
-            count = 0                        
-            minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
-            for i in minor_index:
-                D = self.__data.xs( int(i) , level='minor')
-                   
-                for i in range(0,len(D),self.__N):
-                    y = np.array(D[i:i+self.__N])                
+        countA = 0
+        for i in self.__data.columns:
+            
+            df = pd.DataFrame(self.__data[i])
+            print df.head(5)
+            if self.__analysistype == A.agent:
+                print " -Warning: too many plots will be produced !!! " 
+                count = 0                        
+                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
+                 
+                for i in minor_index:
+                    D = df.xs( int(i) , level='minor')
+                       
+                    for i in range(0,len(D),self.__N):
+                        y = np.array(D[i:i+self.__N])                
+                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                        plt.plot(x,y,color = 'blue', linestyle=self.__param_map.linestyle(self.key), label = self.__param_map.x_label(self.key)) 
+                        plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
+                        plt.savefig(plot_name, bbox_inches='tight')
+                        plt.close()
+                        count = count + 1	                
+            else:
+                y =[]
+                for i in range(0,len(df),self.__N):
+                    y.append(np.array(df[i:i+self.__N]))        
+                count = 0 
+                
+                print len(df)
+                print len(df.index.get_level_values('major').unique())
+                print self.__N
+                      
+             
+                for i in range(0,len(df)/self.__N):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y,color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.x_label(self.key)) 
-                    plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
-                    plt.savefig(plot_name, bbox_inches='tight')
-                    plt.close()
-                    count = count + 1	                
-        else:
-            y =[]
-            for i in range(0,len(self.__data),self.__N):
-                y.append(np.array(self.__data[i:i+self.__N]))        
-            count = 0            
-            for i in range(0,len(self.__data)/self.__N):
-                x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =4, label = self.__param_map.legend_label(self.key)) 
-                plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"
-                plt.savefig(plot_name, bbox_inches='tight')	 
-                count = count + 1
-                plt.clf() # clear current figure
-            plt.close()    
+                    plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__param_map.legend_label(self.key)) 
+                    plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+str(countA)+".png"
+                    plt.savefig(plot_name, bbox_inches='tight')	 
+                    
+                    count = count + 1
+                    countA = countA + 1 
+                    plt.clf() # clear current figure
+                plt.close()    
     
     def one_output(self):
+        #for i in self.__data.columns:
+        #    df = pd.DataFrame(self.__data[i])
+            
         if self.__analysistype == A.agent:
             print " -Warning: too many lines will be printed in a single plot !!! "
             minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 

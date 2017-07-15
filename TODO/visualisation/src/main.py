@@ -125,9 +125,10 @@ def summary_and_plot(idx, key, df, param):
         P = SummaryStats(df, map_analysis(param['analysis']))
         # then call the desired method, if no plot wanted   
         summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-        
+        ############ The length of each of the variable is different, so this needs to be fixed#################################
+        ########################################################################################################################
         n = len(param['major']) # number of datapoints for x-axis
-        step = len(param['minor'])
+        ##step = len(param['minor'])
         # instantiate a plot class with desired output (One, Many)
         Fig = Plot(idx, summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
         # Calling the plot class instance with the desired kind of plot
@@ -270,15 +271,18 @@ if __name__ == "__main__":
                 df_main = pd.DataFrame()
                 # function call to filter based on variable value
                 for dkey, dval in var_dic.iteritems():
-                    df = filter_by_value(dkey, dval, filtered)   
-                    if dval is not None:
-                        if df_main.empty:
-                            df_main = df
-                        else:
-                            df_main = pd.concat([df_main,df], axis = 1)
-                    else:
+                    df = filter_by_value(dkey, dval, filtered) 
+                     
+                    #if dval is not None:
+                    if df_main.empty:
                         df_main = df
-                        del df
+                    else:
+                        df_main = pd.concat([df_main,df], axis = 1)
+                    #else:
+                    #    if df_main.empty:
+                    #        df_main = df
+                    
+                    del df
                    
                 #####################################################################                
                 #if param['conditional_filtering']['yes/no'] == True:
@@ -292,8 +296,12 @@ if __name__ == "__main__":
                 # calling appropriate function based on read-in key from config file
                 # also passing in the filtered dataframe to the function at the same time 
                 #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
+                #print df_main
+                #print len(df_main.index.get_level_values('major').unique())
+                #print len(param['major'])
+                print df_main.head(15)    
                 summary_and_plot(idx,key, df_main, param)                
                 
-                var_dic.clear() # dictionary of mapping between plot var abd operator cleared for next cycle of plot-type
+                var_dic.clear() # dictionary of mapping between plot var and operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
     #store.close() #replaced above
