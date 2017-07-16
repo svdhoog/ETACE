@@ -298,10 +298,8 @@ if __name__ == "__main__":
                 #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
                 #print df_main
                 #print len(df_main.index.get_level_values('major').unique())
-                #print len(param['major'])
-                print df_main.head(15)    
-                summary_and_plot(idx,key, df_main, param)                
-                
+                #print len(param['major'])                    
+                summary_and_plot(idx,key, df_main, param)                                
                 var_dic.clear() # dictionary of mapping between plot var and operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
     #store.close() #replaced above
