@@ -13,7 +13,7 @@ from transform import Transform
 
 
 # the main configuration file 
-config_fname = 'config1.yaml'
+config_fname = 'config.yaml'
 
 # function to output the error message and exit
 def erf(msg):
@@ -63,7 +63,7 @@ def process_hdf_keys( string_in ): # Function to extract set and run values from
         except ValueError:
             return ""    
     tmp_string = string_in.replace('_run_', ',')        
-    string_out = find_between(tmp_string,"/set_","_iters")
+    string_out = find_between(tmp_string,"/set_","_iters")    #TODO: the trailing slash is causing error, so before passing on check if trailing slash present, if yes remove
     return list(map(int, string_out.split(',')))
 
 
@@ -103,50 +103,38 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
         return df  
 
 # Function to bridge other classes (summarystats, transform, and plot)
-def summary_and_plot(idx, key, df, param):
-        
-    def var_transform(idx,df,param):
-        # instantiate a class with desired analysis type
-        P = SummaryStats(df, map_analysis(param['analysis']))
-        # then call the desired method, if no plot wanted   
-        summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-        #print "Dataframe before rolling transform, after summarystats:"
-        dfo = summary_type[param['summary']]()
-        T = Transform(dfo, idx)
+def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot type, df = data, param = parameter from yaml, outpath = output folder
     
-        # call the function and test each of it        
-        #print T.m_o_m()
-        #print T.get_parameters()
-        T.main_method()
+    if 'summary' in param.keys(): # If summary specified, compute summary-statistics
+        P = SummaryStats(df, param) # instantiate summary class
+        data = P.compute_summary() # compute summary
+    else:
+        data = df   
+    #TODO: add a boxplot check, and assign only for other cases, except boxplot, to save memory         
+
+    def plt_timeseries():
+        n = len(param['major'])  # TODO:length of df for each var unequal for filter case, so needs fix
+        T = Plot(idx, data) # instantiate plot class
+        T.timeseries(n, map_analysis(param['analysis']), outpath) # call timeseries function from plot class
 
 
-    def plt_timeseries( idx, df, param ):
-        # instantiate a class with desired analysis type
-        P = SummaryStats(df, map_analysis(param['analysis']))
-        # then call the desired method, if no plot wanted   
-        summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-        ############ The length of each of the variable is different, so this needs to be fixed#################################
-        ########################################################################################################################
-        n = len(param['major']) # number of datapoints for x-axis
+    def plt_boxplot():  
+        n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)     
+        B = Plot(idx, df) # for boxplot whole df passed, not the one with summary
+        B.boxplot( n, map_analysis(param['analysis'])) 
+        
+
+    def var_transform():
+        Tf = Transform(idx, data)
+        Tf.main_method()
+
+    def plt_scatterplot():        
+        ##n = len(param['major']) # number of datapoints for x-axis
         ##step = len(param['minor'])
-        # instantiate a plot class with desired output (One, Many)
-        Fig = Plot(idx, summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
-        # Calling the plot class instance with the desired kind of plot
 
-        Fig.timeseries( n, map_analysis(param['analysis'])) 
-
-
-    # Function that calls the boxplot
-    def plt_boxplot( idx, df, param ):  
-        n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)    
-        # instantiate a boxplot class
-        #Fig = Boxplot(df, n, param['analysis'])  
-        Fig = Plot(idx, df)
-
-        Fig.boxplot( n, map_analysis(param['analysis'])) 
-        # call the appropriate method within the class
-        #Fig.plot()
-
+        S = Plot(idx, data) 
+        S.scatterplot(n, map_analysis(param['analysis'])) 
+ 
 
     # Function that calls the timeseries plot
     def plt_histogram( idx, df, param ):
@@ -165,27 +153,11 @@ def summary_and_plot(idx, key, df, param):
         # Calling the plot class instance with the desired kind of plot
         Fig.histogram( n )
 
-    def plt_scatterplot( idx, df, param ):
-            #print df.head(5) 
-            # instantiate a class with desired analysis type
-            P = SummaryStats(df, map_analysis(param['analysis']))
-            # then call the desired method, if no plot wanted   
-            summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-            
-            n = len(param['major']) # number of datapoints for x-axis
-            step = len(param['minor'])
-            # instantiate a plot class with desired output (One, Many)
-            Fig = Plot(idx, summary_type[param['summary']]()) # argument is one option selected from summary_type dict above
-            # Calling the plot class instance with the desired kind of plot
 
-            Fig.scatterplot( n, map_analysis(param['analysis'])) 
+    plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot, 'transform':var_transform} 
+    return plot_function[key]()                
 
 
-    plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot, 'transform':var_transform} #dictionary of desired functions
-    # calling appropriate function based on read-in key from config file
-    # also passing in the filtered dataframe to the function at the same time 
-    return plot_function[key](idx, df, param) # need to cast df to float
-                
 
 if __name__ == "__main__":
     
@@ -194,6 +166,7 @@ if __name__ == "__main__":
     for ix in x.keys(): 
         if ix in'i/o':
             fp = x[ix]['input_path'] # get input file path
+            outpath = x[ix]['output_path']
     agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name 
     for key, value in fp.iteritems():
         
@@ -298,8 +271,8 @@ if __name__ == "__main__":
                 #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
                 #print df_main
                 #print len(df_main.index.get_level_values('major').unique())
-                #print len(param['major'])                    
-                summary_and_plot(idx,key, df_main, param)                                
+                #print len(param['major'])                   
+                summary_and_plot(idx,key, df_main, param, outpath)                                
                 var_dic.clear() # dictionary of mapping between plot var and operator cleared for next cycle of plot-type
                 del var_list[:] # clearing the list of variables for next cycle
     #store.close() #replaced above
