@@ -5,10 +5,36 @@ import pandas as pd
 from parameters import A # imported self written class from directory
 
 class SummaryStats(A):
-    def __init__(self, data, analysis_type):
+
+    """
+            Takes in a hierarchical dataframe, and returns the dataframe, by aggregating the values on the specified level.
+            Parameters
+            ----------
+            data: [dataframe]
+                A Pandas dataframe containing hiererchial index.
+            analysis type: [integer] 
+                An integer value specifying what summary to compute (mapped to inherited class A) to aggregate upon.
+            Returns
+            -------
+            Pandas dataframe with the aggregated value.                 
+    """
+    def __init__(self, data, param):
         self.__data = data
-        self.__analysis_type = analysis_type
-        #self.__method_type = method_type
+        self.__param = param
+        self.__analysis_type = self.map_analysis()
+
+
+    def compute_summary(self):
+        summary_type = {'mean': self.mean, 'median': self.median, 'upper_quartile': self.upper_quartile,'lower_quartile': self.lower_quartile,'custom_quantile': self.custom_quantile,'minimum': self.minimum,'maximum': self.maximum}            
+        return summary_type[self.__param['summary']]()
+
+
+    def map_analysis(self):         
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}            
+        return analysis_values[self.__param['analysis']]  
+
+
+    
 
     def mean(self):
         agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean().dropna()
