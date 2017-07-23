@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 class Transform():
-    def __init__(self, data, idx):
+    def __init__(self, idx, data):
         self.__data = data
         self.__idx = idx
         # the transform configuration file 
