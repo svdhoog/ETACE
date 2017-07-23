@@ -4,7 +4,7 @@ i/o:
         Eurostat: '/home/susupta/Desktop/GitHub/Bank/Eurostat.h5'
 
 
-    output_path: '/home/susupta/Spaces/ETACE-Conquaire Project/Data/data_reproduction_task/timeseries_classify_LS_output'
+    output_path: '/home/susupta/Desktop/GitHub/ETACE/TODO/visualisation/output'
 
 plot1:
     timeseries:
