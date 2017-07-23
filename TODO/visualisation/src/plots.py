@@ -61,8 +61,8 @@ class Plot(NP,Parameter_mapper):
         self.__parameter = PP.plot_parameters()
         self.__param_map = Parameter_mapper(self.__parameter)   
 
-    def timeseries( self, n, analysis_type ):     
-        T = Timeseries(self.__data, n, analysis_type, self.__parameter, self.key)      
+    def timeseries( self, n, analysis_type, outpath):     
+        T = Timeseries(self.__data, n, analysis_type, self.__parameter, self.key, outpath)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}
@@ -94,7 +94,7 @@ class Plot(NP,Parameter_mapper):
 
 class Timeseries(A):
 
-    def __init__(self, data, n, a, parameter, key):
+    def __init__(self, data, n, a, parameter, key, outpath):
         self.__data = data
         print "main data received from summary module: "
         print self.__data.head(10)
@@ -104,7 +104,8 @@ class Timeseries(A):
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter)
         self.key = key
-                
+        self.outpath = outpath               
+ 
     def many_output(self):
         countA = 0
         for i in self.__data.columns:            
@@ -122,7 +123,7 @@ class Timeseries(A):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
                         plt.plot(x,y,color = 'blue', linestyle=self.__param_map.linestyle(self.key), label = self.__param_map.x_label(self.key)) 
                         plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
-                        plt.savefig(plot_name, bbox_inches='tight')
+                        plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')
                         plt.close()
                         count = count + 1	                
             else:
@@ -134,7 +135,7 @@ class Timeseries(A):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
                     plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__param_map.legend_label(self.key)) 
                     plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+str(countA)+".png"
-                    plt.savefig(plot_name, bbox_inches='tight')	 
+                    plt.savefig(self.outpath+'/'+plot_name, bbox_inches='tight')	 
                     
                     count = count + 1
                     countA = countA + 1 
@@ -161,7 +162,7 @@ class Timeseries(A):
                     plt.hold(True)
                 plt.legend(loc='best', fancybox=True, shadow=True)
                 plot_name = self.__param_map.plot_name(self.key) 
-                plt.savefig(plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                 plt.close()
 
             else:
@@ -186,7 +187,7 @@ class Timeseries(A):
            	 
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__param_map.plot_name(self.key)           
-                    plt.savefig(plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                     plt.close()
                 else:
                     y1 = []
@@ -200,7 +201,7 @@ class Timeseries(A):
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__param_map.plot_name(self.key)           
-                    plt.savefig(plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                     plt.close()
             countA = countA + 1
 
