@@ -1,58 +1,18 @@
 #!/usr/bin/env python
-import sys, os, argparse, yaml
+import sys, os, argparse, operator
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import operator
 
 # helper classes, imported from same directory
-from parameters import A, M, NP
+from parameters import A, main_configuration
 from summarystats import SummaryStats
-from plots import Plot, Boxplot
+from plots import Plot
 from transform import Transform
 
-
-# the main configuration file 
-config_fname = 'config.yaml'
-
-# function to output the error message and exit
-def erf(msg):
+def erf(msg): # function to output the error message and exit
     print " >> Error: %s" % msg
     sys.exit()
-
-
-# Function to parse input parameters from the main configuration file
-def get_parameters():
-    try:
-        f = open(config_fname, 'r')
-    except IOError:
-        erf("unable to read file: %s" % config_fname)
-
-    with f as stream:
-        try:
-            p = yaml.load(stream)
-        except yaml.YAMLError, exc: # error-check for incorrect yaml syntax
-            if hasattr(exc, 'problem_mark'):
-                mark = exc.problem_mark
-                print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, config_fname)
-            else:
-                print " >> Unknown problem with %s file:" % config_fname
-            sys.exit()
-        return p                
-
-
-# Function to process the parsed configuration file values to make them usable
-def process_parameters(p): 
-    indices = ['set','run','major','minor']    
-    for i in indices:
-        if 'range' in str(p[i][0]):  # check if range defined in input configuration file
-            x = p[i][1]
-            try:              
-                if len(x)<3: x.append(1) # if no step size defined in input, add default stepsize of one
-                p[i] = range(x[0],x[1]+x[2],x[2]) # include last value, to make range of yaml file inclusive
-            except:
-                raise AssertionError("In file %s: range expects a list, single value given instead" % config_fname)
-    return p
 
 def process_hdf_keys( string_in ): # Function to extract set and run values from set_*_run_* string 
     def find_between( s, first, last ):
@@ -63,9 +23,8 @@ def process_hdf_keys( string_in ): # Function to extract set and run values from
         except ValueError:
             return ""    
     tmp_string = string_in.replace('_run_', ',')        
-    string_out = find_between(tmp_string,"/set_","_iters")    #TODO: the trailing slash is causing error, so before passing on check if trailing slash present, if yes remove
+    string_out = find_between(tmp_string,"/set_","_iters")    #TODO: trailing slash might cause error, so before passing on check if trailing slash present, if yes remove
     return list(map(int, string_out.split(',')))
-
 
 def process_string( string_in ):
     def find_between( s, first, last ):
@@ -79,7 +38,6 @@ def process_string( string_in ):
     string_out = find_between(string_in,"[","]")
     return list([operator,float(string_out)])
 
-
 def map_analysis(val): # map analysis type from user input to parameter class             
     analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
     return analysis_values[val]  
@@ -91,16 +49,16 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
         index = dkey
         df = pd.DataFrame(filtered[index])        
         while count < len(dval):
-            options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq}          
+            options = {'>' : operator.gt, '<' : operator.lt, '>=' : operator.ge, '<=' : operator.le, '==' : operator.eq} #operator.gt(a,b) :compare a&b, return all a larger than b        
             val = str(dval[count][0])
-            #inside parenthesis is operator function in form operator.gt(a,b) where a and b are compared, the filtered value obtained after comparing is appended as the particular dataframe of the resp var
-            df = df[options[val](filtered[index],dval[count][1])].dropna()
-            # TODO: for line above, check how to replace warning (warning because df size before and after assignment is unequal)
+            #df = df[options[val](filtered[index],dval[count][1])].dropna()
+            df = df[options[val](filtered[index],dval[count][1])]
             count = count + 1
         return df
     else:
         df = pd.DataFrame(filtered[dkey]) 
         return df  
+
 
 # Function to bridge other classes (summarystats, transform, and plot)
 def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot type, df = data, param = parameter from yaml, outpath = output folder
@@ -121,7 +79,7 @@ def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot 
     def plt_boxplot():  
         n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)     
         B = Plot(idx, df) # for boxplot whole df passed, not the one with summary
-        B.boxplot( n, map_analysis(param['analysis'])) 
+        B.boxplot( n, map_analysis(param['analysis']), param) 
         
 
     def var_transform():
@@ -129,14 +87,14 @@ def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot 
         Tf.main_method()
 
     def plt_scatterplot():        
-        ##n = len(param['major']) # number of datapoints for x-axis
+        n = len(param['major']) # number of datapoints for x-axis
         ##step = len(param['minor'])
 
         S = Plot(idx, data) 
         S.scatterplot(n, map_analysis(param['analysis'])) 
  
 
-    # Function that calls the timeseries plot
+    # Function to call the timeseries plot
     def plt_histogram( idx, df, param ):
 
         # instantiate a class with desired analysis type
@@ -150,129 +108,81 @@ def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot 
         # instantiate a plot class with desired output (One, Many)
         Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
 
-        # Calling the plot class instance with the desired kind of plot
+        # call the plot class instance with the desired kind of plot
         Fig.histogram( n )
-
 
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot, 'transform':var_transform} 
     return plot_function[key]()                
 
 
-
 if __name__ == "__main__":
-    
-    # Get parameters from the yaml file to read the i/o information
-    x = get_parameters()
-    for ix in x.keys(): 
-        if ix in'i/o':
-            fp = x[ix]['input_path'] # get input file path
-            outpath = x[ix]['output_path']
-    agent_storelist = {} # dict that has all the agenttype h5 file info mapped to agent name 
-    for key, value in fp.iteritems():
-        
-        agent_storelist[key] = pd.io.pytables.HDFStore(value) # all the agent HDF files are stored in this dict
-         
-    
 
-    agent_dframes = {} # dictonary to hold all the main dataframes of different agenttypes
+    P = main_configuration() # instantiate main_configuration class to process main yaml files
+    inpath = P.input_fpath()
+    outpath = P.output_fpath()
     
-    for agentname, agentstore in agent_storelist.iteritems():
-        # Main dataframe to hold all the dataframes of each instance (one agenttype)   
-        d = pd.DataFrame()
-        # Going through sets and runs in the HDF file
+    agent_storelist = {} # all the agent HDF files are stored in this dict
+    for key, value in inpath.iteritems():        
+        agent_storelist[key] = pd.io.pytables.HDFStore(value) 
+
+    agent_dframes = {} # All the main dataframes of different agenttypes are stored in this dict
+    
+    for agentname, agentstore in agent_storelist.iteritems():           
+        d = pd.DataFrame() # Main dataframe to hold all the dataframes of each instance (one agenttype)        
         df_list =[]
-        for key in agentstore.keys():
-            # getting set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
-            sets_runs = process_hdf_keys(key)        
+        for key in agentstore.keys(): # go through sets and runs in the HDF file            
+            sets_runs = process_hdf_keys(key) # get set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm       
             s = sets_runs[0]
-            r = sets_runs[1]
-            # Opening Panel the particular set and run        
-            pnl = agentstore.select(key)
-            # Converting panel to Dataframe        
-            df = pnl.to_frame()
-            # Adding two columns for set and run into the dataframe for two added level of indexing  
+            r = sets_runs[1]                   
+            pnl = agentstore.select(key) # open datapanel for particular set and run                    
+            df = pnl.to_frame() # convert panel to Dataframe 
+            # Add two columns for set and run into the dataframe for two added level of indexing  
             df['set'] = s
             df['run'] = r
             df.set_index('run', append = True, inplace = True)
             df.set_index('set', append = True, inplace = True)
             df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
-    
-        # Adding each of the dataframe from panel into a main dataframe which has all the sets  and runs        
-        d = pd.concat(df_list)   
+                  
+        d = pd.concat(df_list) # Add each dataframe from panel into a main dataframe containing all sets and runs    
         del df_list
         agent_dframes[agentname] = d # this dict contains agent-type names as keys, and the corresponding dataframes as values
         agentstore.close()
     del agent_storelist
-    #print sys.getsizeof(agent_storelist)
-    #print sys.getsizeof(agent_dframes)
-    ################################################################(memory profiling, and rest from here)
-    # Read the desired input parameters
-    # x = get_parameters()
-    for idx in x.keys(): # looping through the plots in config i.e. plot1, plot2 etc
-        if idx not in'i/o': #skipping i/o value
-            inner_d = x[idx] # required values are in lower hierarchy, so inner dictionary
-            frames= []       # initialize list to store filtered dataframes according to variables 
-            for key in inner_d.keys(): # looping through inner dict read from config file, here timeseries, boxplot etc
-                d_plt = inner_d[key] 
-                param = process_parameters(d_plt)
-                #print param['conditional_filtering']['yes/no']        
-                var_dic = {}  # dictionary to map plot variables, and the desired operator with filter values
-                var_list =[]  # to collect list of variables, if later need to pass without any filtering, also used in first stage filtering
-
-                for k in param['variables'].keys():
-                                       
-                    var_list.append(param['variables'][k][0]) # variables are the first element so index 0 used
-                    
-                    if len(param['variables'][k])>1: # check if filter condition specified, if not then the argument is just of length one, as seen in check
-                        var_filter_list = []
-                        for i in range(1,len(param['variables'][k])):
-                            var_filter_list.append(process_string(param['variables'][k][i]))
-                        var_dic[param['variables'][k][0]] = var_filter_list
+        
+    for idx, param in P.get_parameters().items(): # read filter conditions from yaml
+        frames = []  # list to store filtered dfs according to vars   
+        var_dic = {}
+        for i, j in param['variables'].items():
+            if len(j)>1:
+                var_filter_list = []
+                for s in range(1,len(j)):
+                    var_filter_list.append(process_string(j[s]))
+                var_dic[j[0]] = var_filter_list
+            else:
+                var_dic[j[0]] = None
+            var_list = var_dic.keys()                       
+        d = agent_dframes[param['agent']] #comment: this can be replaced in line below to save memory, here now just for simplicity 
+        
+        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float) # stage-I filtering, all input vars are sliced with desired set & run values             
+        
+        df_main = pd.DataFrame()        
+        for dkey, dval in var_dic.iteritems(): 
+            df = filter_by_value(dkey, dval, filtered) # stage-II filtering for selecting variables according to their values            
+            
+            if df_main.empty:
+                df_main = df
+            else:
+                df_main = pd.concat([df_main,df], axis = 1)
+            del df
                         
-                    else:
-                        var_dic[param['variables'][k][0]] = None    # assigning None if no filter condition present
-                        
+        key = P.get_plotname_by_idx(idx)                 
+        summary_and_plot(idx, key, df_main, param, outpath)
+                                
+        var_dic.clear() # clear dict of mapping between plot var and operator (for next cycle)
+        del var_list[:] # clear the list of variables for next cycle
 
-                #TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse  
 
-                d = agent_dframes[param['agent']] #comment: this can be replaced in line below to save memory, here now just for simplicity 
-                # first stage filtering, where all input variables are sliced with the desired set and run values
-
-                filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)                
-                # second stage of filtering for filtering the variables according to the values
-
-                df_main = pd.DataFrame()
-                # function call to filter based on variable value
-                for dkey, dval in var_dic.iteritems():
-                    df = filter_by_value(dkey, dval, filtered) 
-                     
-                    #if dval is not None:
-                    if df_main.empty:
-                        df_main = df
-                    else:
-                        df_main = pd.concat([df_main,df], axis = 1)
-                    #else:
-                    #    if df_main.empty:
-                    #        df_main = df
-                    
-                    del df
-                   
-                #####################################################################                
-                #if param['conditional_filtering']['yes/no'] == True:
-                #    print "lau hai"
-                #    for k in param['conditional_filtering']['operation_var']:
-                #        print k
-                #####################################################################              
-
-###TODO: currently the filtering is done in two steps, find a way to do it in a single step
-
-                # calling appropriate function based on read-in key from config file
-                # also passing in the filtered dataframe to the function at the same time 
-                #summary_and_plot(idx, key, d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float), param) # need to cast df to float
-                #print df_main
-                #print len(df_main.index.get_level_values('major').unique())
-                #print len(param['major'])                   
-                summary_and_plot(idx,key, df_main, param, outpath)                                
-                var_dic.clear() # dictionary of mapping between plot var and operator cleared for next cycle of plot-type
-                del var_list[:] # clearing the list of variables for next cycle
-    #store.close() #replaced above
+###################################################################################################################################
+# TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse  
+# TODO: currently the filtering is done in two steps, find a way to do it in a single step
+# TODO: create output folder if not present for the output
