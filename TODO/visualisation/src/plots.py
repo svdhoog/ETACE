@@ -76,8 +76,8 @@ class Plot(NP,Parameter_mapper):
         options = {'one' : one_plot, 'many' : many_plot}        
         return options[self.__param_map.num_plots(self.key)]()
 
-    def boxplot( self, n, analysis_type ):
-        B = Boxplot(self.__data, n, analysis_type, self.__parameter, self.key)      
+    def boxplot( self, n, analysis_type, main_param):
+        B = Boxplot(self.__data, n, analysis_type, self.__parameter, self.key, main_param)      
         one_plot = lambda : B.one_output()
         many_plot = lambda : B.many_output()        
         options = {'one' : one_plot, 'many' : many_plot} 
@@ -96,7 +96,7 @@ class Timeseries(A):
 
     def __init__(self, data, n, a, parameter, key, outpath):
         self.__data = data
-        print "main data received from summary module: "
+        print "main data received from summary module inside plot module: "
         print self.__data.head(10)
         #print len(self.__data.columns)
         self.__N = n
@@ -241,19 +241,19 @@ class Histogram():
 
 
 class Boxplot(NP, A):
-    def __init__(self, data, n, a_type, parameter, key):
+    def __init__(self, data, n, a_type, parameter, key, main_param):
         print "data received inside boxplot module"
         self.__data = data
-        print self.__data
+        print self.__data.head(5)
         self.__N = n
         self.__a_type = a_type
         self.__parameter = parameter
         self.__param_map = Parameter_mapper(self.__parameter)
         self.key = key     
-  
+        self.__main_param = main_param
 
     def one_output(self):
-        s = SummaryStats(self.__data, self.__a_type )   
+        s = SummaryStats(self.__data, self.__main_param)   # Fix this for summary accordingly
         box_df = pd.DataFrame()
         box_df['mean'] = [x for sublist in s.mean().values for x in sublist]  # [x for sublist in s.mean().values for x in sublist] done to flatten a 2D list to 1D so pandas accepts it
         # box_df['mean'] = s.mean() # this was the old simpler method which did not work once the config file variables was turned to a hierarchy with filters (bug in df, see for new patches)
