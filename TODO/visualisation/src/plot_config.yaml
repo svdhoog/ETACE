@@ -27,7 +27,7 @@ plot2:
     y-axis label: some y label
     linestyle: solid
 
-plot3:
+plot5:
     number_plots: one
     plot_name: third_one.png
     l_lim: no
