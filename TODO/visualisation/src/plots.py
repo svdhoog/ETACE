@@ -2,108 +2,65 @@ import sys,os,yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from parameters import NP, A
+from parameters import NP, A, Plot_configuration
 from summarystats import SummaryStats
 
-class Process_parameters():    
-    def plot_parameters(self):
-        with open("plot_config.yaml", 'r') as stream:
-            try:
-                param = yaml.load(stream)
-            except yaml.YAMLError as exc:
-                print(exc)
-        #for key, value in param.iteritems():           
-        #print param[key]['plot_type']
-        #print value 
-        return param   
-
-class Parameter_mapper():
-
-    def __init__(self, param):
-        self.__param = param
-        
-    def legend(self, key):
-        return self.__param[key]['plot_legend']
-
-    def legend_label(self, key):
-        return self.__param[key]['legend_label']
-
-    def plot_type(self, key):
-        return self.__param[key]['plot_type']
-
-    def num_plots(self, key):
-        return self.__param[key]['number_plots']
-
-    def y_label(self, key):
-        return self.__param[key]['y-axis label']
-
-    def x_label(self, key):
-        return self.__param[key]['x-axis label']
-
-    def plot_name(self, key):
-        return self.__param[key]['plot_name']
-
-    def llim(self, key):
-        return self.__param[key]['l_lim']
-
-    def ulim(self, key):
-        return self.__param[key]['u_lim']
-
-    def linestyle(self, key):
-        return self.__param[key]['linestyle']
-
-
-class Plot(NP,Parameter_mapper):
+class Plot(NP):
     def __init__(self, idx, data):
         self.__data = data
-        self.key = idx
-        PP = Process_parameters()
-        self.__parameter = PP.plot_parameters()
-        self.__param_map = Parameter_mapper(self.__parameter)   
+        self.idx = idx
+        self.__P = Plot_configuration()
 
-    def timeseries( self, n, analysis_type, outpath):     
-        T = Timeseries(self.__data, n, analysis_type, self.__parameter, self.key, outpath)      
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val] 
+ 
+
+    def timeseries( self, main_param, outpath ):
+        n = len(main_param['major'])
+        analysis_type = self.map_analysis(main_param['analysis'])     
+        T = Timeseries(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx, outpath)      
         one_plot = lambda : T.one_output()
         many_plot = lambda : T.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}
-        #return options['one']()      
-        return options[self.__param_map.num_plots(self.key)]()
+        options = {'one' : one_plot, 'many' : many_plot}     
+        return options[self.__P.num_plots(self.idx)]()
 
     def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      
         one_plot = lambda : H.one_output()
         many_plot = lambda : H.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}        
-        return options[self.__param_map.num_plots(self.key)]()
+        return options[self.__P.num_plots(self.idx)]()
 
     def boxplot( self, n, analysis_type, main_param):
-        B = Boxplot(self.__data, n, analysis_type, self.__parameter, self.key, main_param)      
+        B = Boxplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx, main_param)      
         one_plot = lambda : B.one_output()
         many_plot = lambda : B.many_output()        
         options = {'one' : one_plot, 'many' : many_plot} 
-        return options[self.__param_map.num_plots(self.key)]()
+        return options[self.__P.num_plots(self.idx)]()
 
     def scatterplot( self, n, analysis_type ):     
-        S = Scatterplot(self.__data, n, analysis_type, self.__parameter, self.key)      
+        S = Scatterplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx)      
         one_plot = lambda : S.one_output()
         many_plot = lambda : S.many_output()        
         options = {'one' : one_plot, 'many' : many_plot}
         #return options['one']()      
-        return options[self.__param_map.num_plots(self.key)]()
+        return options[self.__P.num_plots(self.idx)]()
 
 
 class Timeseries(A):
 
-    def __init__(self, data, n, a, parameter, key, outpath):
+    def __init__(self, data, n, a, parameter, idx, outpath):
         self.__data = data
         print "main data received from summary module inside plot module: "
         print self.__data.head(10)
         #print len(self.__data.columns)
         self.__N = n
         self.__analysistype = a
-        self.__parameter = parameter
-        self.__param_map = Parameter_mapper(self.__parameter)
-        self.key = key
+        #self.__parameter = parameter
+        #self.__param_map = Parameter_mapper(self.__parameter)
+        self.__P = Plot_configuration()
+        self.idx = idx
         self.outpath = outpath               
  
     def many_output(self):
@@ -121,8 +78,8 @@ class Timeseries(A):
                     for i in range(0,len(D),self.__N):
                         y = np.array(D[i:i+self.__N])                
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y,color = 'blue', linestyle=self.__param_map.linestyle(self.key), label = self.__param_map.x_label(self.key)) 
-                        plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+".png"              
+                        plt.plot(x,y,color = 'blue', linestyle=self.__P.linestyle(self.idx), label = self.__P.x_label(self.idx)) 
+                        plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+".png"              
                         plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')
                         plt.close()
                         count = count + 1	                
@@ -133,8 +90,8 @@ class Timeseries(A):
                 count = 0                                     
                 for i in range(0,len(df)/self.__N):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__param_map.legend_label(self.key)) 
-                    plot_name = self.__param_map.plot_name(self.key)[:-4]+str(count)+str(countA)+".png"
+                    plt.plot(x,y[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__P.legend_label(self.idx)) 
+                    plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+str(countA)+".png"
                     plt.savefig(self.outpath+'/'+plot_name, bbox_inches='tight')	 
                     
                     count = count + 1
@@ -157,11 +114,11 @@ class Timeseries(A):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
                     
 
-                    plt.plot(x,y, linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(count))
+                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
                     count = count + 1
                     plt.hold(True)
                 plt.legend(loc='best', fancybox=True, shadow=True)
-                plot_name = self.__param_map.plot_name(self.key) 
+                plot_name = self.__P.plot_name(self.idx) 
                 plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                 plt.close()
 
@@ -180,13 +137,13 @@ class Timeseries(A):
 
                     for i in range(0,len(df)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0])
-                        plt.plot(x,y2[i],color = 'red', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'blue', markersize =1, label = df.columns[1])  
+                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0])
+                        plt.plot(x,y2[i],color = 'red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'blue', markersize =1, label = df.columns[1])  
                         plt.hold(True)
                         plt.fill_between(x, y1[i],y2[i],color='k',alpha=.5)
            	 
                     plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__param_map.plot_name(self.key)           
+                    plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                     plt.close()
                 else:
@@ -197,10 +154,10 @@ class Timeseries(A):
                     
                     for i in range(0,len(df)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0]) 
+                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0]) 
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__param_map.plot_name(self.key)           
+                    plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
                     plt.close()
             countA = countA + 1
@@ -241,15 +198,16 @@ class Histogram():
 
 
 class Boxplot(NP, A):
-    def __init__(self, data, n, a_type, parameter, key, main_param):
+    def __init__(self, data, n, a_type, parameter, idx, main_param):
         print "data received inside boxplot module"
         self.__data = data
         print self.__data.head(5)
         self.__N = n
         self.__a_type = a_type
-        self.__parameter = parameter
-        self.__param_map = Parameter_mapper(self.__parameter)
-        self.key = key     
+        self.__P = Plot_configuration()
+        #self.__parameter = parameter
+        #self.__param_map = Parameter_mapper(self.__parameter)
+        self.idx = idx    
         self.__main_param = main_param
 
     def one_output(self):
@@ -269,7 +227,7 @@ class Boxplot(NP, A):
         t_df = box_df.T
         
         bp = t_df.boxplot(column = [100,250,500,750,999], positions =[1,2,3,4,5])           
-        plot_name = self.__param_map.plot_name(self.key)            
+        plot_name = self.__P.plot_name(self.idx)            
         plt.savefig(plot_name, bbox_inches='tight')      
         plt.clf()
 
@@ -298,7 +256,7 @@ class Boxplot(NP, A):
 
 class Scatterplot(A):
 
-    def __init__(self, data, n, a, parameter, key):
+    def __init__(self, data, n, a, parameter, idx):
         print "la hai aaiyo scatterplot samma"
         self.__data = data
         print "main data received from summary module: "
@@ -306,9 +264,9 @@ class Scatterplot(A):
         print len(self.__data.columns)
         self.__N = n
         self.__analysistype = a
-        self.__parameter = parameter
-        self.__param_map = Parameter_mapper(self.__parameter)
-        self.key = key                
+        #self.__parameter = parameter
+        #self.__param_map = Parameter_mapper(self.__parameter)
+        self.idx = idx                
     
     def one_output(self):
         if self.__analysistype == A.agent:
@@ -322,11 +280,11 @@ class Scatterplot(A):
                 x = np.linspace(0, self.__N, self.__N, endpoint=True)
                 #print x
 
-                plt.plot(x,y, linestyle = self.__param_map.linestyle(self.key), marker='o', markerfacecolor = 'green', markersize =1, label = self.__param_map.legend_label(self.key)+"_"+str(count))
+                plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
                 count = count + 1
                 plt.hold(True)
             plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__param_map.plot_name(self.key) 
+            plot_name = self.__P.plot_name(self.idx) 
             plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
 
@@ -351,7 +309,7 @@ class Scatterplot(A):
                 plt.ylabel('y')
                 
             #plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__param_map.plot_name(self.key)           
+            plot_name = self.__P.plot_name(self.idx)           
             plt.savefig(plot_name, bbox_inches='tight')
             plt.close()
             
