@@ -61,8 +61,13 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
 
 
 # Function to bridge other classes (summarystats, transform, and plot)
-def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot type, df = data, param = parameter from yaml, outpath = output folder
-    
+##def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot type, df = data, param = parameter from yaml, outpath = output folder
+
+def summary_and_plot (idx, P, df):
+    param = P.get_parameters()[idx]
+    key = P.get_plotname_by_idx(idx)
+    outpath = P.output_fpath()
+   
     if 'summary' in param.keys(): # If summary specified, compute summary-statistics
         P = SummaryStats(df, param) # instantiate summary class
         data = P.compute_summary() # compute summary
@@ -71,10 +76,9 @@ def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot 
     #TODO: add a boxplot check, and assign only for other cases, except boxplot, to save memory         
 
     def plt_timeseries():
-        n = len(param['major'])  # TODO:length of df for each var unequal for filter case, so needs fix
-        T = Plot(idx, data) # instantiate plot class
-        T.timeseries(n, map_analysis(param['analysis']), outpath) # call timeseries function from plot class
-
+        T = Plot(idx, data) # instantiate a plot object, idx = plot id, data = df
+        T.timeseries(param, outpath) # call timeseries method, param = parameters from main yaml, outpath = where to save output plot
+        
 
     def plt_boxplot():  
         n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)     
@@ -119,7 +123,6 @@ if __name__ == "__main__":
 
     P = main_configuration() # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
-    outpath = P.output_fpath()
     
     agent_storelist = {} # all the agent HDF files are stored in this dict
     for key, value in inpath.iteritems():        
@@ -173,11 +176,8 @@ if __name__ == "__main__":
                 df_main = df
             else:
                 df_main = pd.concat([df_main,df], axis = 1)
-            del df
-                        
-        key = P.get_plotname_by_idx(idx)                 
-        summary_and_plot(idx, key, df_main, param, outpath)
-                                
+            del df      
+        summary_and_plot(idx, P, df_main) # plot index, parameter object, data                                                      
         var_dic.clear() # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:] # clear the list of variables for next cycle
 
