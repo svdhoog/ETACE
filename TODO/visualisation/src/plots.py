@@ -7,23 +7,22 @@ from summarystats import SummaryStats
 
 class Plot(NP):
     def __init__(self, idx, data):
-        self.__data = data
         self.idx = idx
+        self.__data = data
         self.__P = Plot_configuration()
 
-    def map_analysis(self, val):             
-        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
-        return analysis_values[val] 
- 
+    def num_plot_mapper(self, val, obj):
+        one_plot = lambda : obj.one_output()
+        many_plot = lambda : obj.many_output()        
+
+        options = {'one' : one_plot, 'many' : many_plot}     
+        return options[val]()
+        
 
     def timeseries( self, main_param, outpath ):
-        n = len(main_param['major'])
-        analysis_type = self.map_analysis(main_param['analysis'])     
-        T = Timeseries(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx, outpath)      
-        one_plot = lambda : T.one_output()
-        many_plot = lambda : T.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}     
-        return options[self.__P.num_plots(self.idx)]()
+        T = Timeseries(self.idx, self.__data, self.__P, main_param, outpath)  
+        self.num_plot_mapper(self.__P.num_plots(self.idx), T)
+        
 
     def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      
@@ -50,19 +49,22 @@ class Plot(NP):
 
 class Timeseries(A):
 
-    def __init__(self, data, n, a, parameter, idx, outpath):
+    def __init__(self, idx, data, plt_config, main_param, outpath):
+        self.idx = idx
         self.__data = data
+        self.outpath = outpath          
+        self.__N = len(main_param['major'])
+        self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.__P = plt_config
+
         print "main data received from summary module inside plot module: "
         print self.__data.head(10)
-        #print len(self.__data.columns)
-        self.__N = n
-        self.__analysistype = a
-        #self.__parameter = parameter
-        #self.__param_map = Parameter_mapper(self.__parameter)
-        self.__P = Plot_configuration()
-        self.idx = idx
-        self.outpath = outpath               
- 
+                   
+    
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val] 
+    
     def many_output(self):
         countA = 0
         for i in self.__data.columns:            
