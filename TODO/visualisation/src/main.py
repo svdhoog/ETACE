@@ -79,11 +79,9 @@ def summary_and_plot (idx, P, df):
         T = Plot(idx, data) # instantiate a plot object, idx = plot id, data = df
         T.timeseries(param, outpath) # call timeseries method, param = parameters from main yaml, outpath = where to save output plot
         
-
-    def plt_boxplot():  
-        n = len(param['major']) # *len(param['minor']) # number of rows of dataframe including minor (special case for boxplot)     
+    def plt_boxplot():   
         B = Plot(idx, df) # for boxplot whole df passed, not the one with summary
-        B.boxplot( n, map_analysis(param['analysis']), param) 
+        B.boxplot(param, outpath) 
         
 
     def var_transform():
