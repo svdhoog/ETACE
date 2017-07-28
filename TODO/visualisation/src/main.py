@@ -83,17 +83,17 @@ def summary_and_plot (idx, P, df):
         B = Plot(idx, df) # for boxplot whole df passed, not the one with summary
         B.boxplot(param, outpath) 
         
+    def plt_scatterplot():        
+        S = Plot(idx, data) 
+        S.scatterplot(param, outpath) 
+
+
 
     def var_transform():
         Tf = Transform(idx, data)
         Tf.main_method()
 
-    def plt_scatterplot():        
-        n = len(param['major']) # number of datapoints for x-axis
-        ##step = len(param['minor'])
-
-        S = Plot(idx, data) 
-        S.scatterplot(n, map_analysis(param['analysis'])) 
+    
  
 
     # Function to call the timeseries plot
