@@ -22,21 +22,11 @@ class Plot(NP):
     def timeseries( self, main_param, outpath ):
         T = Timeseries(self.idx, self.__data, self.__P, main_param, outpath)  
         self.num_plot_mapper(self.__P.num_plots(self.idx), T)
-        
+         
+    def boxplot( self, main_param, outpath ):
+        B = Boxplot(self.idx, self.__data, self.__P, main_param, outpath)        
+        self.num_plot_mapper(self.__P.num_plots(self.idx), B)
 
-    def histogram( self, n ):          
-        H = Histogram(self.__data, num_plots, n)      
-        one_plot = lambda : H.one_output()
-        many_plot = lambda : H.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}        
-        return options[self.__P.num_plots(self.idx)]()
-
-    def boxplot( self, n, analysis_type, main_param):
-        B = Boxplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx, main_param)      
-        one_plot = lambda : B.one_output()
-        many_plot = lambda : B.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot} 
-        return options[self.__P.num_plots(self.idx)]()
 
     def scatterplot( self, n, analysis_type ):     
         S = Scatterplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx)      
@@ -45,6 +35,14 @@ class Plot(NP):
         options = {'one' : one_plot, 'many' : many_plot}
         #return options['one']()      
         return options[self.__P.num_plots(self.idx)]()
+
+    def histogram( self, n ):          
+        H = Histogram(self.__data, num_plots, n)      
+        one_plot = lambda : H.one_output()
+        many_plot = lambda : H.many_output()        
+        options = {'one' : one_plot, 'many' : many_plot}        
+        return options[self.__P.num_plots(self.idx)]()
+
 
 
 class Timeseries(A):
@@ -200,18 +198,19 @@ class Histogram():
 
 
 class Boxplot(NP, A):
-    def __init__(self, data, n, a_type, parameter, idx, main_param):
-        print "data received inside boxplot module"
+    def __init__(self, idx, data, plt_config, main_param, outpath):
+        self.idx = idx 
         self.__data = data
-        print self.__data.head(5)
-        self.__N = n
-        self.__a_type = a_type
-        self.__P = Plot_configuration()
-        #self.__parameter = parameter
-        #self.__param_map = Parameter_mapper(self.__parameter)
-        self.idx = idx    
+        self.__P = plt_config
         self.__main_param = main_param
-
+        self.outpath = outpath 
+        self.__N = len(main_param['major'])
+        self.__analysistype = self.map_analysis(main_param['analysis'])
+              
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val] 
+        
     def one_output(self):
         s = SummaryStats(self.__data, self.__main_param)   # Fix this for summary accordingly
         box_df = pd.DataFrame()
@@ -230,12 +229,12 @@ class Boxplot(NP, A):
         
         bp = t_df.boxplot(column = [100,250,500,750,999], positions =[1,2,3,4,5])           
         plot_name = self.__P.plot_name(self.idx)            
-        plt.savefig(plot_name, bbox_inches='tight')      
+        plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')      
         plt.clf()
 
     def many_output(self):
         print "many ma ni aaucha ta?"
-        s = SummaryStats(self.__data, self.__a_type )           
+        s = SummaryStats(self.__data, self.__analysistype )           
         box_df = pd.DataFrame()
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
@@ -249,7 +248,7 @@ class Boxplot(NP, A):
             tmp_df = box_df[count:count+self.__N]
             bp = tmp_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
             plot_name = "boxplot_"+str(i)+".png"        
-            plt.savefig(plot_name, bbox_inches='tight')  
+            plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')  
             plt.clf()           
             count = count + self.__N
         plt.close()
