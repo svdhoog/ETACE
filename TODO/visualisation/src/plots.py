@@ -28,13 +28,16 @@ class Plot(NP):
         self.num_plot_mapper(self.__P.num_plots(self.idx), B)
 
 
-    def scatterplot( self, n, analysis_type ):     
-        S = Scatterplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx)      
-        one_plot = lambda : S.one_output()
-        many_plot = lambda : S.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}
-        #return options['one']()      
-        return options[self.__P.num_plots(self.idx)]()
+    def scatterplot( self, main_param, outpath ):    
+        S = Scatterplot(self.idx, self.__data, self.__P, main_param, outpath)        
+        self.num_plot_mapper(self.__P.num_plots(self.idx), S)
+ 
+        #S = Scatterplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx)      
+        #one_plot = lambda : S.one_output()
+        #many_plot = lambda : S.many_output()        
+        #options = {'one' : one_plot, 'many' : many_plot}
+        ##return options['one']()      
+        #return options[self.__P.num_plots(self.idx)]()
 
     def histogram( self, n ):          
         H = Histogram(self.__data, num_plots, n)      
@@ -255,19 +258,31 @@ class Boxplot(NP, A):
 
 
 
-class Scatterplot(A):
 
-    def __init__(self, data, n, a, parameter, idx):
-        print "la hai aaiyo scatterplot samma"
+class Scatterplot(A):
+    
+    def __init__(self, idx, data, plt_config, main_param, outpath):
+    #def __init__(self, data, n, a, parameter, idx):
+        self.idx = idx  
         self.__data = data
+        self.outpath = outpath          
+        self.__N = len(main_param['major'])
+        self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.__P = plt_config
+
+        print "la hai aaiyo scatterplot samma"
+        
         print "main data received from summary module: "
         print self.__data.head(10)
-        print len(self.__data.columns)
-        self.__N = n
-        self.__analysistype = a
+        #print len(self.__data.columns)
+        #self.__N = n
+        #elf.__analysistype = a
         #self.__parameter = parameter
         #self.__param_map = Parameter_mapper(self.__parameter)
-        self.idx = idx                
+     
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val]                  
     
     def one_output(self):
         if self.__analysistype == A.agent:
