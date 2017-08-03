@@ -18,7 +18,6 @@ class Plot(NP):
         options = {'one' : one_plot, 'many' : many_plot}     
         return options[val]()
         
-
     def timeseries( self, main_param, outpath ):
         T = Timeseries(self.idx, self.__data, self.__P, main_param, outpath)  
         self.num_plot_mapper(self.__P.num_plots(self.idx), T)
@@ -27,25 +26,13 @@ class Plot(NP):
         B = Boxplot(self.idx, self.__data, self.__P, main_param, outpath)        
         self.num_plot_mapper(self.__P.num_plots(self.idx), B)
 
-
     def scatterplot( self, main_param, outpath ):    
         S = Scatterplot(self.idx, self.__data, self.__P, main_param, outpath)        
         self.num_plot_mapper(self.__P.num_plots(self.idx), S)
- 
-        #S = Scatterplot(self.__data, n, analysis_type, self.__P.parse_yaml, self.idx)      
-        #one_plot = lambda : S.one_output()
-        #many_plot = lambda : S.many_output()        
-        #options = {'one' : one_plot, 'many' : many_plot}
-        ##return options['one']()      
-        #return options[self.__P.num_plots(self.idx)]()
-
-    def histogram( self, n ):          
-        H = Histogram(self.__data, num_plots, n)      
-        one_plot = lambda : H.one_output()
-        many_plot = lambda : H.many_output()        
-        options = {'one' : one_plot, 'many' : many_plot}        
-        return options[self.__P.num_plots(self.idx)]()
-
+        
+    def histogram( self, main_param, outpath ):  
+        H = Histogram(self.idx, self.__data, self.__P, main_param, outpath)        
+        self.num_plot_mapper(self.__P.num_plots(self.idx), H)        
 
 
 class Timeseries(A):
@@ -168,9 +155,19 @@ class Timeseries(A):
 
 class Histogram():
 
-    def __init__(self, data, num_plots, n):
+    def __init__(self, idx, data, plt_config, main_param, outpath):
+        self.idx = idx
         self.__data = data
-        self.__N = n
+        self.outpath = outpath          
+        self.__N = len(main_param['major'])
+        self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.__P = plt_config
+        print "lau hai aayo lili lai"
+
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val] 
+
 
     def many_output(self): ####TODO###
         return
@@ -265,21 +262,14 @@ class Scatterplot(A):
     #def __init__(self, data, n, a, parameter, idx):
         self.idx = idx  
         self.__data = data
+        self.__P = plt_config
         self.outpath = outpath          
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
-        self.__P = plt_config
-
-        print "la hai aaiyo scatterplot samma"
         
-        print "main data received from summary module: "
-        print self.__data.head(10)
-        #print len(self.__data.columns)
-        #self.__N = n
-        #elf.__analysistype = a
-        #self.__parameter = parameter
-        #self.__param_map = Parameter_mapper(self.__parameter)
-     
+        #print "main data received from summary module to scatterplot module: "
+        #print self.__data.head(10)
+            
     def map_analysis(self, val):             
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val]                  
