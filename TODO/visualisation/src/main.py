@@ -87,32 +87,14 @@ def summary_and_plot (idx, P, df):
         S = Plot(idx, data) 
         S.scatterplot(param, outpath) 
 
-
+    def plt_histogram():
+        H = Plot(idx, data)
+        H.histogram(param, outpath)
 
     def var_transform():
         Tf = Transform(idx, data)
         Tf.main_method()
-
     
- 
-
-    # Function to call the timeseries plot
-    def plt_histogram( idx, df, param ):
-
-        # instantiate a class with desired analysis type
-        P = SummaryStats(df, map_analysis(param['analysis']))
-
-        # then call the desired method, if no plot wanted   
-        summary_type = {'mean': P.mean, 'median': P.median, 'upper_quartile': P.upper_quartile,'lower_quartile': P.lower_quartile,'custom_quantile': P.custom_quantile,'minimum': P.minimum,'maximum': P.maximum}    
-        
-        n = len(param['major']) # number of datapoints for x-axis
-        
-        # instantiate a plot class with desired output (One, Many)
-        Fig = Plot(summary_type[param['summary']](), param['plot properties']['number_plots']) # first argument is one option selected from summary_type dict above
-
-        # call the plot class instance with the desired kind of plot
-        Fig.histogram( n )
-
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot, 'transform':var_transform} 
     return plot_function[key]()                
 
