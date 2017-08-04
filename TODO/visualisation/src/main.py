@@ -59,11 +59,8 @@ def filter_by_value(dkey, dval, filtered): # Function to filter the variables ba
         df = pd.DataFrame(filtered[dkey]) 
         return df  
 
-
 # Function to bridge other classes (summarystats, transform, and plot)
-##def summary_and_plot(idx, key, df, param, outpath): # idx = plot no, key = plot type, df = data, param = parameter from yaml, outpath = output folder
-
-def summary_and_plot (idx, P, df):
+def summary_and_plot (idx, P, df): # idx = plot no, P = parameter object, df = data
     param = P.get_parameters()[idx]
     key = P.get_plotname_by_idx(idx)
     outpath = P.output_fpath()
@@ -87,14 +84,14 @@ def summary_and_plot (idx, P, df):
         S = Plot(idx, data) 
         S.scatterplot(param, outpath) 
 
+    def var_transform():
+        Tf = Transform(idx, data)
+        Tf.main_method()
+
     def plt_histogram():
         H = Plot(idx, data)
         H.histogram(param, outpath)
 
-    def var_transform():
-        Tf = Transform(idx, data)
-        Tf.main_method()
-    
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram':plt_histogram, 'scatterplot':plt_scatterplot, 'transform':var_transform} 
     return plot_function[key]()                
 
