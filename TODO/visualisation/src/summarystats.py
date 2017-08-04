@@ -33,14 +33,11 @@ class SummaryStats(A):
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}            
         return analysis_values[self.__param['analysis']]  
 
-
-    
-
     def mean(self):
-        agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean().dropna()
-        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean().dropna()
-        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).mean().dropna()
-        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).mean().dropna()
+        agent_analysis = lambda : self.__data.groupby(level = ['set','run','major','minor']).mean()#.dropna()
+        multiple_run_analysis = lambda : self.__data.groupby(level = ['set','run','major']).mean()#.dropna()
+        multiple_batch_analysis = lambda : self.__data.groupby(level = ['set','major']).mean()#.dropna()
+        multiple_set_analysis = lambda : self.__data.groupby(level=['major']).mean()#.dropna()
 
         options = {A.agent : agent_analysis, A.multiple_run : multiple_run_analysis, A.multiple_batch : multiple_batch_analysis, A.multiple_set : multiple_set_analysis}          
         return options[self.__analysis_type]()
