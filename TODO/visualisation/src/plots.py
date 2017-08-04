@@ -46,12 +46,77 @@ class Timeseries(A):
         self.__P = plt_config
 
         print "main data received from summary module inside plot module: "
-        print self.__data.head(10)
+        print self.__data
                    
     
     def map_analysis(self, val):             
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val] 
+
+    def one_output(self):
+        countA = 0
+        for i in self.__data.columns:
+            df = pd.DataFrame(self.__data[i])
+            if self.__analysistype == A.agent:
+                print " -Warning: too many lines will be printed in a single plot !!! "
+                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+                for i in minor_index:
+                    D = df.xs( int(i) , level='minor')
+                count = 0          
+                for i in range(0,len(D),self.__N):
+                    y = np.array(D[i:i+self.__N])
+                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                    
+
+                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
+                    count = count + 1
+                    plt.hold(True)
+                plt.legend(loc='best', fancybox=True, shadow=True)
+                plot_name = self.__P.plot_name(self.idx) 
+                plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                plt.close()
+
+            else:
+                # TODO: this part after else block is working as intended
+                if len(df.columns) == 2:
+                    y1 = []
+                    y2 = []
+                    col_A = df[df.columns[0]]
+                    col_B = df[df.columns[1]]
+                    print col_A.head(5)
+                    print col_B.head(5)
+                    for i in range(0,len(df),self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                    
+                    for i in range(0,len(df),self.__N):
+                        y2.append(np.array(col_B[i:i+self.__N]))  
+
+                    for i in range(0,len(df)/self.__N):
+                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0])
+                        plt.plot(x,y2[i],color = 'red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'blue', markersize =1, label = df.columns[1])  
+                        plt.hold(True)
+                        plt.fill_between(x, y1[i],y2[i],color='k',alpha=.5)
+           	 
+                    plt.legend(loc='best', fancybox=True, shadow=True)
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.close()
+                else:
+                    y1 = []
+                    col_A = df[df.columns[0]]
+                    for i in range(0,len(df),self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                    
+                    for i in range(0,len(df)/self.__N):
+                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0]) 
+                        plt.hold(True)
+                    plt.legend(loc='best', fancybox=True, shadow=True)
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.close()
+            countA = countA + 1
     
     def many_output(self):
         countA = 0
@@ -89,68 +154,7 @@ class Timeseries(A):
                     plt.clf() # clear current figure
                 plt.close()    
   
-    def one_output(self):
-        countA = 0
-        for i in self.__data.columns:
-            df = pd.DataFrame(self.__data[i])
-            if self.__analysistype == A.agent:
-                print " -Warning: too many lines will be printed in a single plot !!! "
-                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
-                for i in minor_index:
-                    D = df.xs( int(i) , level='minor')
-                count = 0          
-                for i in range(0,len(D),self.__N):
-                    y = np.array(D[i:i+self.__N])
-                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    
-
-                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
-                    count = count + 1
-                    plt.hold(True)
-                plt.legend(loc='best', fancybox=True, shadow=True)
-                plot_name = self.__P.plot_name(self.idx) 
-                plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
-                plt.close()
-
-            else:
-                # TODO: this part after else block is working as intended
-                if len(df.columns) == 2:
-                    y1 = []
-                    y2 = []
-                    col_A = df[df.columns[0]]
-                    col_B = df[df.columns[1]]
-                    for i in range(0,len(df),self.__N):
-                        y1.append(np.array(col_A[i:i+self.__N]))
-                    
-                    for i in range(0,len(df),self.__N):
-                        y2.append(np.array(col_B[i:i+self.__N]))  
-
-                    for i in range(0,len(df)/self.__N):
-                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0])
-                        plt.plot(x,y2[i],color = 'red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'blue', markersize =1, label = df.columns[1])  
-                        plt.hold(True)
-                        plt.fill_between(x, y1[i],y2[i],color='k',alpha=.5)
-           	 
-                    plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
-                    plt.close()
-                else:
-                    y1 = []
-                    col_A = df[df.columns[0]]
-                    for i in range(0,len(df),self.__N):
-                        y1.append(np.array(col_A[i:i+self.__N]))
-                    
-                    for i in range(0,len(df)/self.__N):
-                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0]) 
-                        plt.hold(True)
-                    plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
-                    plt.close()
-            countA = countA + 1
+    
 
 
 class Histogram():
