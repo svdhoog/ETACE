@@ -1,38 +1,109 @@
-timeseries:
-    agent: 'Bank'
-    analysis: 'multiple_batch'
-    variables: ['total_credit']
-    set: [1,2]
-    run: [1,2,3,4,5,6]
-    major: [range,[6020,26000,20]]
-    minor: [range,[1,2]] 
-    summary: 'mean'
-    plot properties:
-        number_plots: 'one'
-        plot_label: 'no'
-
-boxplot:
-    agent: 'Bank'
-    analysis: 'multiple_set' 
-    variables: 'total_credit'
-    set: [1]
-    run: [range,[1,3]]
-    major: [range,[6020,26020,20]]
-    minor: [1,5,7] 
-    plot properties:
-        number_plots: 'one'
-        plot_label: 'yes'
+i/o:
+    input_path: 
+        Bank: '/home/susupta/Desktop/GitHub/Bank/Bank.h5' # please name the key as the agent name
+        Eurostat: '/home/susupta/Desktop/GitHub/Bank/Eurostat.h5'
 
 
-histogram:
-    agent: 'Bank'
-    analysis: 'multiple_set'    
-    variables: ['total_credit']
-    set: [1]
-    run: [1,2]
-    major: [range,[6020,26020,20]]
-    minor: [range,[1,5]] 
-    summary: 'mean'    
-    plot properties:
-        number_plots: 'one'  #multiple, not fixed yet
-        plot_label: 'no'
+    output_path: '/home/susupta/Desktop/Fix_preprocess/visualize/src/output'
+
+plot1:
+    timeseries:
+        agent: Bank
+        analysis: multiple_set
+        variables: 
+#              var1: [total_credit, '>[700]', '<[800]']
+            var1: [total_credit]  
+#              var2: [equity]     
+            var2: [equity, '>[900]']
+        set: [1]
+        run: [1,2]
+        major: [range,[6020,26000,20]]
+        minor: [1,5,7] 
+        summary: custom_quantile
+        quantile_values:          
+            lower_quantile : 0.50
+            upper_quantile : 0.90
+        
+
+#plot2:
+#    transform:
+#        agent: Bank
+#        analysis: multiple_set
+#        variables: 
+#            var1: [total_credit]       
+#        set: [1]
+#        run: [1]
+#        major: [range,[6020,6300,20]]
+#        minor: [1,5] 
+#        summary: mean
+#        conditional_filtering:
+#            yes/no: no
+            
+
+#plot3:
+#    scatterplot:
+#        agent: Bank
+#        analysis: multiple_batch
+#        variables: 
+##            var1: [total_credit, '>[700]', '<[800]']
+#            var1: [total_credit]       
+##            var2: [equity, '>[900]']
+#        set: [1]
+#        run: [1,2]
+#        major: [range,[6020,26000,20]]
+#        minor: [1,5,7] 
+#        summary: custom_quantile
+#        conditional_filtering:
+#            yes/no: yes
+#            condition_var: [total_credit, '>[700]']
+#            operation_var: [total_credit, '>[700]', '<[800]']
+
+
+#plot3:
+#    histogram:
+#        agent: Bank
+#        analysis: multiple_batch
+#        variables: 
+##            var1: [total_credit, '>[700]', '<[800]']
+#            var1: [total_credit]       
+##            var2: [equity, '>[900]']
+#        set: [1]
+#        run: [1,2]
+#        major: [range,[6020,26000,20]]
+#        minor: [1,5,7] 
+#        summary: mean
+#       conditional_filtering:
+#            yes/no: yes
+#            condition_var: [total_credit, '>[700]']
+#            operation_var: [total_credit, '>[700]', '<[800]']
+
+
+
+#plot4:
+#    timeseries:
+#        agent: Bank
+#        analysis: agent
+#        variables: 
+#            var1: [total_credit]       
+#        set: [1]
+#        run: [1,2]
+#        major: [range,[6020,6100,20]]
+#        minor: [range,[1,2]] 
+#        summary: mean
+#        conditional_filtering:
+#            yes/no: no
+        
+
+#plot5:
+#    boxplot:
+#        agent: Bank
+#        analysis: multiple_set
+#        variables:      
+#            var1: [total_credit]                          
+#        set: [1]
+#        run: [range,[1,2]]
+#        major: [range,[6020,26000,20]]
+#        minor: [1,5,7]
+#        conditional_filtering:
+#            yes/no: no 
+
