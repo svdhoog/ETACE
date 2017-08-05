@@ -46,7 +46,7 @@ class Timeseries(A):
         self.__P = plt_config
 
         print "main data received from summary module inside plot module: "
-        print self.__data
+        print self.__data.tail(5)
                    
     
     def map_analysis(self, val):             
@@ -78,6 +78,7 @@ class Timeseries(A):
 
             else:
                 # TODO: this part after else block is working as intended
+                print len(df.columns)
                 if len(df.columns) == 2:
                     y1 = []
                     y2 = []
