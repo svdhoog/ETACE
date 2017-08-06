@@ -2,6 +2,7 @@ import sys,os,yaml
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
+plt.style.use('ggplot')
 from parameters import NP, A, Plot_configuration
 from summarystats import SummaryStats
 
@@ -54,31 +55,34 @@ class Timeseries(A):
         return analysis_values[val] 
 
     def one_output(self):
-        countA = 0
+        file_count = 0
         for i in self.__data.columns:
-            df = pd.DataFrame(self.__data[i])
+            df = pd.DataFrame(self.__data[i]) # one variable, one case at a time
             if self.__analysistype == A.agent:
                 print " -Warning: too many lines will be printed in a single plot !!! "
                 minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
                 for i in minor_index:
                     D = df.xs( int(i) , level='minor')
+                legend_label = D.columns[0]
                 count = 0          
                 for i in range(0,len(D),self.__N):
                     y = np.array(D[i:i+self.__N])
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    
+                    #plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = self.__P.legend_label(self.idx)+"_"+str(count))
 
-                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
+                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = legend_label)
+
                     count = count + 1
                     plt.hold(True)
-                plt.legend(loc='best', fancybox=True, shadow=True)
+
+                if self.__P.legend(self.idx) == True:
+                    plt.legend(loc= self.__P.legend_location(self.idx), fancybox=True, shadow=True)
                 plot_name = self.__P.plot_name(self.idx) 
-                plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                plt.savefig(self.outpath+'/'+plot_name[:-4]+ '_'+str(file_count)+".png", bbox_inches='tight')
                 plt.close()
 
             else:
                 # TODO: this part after else block is working as intended
-                print len(df.columns)
                 if len(df.columns) == 2:
                     y1 = []
                     y2 = []
@@ -101,7 +105,7 @@ class Timeseries(A):
            	 
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(file_count)+".png", bbox_inches='tight')
                     plt.close()
                 else:
                     y1 = []
@@ -115,9 +119,9 @@ class Timeseries(A):
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(countA)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(file_count)+".png", bbox_inches='tight')
                     plt.close()
-            countA = countA + 1
+            file_count = file_count + 1
     
     def many_output(self):
         countA = 0
