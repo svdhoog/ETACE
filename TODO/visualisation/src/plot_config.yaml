@@ -1,17 +1,18 @@
 plot1:
     number_plots: one
-    plot_name: first_one.png
-    l_lim: no
-    u_lim: no
-    tmin: no
-    tmax: no
+    plot_name: timeseries_agentanalysis.png
     plot_legend: yes
-    legend_loc: out
-    legend_label: timeseriesA
+    legend_location: best
+    legend_label: total_credit
     x-axis label: some x label
     y-axis label: some y label
     linestyle: solid
-    
+    marker: o
+    markerfacecolor: green
+    markersize: 1
+        
+
+
 
 plot2:
     number_plots: one
@@ -27,7 +28,7 @@ plot2:
     y-axis label: some y label
     linestyle: solid
 
-plot5:
+plot3:
     number_plots: one
     plot_name: third_one.png
     l_lim: no
@@ -41,3 +42,6 @@ plot5:
     y-axis label: some y label
     linestyle: solid
 
+plot5:
+    number_plots: one
+    plot_name: sum_one.png

@@ -9,7 +9,8 @@ i/o:
 plot1:
     timeseries:
         agent: Bank
-        analysis: multiple_set
+#        analysis: multiple_set
+        analysis: agent
         variables: 
 #              var1: [total_credit, '>[700]', '<[800]']
             var1: [total_credit]  
