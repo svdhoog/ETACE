@@ -1,10 +1,10 @@
-import sys,os,yaml
+from parameters import NP, A, Plot_configuration
+from summarystats import SummaryStats
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
-from parameters import NP, A, Plot_configuration
-from summarystats import SummaryStats
+
 
 class Plot(NP):
     def __init__(self, idx, data):
@@ -13,27 +13,26 @@ class Plot(NP):
         self.__P = Plot_configuration()
 
     def num_plot_mapper(self, val, obj):
-        one_plot = lambda : obj.one_output()
-        many_plot = lambda : obj.many_output()        
-
-        options = {'one' : one_plot, 'many' : many_plot}     
+        one_plot = lambda: obj.one_output()
+        many_plot = lambda: obj.many_output()
+        options = {'one': one_plot, 'many': many_plot}
         return options[val]()
-        
-    def timeseries( self, main_param, outpath ):
-        T = Timeseries(self.idx, self.__data, self.__P, main_param, outpath)  
+
+    def timeseries(self, main_param, outpath):
+        T = Timeseries(self.idx, self.__data, self.__P, main_param, outpath)
         self.num_plot_mapper(self.__P.num_plots(self.idx), T)
-         
-    def boxplot( self, main_param, outpath ):
-        B = Boxplot(self.idx, self.__data, self.__P, main_param, outpath)        
+
+    def boxplot(self, main_param, outpath):
+        B = Boxplot(self.idx, self.__data, self.__P, main_param, outpath)
         self.num_plot_mapper(self.__P.num_plots(self.idx), B)
 
-    def scatterplot( self, main_param, outpath ):    
-        S = Scatterplot(self.idx, self.__data, self.__P, main_param, outpath)        
+    def scatterplot(self, main_param, outpath):
+        S = Scatterplot(self.idx, self.__data, self.__P, main_param, outpath)
         self.num_plot_mapper(self.__P.num_plots(self.idx), S)
-        
-    def histogram( self, main_param, outpath ):  
-        H = Histogram(self.idx, self.__data, self.__P, main_param, outpath)        
-        self.num_plot_mapper(self.__P.num_plots(self.idx), H)        
+
+    def histogram(self, main_param, outpath):
+        H = Histogram(self.idx, self.__data, self.__P, main_param, outpath)
+        self.num_plot_mapper(self.__P.num_plots(self.idx), H)
 
 
 class Timeseries(A):
@@ -41,44 +40,43 @@ class Timeseries(A):
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
         self.__data = data
-        self.outpath = outpath          
+        self.outpath = outpath
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
 
         print "main data received from summary module inside plot module: "
         print self.__data.tail(5)
-                   
-    
-    def map_analysis(self, val):             
-        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
-        return analysis_values[val] 
+
+    def map_analysis(self, val):
+        analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
+        return analysis_values[val]
 
     def one_output(self):
         file_count = 0
         for i in self.__data.columns:
-            df = pd.DataFrame(self.__data[i]) # one variable, one case at a time
+            df = pd.DataFrame(self.__data[i])  # one variable, one case at a time
             if self.__analysistype == A.agent:
                 print " -Warning: too many lines will be printed in a single plot !!! "
-                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
                 for i in minor_index:
-                    D = df.xs( int(i) , level='minor')
+                    D = df.xs(int(i), level='minor')
                 legend_label = D.columns[0]
-                count = 0          
-                for i in range(0,len(D),self.__N):
+                count = 0
+                for i in range(0, len(D), self.__N):
                     y = np.array(D[i:i+self.__N])
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    #plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = self.__P.legend_label(self.idx)+"_"+str(count))
+                    # plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = self.__P.legend_label(self.idx)+"_"+str(count))
 
-                    plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = legend_label)
+                    plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=legend_label)
 
                     count = count + 1
                     plt.hold(True)
 
-                if self.__P.legend(self.idx) == True:
-                    plt.legend(loc= self.__P.legend_location(self.idx), fancybox=True, shadow=True)
-                plot_name = self.__P.plot_name(self.idx) 
-                plt.savefig(self.outpath+'/'+plot_name[:-4]+ '_'+str(file_count)+".png", bbox_inches='tight')
+                if self.__P.legend(self.idx) is True:
+                    plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+                plot_name = self.__P.plot_name(self.idx)
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + '_'+str(file_count) + ".png", bbox_inches='tight')
                 plt.close()
 
             else:
@@ -90,36 +88,36 @@ class Timeseries(A):
                     col_B = df[df.columns[1]]
                     print col_A.head(5)
                     print col_B.head(5)
-                    for i in range(0,len(df),self.__N):
+                    for i in range(0, len(df), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-                    
-                    for i in range(0,len(df),self.__N):
-                        y2.append(np.array(col_B[i:i+self.__N]))  
 
-                    for i in range(0,len(df)/self.__N):
+                    for i in range(0, len(df), self.__N):
+                        y2.append(np.array(col_B[i:i+self.__N]))
+
+                    for i in range(0, len(df)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0])
-                        plt.plot(x,y2[i],color = 'red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'blue', markersize =1, label = df.columns[1])  
+                        plt.plot(x, y1[i], color='blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=df.columns[0])
+                        plt.plot(x, y2[i], color='red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='blue', markersize=1, label=df.columns[1])
                         plt.hold(True)
-                        plt.fill_between(x, y1[i],y2[i],color='k',alpha=.5)
-           	 
+                        plt.fill_between(x, y1[i], y2[i], color='k', alpha=.5)
+
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(file_count)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count) + ".png", bbox_inches='tight')
                     plt.close()
                 else:
                     y1 = []
                     col_A = df[df.columns[0]]
-                    for i in range(0,len(df),self.__N):
+                    for i in range(0, len(df), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                     
-                    for i in range(0,len(df)/self.__N):
+                    for i in range(0, len(df)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y1[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = df.columns[0]) 
+                        plt.plot(x, y1[i], color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=df.columns[0]) 
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath+'/'+plot_name[:-4]+str(file_count)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count)+".png", bbox_inches='tight')
                     plt.close()
             file_count = file_count + 1
     
