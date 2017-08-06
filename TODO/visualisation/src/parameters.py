@@ -19,10 +19,16 @@ class NP:
     # 0, 1
 
 
+
+
+
+
+
+
 class main_configuration():    
     
     def __init__(self):                 
-        self.main_f = 'config1.yaml'   # the main configuration file
+        self.main_f = 'config.yaml'   # the main configuration file
         self.parsed_values = self.parse_yaml(self.main_f)
     
     def erf(self, msg): # function to output the error message and exit
@@ -128,6 +134,9 @@ class Plot_configuration():
     def legend_label(self, key):
         return self.__param[key]['legend_label']
 
+    def legend_location(self, key):
+        return self.__param[key]['legend_location']
+
     def plot_type(self, key):
         return self.__param[key]['plot_type']
 
@@ -152,8 +161,14 @@ class Plot_configuration():
     def linestyle(self, key):
         return self.__param[key]['linestyle']
 
+    def marker(self, key):
+        return self.__param[key]['marker']   
 
+    def markersize(self, key):
+        return self.__param[key]['markersize']
 
+    def markerfacecolor(self, key):
+        return self.__param[key]['markerfacecolor']
 
 
 
