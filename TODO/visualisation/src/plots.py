@@ -52,6 +52,21 @@ class Timeseries(A):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
+    def plot_line(self, x, y, l_label):
+        fig = plt.figure() 
+        if self.__P.legend_label(self.idx) is None:      
+            le_label = l_label
+        else:
+            le_label = self.__P.legend_label(self.idx)
+
+        plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
+       
+        if self.__P.legend(self.idx) is True:
+            plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        
+        return fig
+
+
     def one_output(self):
         file_count = 0
         for i in self.__data.columns:
@@ -66,15 +81,12 @@ class Timeseries(A):
                 for i in range(0, len(D), self.__N):
                     y = np.array(D[i:i+self.__N])
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    # plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker= self.__P.marker(self.idx), markerfacecolor = self.__P.markerfacecolor(self.idx), markersize = self.__P.markersize(self.idx), label = self.__P.legend_label(self.idx)+"_"+str(count))
-
-                    plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=legend_label)
-
+                    
+                    ##plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=legend_label)
+                    self.plot_line(x, y, legend_label)
                     count = count + 1
                     plt.hold(True)
-
-                if self.__P.legend(self.idx) is True:
-                    plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+                
                 plot_name = self.__P.plot_name(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + '_'+str(file_count) + ".png", bbox_inches='tight')
                 plt.close()
