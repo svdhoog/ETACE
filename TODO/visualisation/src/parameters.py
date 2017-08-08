@@ -99,10 +99,18 @@ class Plot_configuration():
     def __init__(self):
         self.plot_f = 'plot_config.yaml'
         self.__param = self.parse_yaml(self.plot_f)
+        self.__default_plot_parameters = Figure_default_parameters()
 
     def erf(self, msg):
         print " >> Error: %s" % msg
         sys.exit()
+
+    def get_fig_values(self, key):
+        for k, v in self.__param[key].items():
+            if k in self.__default_plot_parameters.__dict__.keys():  # check if parameter specified, replace default with specific value
+                self.__default_plot_parameters.__dict__[k] = v
+        return self.__default_plot_parameters.__dict__
+        # TODO: check for non existent values, exception handling
 
     def parse_yaml(self, fname):
         try:
@@ -122,46 +130,91 @@ class Plot_configuration():
             return p
 
     def legend(self, key):
-        return self.__param[key]['plot_legend']
+        if 'plot_legend' in self.__param[key].keys():
+            return self.__param[key]['plot_legend']
+        return self.__default_plot_parameters.__dict__['plot_legend']
 
     def legend_label(self, key):
-        return self.__param[key]['legend_label']
+        if 'legend_label' in self.__param[key].keys():
+            return self.__param[key]['legend_label']
+        return self.__default_plot_parameters.__dict__['legend_label']
 
     def legend_location(self, key):
-        return self.__param[key]['legend_location']
+        if 'legend_location' in self.__param[key].keys():
+            return self.__param[key]['legend_location']
+        return self.__default_plot_parameters.__dict__['legend_location']
 
     def plot_type(self, key):
-        return self.__param[key]['plot_type']
+        if 'plot_type' in self.__param[key].keys():
+            return self.__param[key]['plot_type']
+        return self.__default_plot_parameters.__dict__['plot_type']
 
     def num_plots(self, key):
-        return self.__param[key]['number_plots']
+        if 'number_plots' in self.__param[key].keys():
+            return self.__param[key]['number_plots']
+        return self.__default_plot_parameters.__dict__['number_plots']
 
     def y_label(self, key):
-        return self.__param[key]['y-axis label']
+        if 'y-axis label' in self.__param[key].keys():
+            return self.__param[key]['y-axis label']
+        return self.__default_plot_parameters.__dict__['y-axis label']
 
     def x_label(self, key):
-        return self.__param[key]['x-axis label']
+        if 'x-axis label' in self.__param[key].keys():
+            return self.__param[key]['x-axis label']
+        return self.__default_plot_parameters.__dict__['x-axis label']
 
     def plot_name(self, key):
-        return self.__param[key]['plot_name']
+        if 'plot_name' in self.__param[key].keys():
+            return self.__param[key]['plot_name']
+        return self.__default_plot_parameters.__dict__['plot_name']
 
     def llim(self, key):
-        return self.__param[key]['l_lim']
+        if 'l_lim' in self.__param[key].keys():
+            return self.__param[key]['l_lim']
+        return self.__default_plot_parameters.__dict__['l_lim']
 
     def ulim(self, key):
-        return self.__param[key]['u_lim']
+        if 'u_lim' in self.__param[key].keys():
+            return self.__param[key]['u_lim']
+        return self.__default_plot_parameters.__dict__['u_lim']
 
     def linestyle(self, key):
-        return self.__param[key]['linestyle']
+        if 'linestyle' in self.__param[key].keys():
+            return self.__param[key]['linestyle']
+        return self.__default_plot_parameters.__dict__['linestyle']
 
     def marker(self, key):
-        return self.__param[key]['marker']
+        if 'marker' in self.__param[key].keys():
+            return self.__param[key]['marker']
+        return self.__default_plot_parameters.__dict__['marker']
 
     def markersize(self, key):
-        return self.__param[key]['markersize']
+        if 'markersize' in self.__param[key].keys():
+            return self.__param[key]['markersize']
+        return self.__default_plot_parameters.__dict__['markersize']
 
     def markerfacecolor(self, key):
-        return self.__param[key]['markerfacecolor']
+        if 'markerfacecolor' in self.__param[key].keys():
+            return self.__param[key]['markerfacecolor']
+        return self.__default_plot_parameters.__dict__['markerfacecolor']
+
+
+class Figure_default_parameters(object):
+    def __init__(self):
+        self.plot_legend = 'no'
+        self.legend_label = None
+        self.legend_location = 'best'
+        self.plot_type = None
+        self.number_plots = 'one'
+        self.plot_name = 'default_fig.png'
+        self.l_lim = None
+        self.u_lim = None
+        self.linestyle = 1
+        self.marker = 4
+        self.markerfacecolor = None
+        self.markersize = None
+        # self.label = None
 
 
 if __name__ == "__main__":
