@@ -44,49 +44,58 @@ class Timeseries(A):
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
+        self.summary = main_param['summary']
+        #print self.summary
 
-        print "main data received from summary module inside plot module: "
-        print self.__data.tail(5)
+        #print "main data received from summary module inside plot module: "
+        #print self.__data.tail(5)
+        #print self.__data.columns
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
-    def plot_line(self, x, y, l_label):
-        fig = plt.figure() 
+    def plot_line(self, ax, x, y, l_label):
+        #fig = plt.figure() 
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
 
-        plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
+        ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
        
         if self.__P.legend(self.idx) is True:
-            plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
-        
-        return fig
+            ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        return ax
+
 
 
     def one_output(self):
         file_count = 0
-        for i in self.__data.columns:
-            df = pd.DataFrame(self.__data[i])  # one variable, one case at a time
+        step = 1
+        if self.summary == 'custom_quantile':
+            step = 1 #2
+        
+        for i in range(0, len(self.__data.columns), step):
+            if self.summary == 'custom_quantile':
+                ass = self.__data[[self.__data.columns[i], self.__data.columns[i+1]]].copy()  # one variable, one case at a time
+                print ass.head(5)            
+            #else:
+            df = pd.DataFrame(self.__data[self.__data.columns[i]])
+            
+
             if self.__analysistype == A.agent:
                 print " -Warning: too many lines will be printed in a single plot !!! "
                 minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
                 for i in minor_index:
                     D = df.xs(int(i), level='minor')
                 legend_label = D.columns[0]
-                count = 0
+
+                fig, ax = plt.subplots()
                 for i in range(0, len(D), self.__N):
                     y = np.array(D[i:i+self.__N])
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    
-                    ##plt.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=legend_label)
-                    self.plot_line(x, y, legend_label)
-                    count = count + 1
-                    plt.hold(True)
-                
+                    self.plot_line(ax, x, y, legend_label)
                 plot_name = self.__P.plot_name(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + '_'+str(file_count) + ".png", bbox_inches='tight')
                 plt.close()
