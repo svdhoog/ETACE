@@ -21,6 +21,8 @@ class SummaryStats(A):
         self.__data = data
         self.__param = param
         self.__analysis_type = self.map_analysis()
+        #print "Data received for computation in summary module:"
+        #print self.__data.head(5)
 
     def compute_summary(self):
         summary_type = {'mean': self.mean, 'median': self.median, 'upper_quartile': self.upper_quartile, 'lower_quartile': self.lower_quartile, 'custom_quantile': self.custom_quantile, 'minimum': self.minimum, 'maximum': self.maximum}
@@ -72,7 +74,6 @@ class SummaryStats(A):
             for i in range(len(list(s2))):
                 s2.rename(columns={list(s2)[i]: str(list(s2)[i])+"_u_quantile ("+str(Q2)+")"}, inplace=True)
             
-            D = pd.concat([s1, s2], axis=1)  
             return D[list(sum(zip(s1.columns, s2.columns), ()))] # arrange columns (l_q, u_q) in alternating fashion
 
     def maximum(self):
