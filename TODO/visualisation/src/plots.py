@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 plt.style.use('ggplot')
 
 
-class Plot(NP):
+class Plot(NP):  # TODO: remove NP here, inheritance usless for this class
     def __init__(self, idx, data):
         self.idx = idx
         self.__data = data
@@ -45,60 +45,83 @@ class Timeseries(A):
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
         self.summary = main_param['summary']
-        #print self.summary
-
-        #print "main data received from summary module inside plot module: "
-        #print self.__data.tail(5)
-        #print self.__data.columns
+        print "main data received from summary module inside plot module: "
+        print self.__data['total_credit'].head(15)
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
-    def plot_line(self, ax, x, y, l_label):
-        #fig = plt.figure() 
+
+    def plot_line(self, ax, x, y, l_label): 
+        print "plt for", l_label
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
 
-        ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
+        ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
+        markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
        
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        #plt.show()
         return ax
-
 
 
     def one_output(self):
         file_count = 0
         step = 1
         if self.summary == 'custom_quantile':
-            step = 1 #2
+            step = 2
         
-        for i in range(0, len(self.__data.columns), step):
+        for col in range(0, len(self.__data.columns), step):
             if self.summary == 'custom_quantile':
-                ass = self.__data[[self.__data.columns[i], self.__data.columns[i+1]]].copy()  # one variable, one case at a time
-                print ass.head(5)            
-            #else:
-            df = pd.DataFrame(self.__data[self.__data.columns[i]])
-            
+                dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()  # one variable, one case at a time            
+            else:
+                dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
 
             if self.__analysistype == A.agent:
-                print " -Warning: too many lines will be printed in a single plot !!! "
-                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
-                for i in minor_index:
-                    D = df.xs(int(i), level='minor')
-                legend_label = D.columns[0]
+                minor_index = dframe.index.get_level_values('minor').unique()
+                legend_label = dframe.columns
+                for m in minor_index:
+                    D = dframe.xs(int(m), level='minor')
+                    if len(D.columns) == 2:
+                        y1 = []
+                        y2 = []
+                        col_A = D[D.columns[0]]
+                        col_B = D[D.columns[1]]
+                                             
+                        for i in range(0, len(D), self.__N):
+                            y1.append(np.array(col_A[i:i+self.__N]))
 
-                fig, ax = plt.subplots()
-                for i in range(0, len(D), self.__N):
-                    y = np.array(D[i:i+self.__N])
-                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    self.plot_line(ax, x, y, legend_label)
-                plot_name = self.__P.plot_name(self.idx)
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + '_'+str(file_count) + ".png", bbox_inches='tight')
-                plt.close()
+                        for i in range(0, len(D), self.__N):
+                            y2.append(np.array(col_B[i:i+self.__N]))
+
+                        fig, ax = plt.subplots()
+                        for j in range(0, len(D)/self.__N):
+                            x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                            self.plot_line(ax, x, y1[j], legend_label[0])
+                            self.plot_line(ax, x, y2[j], legend_label[1])
+                            #plt.fill_between(x, y1[i], y2[i], color='k', alpha=.5)
+
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count) + ".png", bbox_inches='tight')
+                        plt.close()
+
+                    else: #checked yesterday, all seems fine except function call
+                        y1 = []
+                        fig, ax = plt.subplots()
+                        for l in range(0, len(D), self.__N):
+                            y1.append(np.array(D[l:l+self.__N]))
+                        x = np.arange(1, self.__N+1)
+
+                        for r in range(0, len(y1)):                                                        
+                            self.plot_line(ax, x, y1[r], legend_label[0]+'_'+str(r))
+                           
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count)+".png", bbox_inches='tight')
+                    plt.close()
 
             else:
                 # TODO: this part after else block is working as intended
