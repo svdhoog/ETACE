@@ -104,12 +104,13 @@ class Timeseries(A):
             else:
                 # this part after else block is working as intended
                 fig, ax = plt.subplots() # initialize figure
+                legend_label = dframe.columns
                 if len(dframe.columns) == 2:
                     y1 = []
                     y2 = []
                     col_A = dframe[dframe.columns[0]]
                     col_B = dframe[dframe.columns[1]]
-                    legend_label = dframe.columns
+                    
 
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
@@ -119,8 +120,8 @@ class Timeseries(A):
 
                     x = np.arange(1, self.__N+1)
                     for r in range(0, len(dframe)/self.__N):
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r))
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'_inst_'+str(r))
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'_inst_'+str(r))
                         plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
 
                     plt.legend(loc='best', fancybox=True, shadow=True)
@@ -132,24 +133,21 @@ class Timeseries(A):
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-                    
-                    for i in range(0, len(dframe)/self.__N):
+                    for r in range(0, len(dframe)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x, y1[i], color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=dframe.columns[0]) 
-                        plt.hold(True)
+                        self.plot_line(ax, x, y1[r], legend_label[0] + "_inst_" + str(r))
                     plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count)+".png", bbox_inches='tight')
+                    plot_name = self.__P.plot_name(self.idx) 
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
                     plt.close()
             file_count = file_count + 1
 
     
     def many_output(self):
-        file_count = 0
         step = 1
         if self.summary == 'custom_quantile':
             step = 2
-        
+        file_count = 0
         for col in range(0, len(self.__data.columns),step):
             if self.summary == 'custom_quantile':
                 dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()  # one variable, one case at a time            
@@ -174,27 +172,52 @@ class Timeseries(A):
                             x = np.arange(1, self.__N+1)
                             self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m))
                             plot_name = self.__P.plot_name(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_instance_" + str(m) + ".png", bbox_inches='tight')
+                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_inst_" + str(m) + ".png", bbox_inches='tight')
                             plt.close()
                             count = count + 1	                
 
-            else:
-                y =[]
-                for i in range(0,len(df),self.__N):
-                    y.append(np.array(df[i:i+self.__N]))        
-                count = 0                                     
-                for i in range(0,len(df)/self.__N):
-                    x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                    plt.plot(x,y[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__P.legend_label(self.idx)) 
-                    plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+str(file_count)+".png"
-                    plt.savefig(self.outpath+'/'+plot_name, bbox_inches='tight')	 
+            else:                
+                if len(dframe.columns) == 2:
+                    y1 = []
+                    y2 = []
+                    col_A = dframe[dframe.columns[0]]
+                    col_B = dframe[dframe.columns[1]]
+                    legend_label = dframe.columns
+
+                    for i in range(0, len(dframe), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+
+                    for i in range(0, len(dframe), self.__N):
+                        y2.append(np.array(col_B[i:i+self.__N]))
+
+                    x = np.arange(1, self.__N+1)
                     
-                    count = count + 1
-                    file_count = file_count + 1 
-                    plt.clf() # clear current figure
-                plt.close()    
-  
-    
+                    for r in range(0, len(dframe)/self.__N):
+                        fig, ax = plt.subplots() 
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r))
+                        plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        file_count = file_count + 1
+                        plt.close()
+
+                else:
+                    y =[]
+                    for i in range(0,len(dframe),self.__N):
+                        y.append(np.array(dframe[i:i+self.__N]))
+                    legend_label = dframe.columns        
+                                    
+                    for s in range(0, len(dframe)/self.__N):
+                        fig, ax = plt.subplots() 
+                        x = np.arange(1, self.__N+1)
+                        self.plot_line(ax, x, y[s], legend_label[0] + "_inst_" + str(s))
+                        
+                        plot_name = self.__P.plot_name(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                        plt.close()    
+      
+        
 
 
 class Histogram():
