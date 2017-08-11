@@ -145,25 +145,39 @@ class Timeseries(A):
 
     
     def many_output(self):
-        countA = 0
-        for i in self.__data.columns:            
-            df = pd.DataFrame(self.__data[i])
+        file_count = 0
+        step = 1
+        if self.summary == 'custom_quantile':
+            step = 2
+        
+        for col in range(0, len(self.__data.columns),step):
+            if self.summary == 'custom_quantile':
+                dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()  # one variable, one case at a time            
+            else:
+                dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             if self.__analysistype == A.agent:
                 print " -Warning: too many plots will be produced !!! " 
-                count = 0                        
-                minor_index = df.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
-                 
-                for i in minor_index:
-                    D = df.xs( int(i) , level='minor')
-                       
-                    for i in range(0,len(D),self.__N):
-                        y = np.array(D[i:i+self.__N])                
-                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x,y,color = 'blue', linestyle=self.__P.linestyle(self.idx), label = self.__P.x_label(self.idx)) 
-                        plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+".png"              
-                        plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')
-                        plt.close()
-                        count = count + 1	                
+                                       
+                minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
+                legend_label = dframe.columns
+ 
+                for m in minor_index:
+                    D = dframe.xs( int(m) , level='minor')
+                    if len(D.columns) == 2:
+                        print "Quantile not possible for agent level analysis"                    
+                        sys.exit(1)
+                    else:
+                        count = 0 
+                        for i in range(0,len(D),self.__N):
+                            fig, ax = plt.subplots()                  
+                            y = np.array(D[i:i+self.__N])
+                            x = np.arange(1, self.__N+1)
+                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m))
+                            plot_name = self.__P.plot_name(self.idx)
+                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_instance_" + str(m) + ".png", bbox_inches='tight')
+                            plt.close()
+                            count = count + 1	                
+
             else:
                 y =[]
                 for i in range(0,len(df),self.__N):
@@ -172,11 +186,11 @@ class Timeseries(A):
                 for i in range(0,len(df)/self.__N):
                     x = np.linspace(0, self.__N, self.__N, endpoint=True)
                     plt.plot(x,y[i],color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =0.1, label = self.__P.legend_label(self.idx)) 
-                    plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+str(countA)+".png"
+                    plot_name = self.__P.plot_name(self.idx)[:-4]+str(count)+str(file_count)+".png"
                     plt.savefig(self.outpath+'/'+plot_name, bbox_inches='tight')	 
                     
                     count = count + 1
-                    countA = countA + 1 
+                    file_count = file_count + 1 
                     plt.clf() # clear current figure
                 plt.close()    
   
