@@ -1,5 +1,6 @@
 from parameters import NP, A, Plot_configuration
 from summarystats import SummaryStats
+import sys
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -85,22 +86,8 @@ class Timeseries(A):
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     if len(D.columns) == 2:
-                        y1 = []
-                        y2 = []
-                        col_A = D[D.columns[0]]
-                        col_B = D[D.columns[1]]
-                                             
-                        for i in range(0, len(D), self.__N):
-                            y1.append(np.array(col_A[i:i+self.__N]))
-
-                        for i in range(0, len(D), self.__N):
-                            y2.append(np.array(col_B[i:i+self.__N]))
-
-                        for j in range(0, len(D)/self.__N):
-                            x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                            self.plot_line(ax, x, y1[j], legend_label[0])
-                            self.plot_line(ax, x, y2[j], legend_label[1])
-                            #plt.fill_between(x, y1[i], y2[i], color='k', alpha=.5)
+                        print "Quantile not possible for agent level analysis!"
+                        sys.exit(1)                        
 
                     else: # all fine for this else block ,do not change, also save fine
                         y = []                        
@@ -152,7 +139,7 @@ class Timeseries(A):
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count)+".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count)+".png", bbox_inches='tight')
                     plt.close()
             file_count = file_count + 1
 
