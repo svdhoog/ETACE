@@ -46,27 +46,24 @@ class Timeseries(A):
         self.__P = plt_config
         self.summary = main_param['summary']
         print "main data received from summary module inside plot module: "
-        print self.__data['total_credit'].head(15)
+        print self.__data.head(5)
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
-
     def plot_line(self, ax, x, y, l_label): 
-        print "plt for", l_label
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
 
-        ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
+        out = ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
         markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
        
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
-        #plt.show()
-        return ax
+        return out
 
 
     def one_output(self):
@@ -82,8 +79,9 @@ class Timeseries(A):
                 dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
 
             if self.__analysistype == A.agent:
-                minor_index = dframe.index.get_level_values('minor').unique()
+                minor_index = dframe.index.get_level_values('minor').unique()                
                 legend_label = dframe.columns
+                fig, ax = plt.subplots() # initialize figure
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     if len(D.columns) == 2:
@@ -98,72 +96,66 @@ class Timeseries(A):
                         for i in range(0, len(D), self.__N):
                             y2.append(np.array(col_B[i:i+self.__N]))
 
-                        fig, ax = plt.subplots()
                         for j in range(0, len(D)/self.__N):
                             x = np.linspace(0, self.__N, self.__N, endpoint=True)
                             self.plot_line(ax, x, y1[j], legend_label[0])
                             self.plot_line(ax, x, y2[j], legend_label[1])
                             #plt.fill_between(x, y1[i], y2[i], color='k', alpha=.5)
 
-                        plot_name = self.__P.plot_name(self.idx)           
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count) + ".png", bbox_inches='tight')
-                        plt.close()
-
-                    else: #checked yesterday, all seems fine except function call
-                        y1 = []
-                        fig, ax = plt.subplots()
+                    else: # all fine for this else block ,do not change, also save fine
+                        y = []                        
                         for l in range(0, len(D), self.__N):
-                            y1.append(np.array(D[l:l+self.__N]))
+                            y.append(np.array(D[l:l+self.__N]))
                         x = np.arange(1, self.__N+1)
-
-                        for r in range(0, len(y1)):                                                        
-                            self.plot_line(ax, x, y1[r], legend_label[0]+'_'+str(r))
-                           
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count)+".png", bbox_inches='tight')
-                    plt.close()
+                        for r in range(0, len(y)):                                                        
+                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m))
+                #plt.show()                           
+                plot_name = self.__P.plot_name(self.idx)           
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+                plt.close()
 
             else:
-                # TODO: this part after else block is working as intended
-                if len(df.columns) == 2:
+                # this part after else block is working as intended
+                fig, ax = plt.subplots() # initialize figure
+                if len(dframe.columns) == 2:
                     y1 = []
                     y2 = []
-                    col_A = df[df.columns[0]]
-                    col_B = df[df.columns[1]]
-                    print col_A.head(5)
-                    print col_B.head(5)
-                    for i in range(0, len(df), self.__N):
+                    col_A = dframe[dframe.columns[0]]
+                    col_B = dframe[dframe.columns[1]]
+                    legend_label = dframe.columns
+
+                    for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
 
-                    for i in range(0, len(df), self.__N):
+                    for i in range(0, len(dframe), self.__N):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
-                    for i in range(0, len(df)/self.__N):
-                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x, y1[i], color='blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=df.columns[0])
-                        plt.plot(x, y2[i], color='red', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='blue', markersize=1, label=df.columns[1])
-                        plt.hold(True)
-                        plt.fill_between(x, y1[i], y2[i], color='k', alpha=.5)
+                    x = np.arange(1, self.__N+1)
+                    for r in range(0, len(dframe)/self.__N):
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r))
+                        plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
 
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count) + ".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                     plt.close()
                 else:
                     y1 = []
-                    col_A = df[df.columns[0]]
-                    for i in range(0, len(df), self.__N):
+                    col_A = dframe[dframe.columns[0]]
+                    for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                     
-                    for i in range(0, len(df)/self.__N):
+                    for i in range(0, len(dframe)/self.__N):
                         x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                        plt.plot(x, y1[i], color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=df.columns[0]) 
+                        plt.plot(x, y1[i], color = 'blue', linestyle=self.__P.linestyle(self.idx), marker='o', markerfacecolor='green', markersize=1, label=dframe.columns[0]) 
                         plt.hold(True)
                     plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + str(file_count)+".png", bbox_inches='tight')
                     plt.close()
             file_count = file_count + 1
+
     
     def many_output(self):
         countA = 0
