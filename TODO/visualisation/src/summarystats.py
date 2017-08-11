@@ -74,6 +74,7 @@ class SummaryStats(A):
             for i in range(len(list(s2))):
                 s2.rename(columns={list(s2)[i]: str(list(s2)[i])+"_u_quantile ("+str(Q2)+")"}, inplace=True)
             
+            D = pd.concat([s1, s2], axis=1)  
             return D[list(sum(zip(s1.columns, s2.columns), ()))] # arrange columns (l_q, u_q) in alternating fashion
 
     def maximum(self):
