@@ -40,6 +40,9 @@ class Scatterplot(A):
         print self.__data.tail(5)        
 
         if self.delay is True:
+            if self.summary == 'custom_quantile':
+                print ">> Delay not supported for Quantiles! Adjust parameter and retry!"
+                sys.exit(1)
             delayed_df = self.__data.shift(periods = 1, axis = 0)
             delayed_df.rename(columns=lambda x: x+ "_delay", inplace=True)
             D = pd.concat([self.__data, delayed_df], axis =1)            
@@ -51,8 +54,7 @@ class Scatterplot(A):
         return analysis_values[val]                  
 
 
-    def plot_scatterplot(self, ax, x, y, l_label, x_label, y_label, clr):
-        
+    def plot_scatterplot(self, ax, x, y, l_label, x_label, y_label, clr):        
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
@@ -67,15 +69,13 @@ class Scatterplot(A):
         plt.ylabel(y_label)
         return out
 
-
     def one_output(self):
         file_count = 0
         step = 2        
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
-                print "Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                print ">> Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
                 sys.exit(1)
-
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
            
             if self.__analysistype == A.agent:
@@ -86,7 +86,7 @@ class Scatterplot(A):
                     D = dframe.xs(int(m), level='minor')
                     legend_label = D.columns
                     if len(dframe.columns) != 2:
-                        print "Something wrong with data, check and retry!"
+                        print ">> Something wrong with data, check and retry!"
                         sys.exit (1)
                     y1 = []
                     y2 = []
@@ -106,7 +106,7 @@ class Scatterplot(A):
                 fig, ax = plt.subplots() # initialize figure
                 legend_label = dframe.columns
                 if len(dframe.columns) != 2:
-                    print "Something wrong with data, check and retry!"
+                    print ">> Something wrong with data, check and retry!"
                     sys.exit (1)
                 y1 = []
                 y2 = []
@@ -122,4 +122,58 @@ class Scatterplot(A):
                 plot_name = self.__P.plot_name(self.idx)           
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                 plt.close()                
+            file_count = file_count + 1
+
+    def many_output(self):
+        file_count = 0
+        step = 2        
+        for col in range(0, len(self.__data.columns), step):
+            if len(self.__data.columns) < 2:
+                print "Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                sys.exit(1)
+            dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
+           
+            if self.__analysistype == A.agent:
+                minor_index = dframe.index.get_level_values('minor').unique()                                
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
+                for m in minor_index:
+                    D = dframe.xs(int(m), level='minor')
+                    legend_label = D.columns
+                    if len(dframe.columns) != 2:
+                        print "Something wrong with data, check and retry!"
+                        sys.exit (1)
+                    y1 = []
+                    y2 = []
+                    col_A = D[D.columns[0]]
+                    col_B = D[D.columns[1]]
+                    for i in range(0, len(D), self.__N):                        
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+                    for r in range(0, len(D)/self.__N):
+                        fig, ax = plt.subplots()
+                        clr = next(colors)
+                        self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + ".png", bbox_inches='tight')
+                        plt.close()
+            else:
+                legend_label = dframe.columns
+                if len(dframe.columns) != 2:
+                    print "Something wrong with data, check and retry!"
+                    sys.exit (1)
+                y1 = []
+                y2 = []
+                col_A = dframe[dframe.columns[0]]
+                col_B = dframe[dframe.columns[1]]                
+                for i in range(0, len(dframe), self.__N):
+                    y1.append(np.array(col_A[i:i+self.__N]))
+                    y2.append(np.array(col_B[i:i+self.__N]))
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                for r in range(0, len(dframe)/self.__N):
+                    fig, ax = plt.subplots() 
+                    clr = next(colors)
+                    self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_inst_'+ str(r) + ".png", bbox_inches='tight')
+                    plt.close()                
             file_count = file_count + 1
