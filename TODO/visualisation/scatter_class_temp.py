@@ -67,7 +67,7 @@ class Scatterplot(A):
         plt.ylabel(y_label)
         return out
 
-    
+    # TODO: all label okay for delay case, find a way to fix label for two variable case with no delay
     def one_output(self):
         file_count = 0
         step = 2        
@@ -81,30 +81,32 @@ class Scatterplot(A):
             if self.__analysistype == A.agent:
                 print "Agent wala analysis"
                 minor_index = dframe.index.get_level_values('minor').unique()                
-                legend_label = dframe.columns
+                
                 fig, ax = plt.subplots() # initialize figure
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
                 for m in minor_index:
-                    D = dframe.xs(int(m), level='minor')                
+                    D = dframe.xs(int(m), level='minor')
+                    legend_label = D.columns
+                    if len(dframe.columns) != 2:
+                        print "Something wrong with data, check and retry!"
+                        sys.exit (1)
                     y1 = []
                     y2 = []
-                    col_A = dframe[dframe.columns[0]]
-                    col_B = dframe[dframe.columns[1]]
+                    col_A = D[D.columns[0]]
+                    col_B = D[D.columns[1]]
                     
-                    for i in range(0, len(dframe), self.__N):
+                    for i in range(0, len(D), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-
-                    for i in range(0, len(dframe), self.__N):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
-                    for r in range(0, len(dframe)/self.__N):
-                        colors = itertools.cycle(["r", "b", "g"])
+                    for r in range(0, len(D)/self.__N):
                         clr = next(colors)
-                        self.plot_line(ax, y1[r], y2[r], legend_label[0], legend_label[0]+'_inst_'+str(r), legend_label[1]+'_inst_'+str(r), clr )
+                        self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+'_inst_'+str(m) + '_run_' + str(r), legend_label[0], legend_label[1], clr )
                         # TODO: find a better label name for default case, erroneous label in case of quantile values
-                    plt.legend(loc='best', fancybox=True, shadow=True)
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plt.close()
+                plt.legend(loc='best', fancybox=True, shadow=True)
+                plot_name = self.__P.plot_name(self.idx)           
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                plt.close()
 
             else:
                 print "Aru khale analysis"
