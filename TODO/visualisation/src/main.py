@@ -1,18 +1,27 @@
 #!/usr/bin/env python
-import sys
+import sys, os, argparse
 import operator
 import pandas as pd
 
 # helper classes, imported from same directory
 from parameters import A, main_configuration
 from summarystats import SummaryStats
-from plots import Plot
+#from plots import Plot
+from histogram_august import Plot
 from transform import Transform
 
 
 def erf(msg):  # function to output the error message and exit
     print " >> Error: %s" % msg
     sys.exit()
+
+def dir_check(d):
+    if os.path.exists(d):
+        print("- Directory ["+os.path.basename(d)+ "] is used for output files")
+                   
+    else:
+        os.makedirs(d)
+        print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
 
 def process_hdf_keys(string_in):  # function to extract set and run values from set_*_run_* string
@@ -64,10 +73,12 @@ def filter_by_value(dkey, dval, filtered):  # Function to filter the variables b
 
 
 # Function to bridge other classes (summarystats, transform, and plot)
-def summary_and_plot(idx, P, df):  # idx = plot no, P = parameter object, df = data
+def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter object, df = data
     param = P.get_parameters()[idx]
     key = P.get_plotname_by_idx(idx)
     outpath = P.output_fpath()
+
+    dir_check(outpath)
 
     if 'summary' in param.keys():  # If summary specified, compute summary-statistics
         P = SummaryStats(df, param)  # instantiate summary class
@@ -77,23 +88,23 @@ def summary_and_plot(idx, P, df):  # idx = plot no, P = parameter object, df = d
     # TODO: add a boxplot check, and assign only for other cases, except boxplot, to save memory
 
     def plt_timeseries():
-        T = Plot(idx, data)  # instantiate a plot object, idx = plot id, data = df
+        T = Plot(idx, data, par_fpath)  # instantiate a plot object, idx = plot id, data = df
         T.timeseries(param, outpath)  # call timeseries method, param = parameters from main yaml, outpath = where to save output plot
 
     def plt_boxplot():
-        B = Plot(idx, df)  # for boxplot whole df passed, not the one with summary
+        B = Plot(idx, df, par_fpath)  # for boxplot whole df passed, not the one with summary
         B.boxplot(param, outpath)
 
     def plt_scatterplot():
-        S = Plot(idx, data)
+        S = Plot(idx, data, par_fpath)
         S.scatterplot(param, outpath)
 
     def var_transform():
-        Tf = Transform(idx, data)
+        Tf = Transform(idx, data, par_fpath)
         Tf.main_method()
 
     def plt_histogram():
-        H = Plot(idx, data)
+        H = Plot(idx, data, par_fpath)
         H.histogram(param, outpath)
 
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram': plt_histogram, 'scatterplot': plt_scatterplot, 'transform': var_transform}
@@ -102,7 +113,11 @@ def summary_and_plot(idx, P, df):  # idx = plot no, P = parameter object, df = d
 
 if __name__ == "__main__":
 
-    P = main_configuration()  # instantiate main_configuration class to process main yaml files
+    parser = argparse.ArgumentParser(prog='main.py', description='Visualise and transform various time-series data.')
+    parser.add_argument('parameterpath', help='Path to folder containing the parameter (.yaml) files', nargs=1, type=str)
+    args = parser.parse_args()
+    
+    P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
 
     agent_storelist = {}  # all the agent HDF files are stored in this dict
@@ -156,7 +171,7 @@ if __name__ == "__main__":
             else:
                 df_main = pd.concat([df_main, df], axis=1)
             del df
-        summary_and_plot(idx, P, df_main)  # plot index, parameter object, data
+        summary_and_plot(idx, P, df_main, args.parameterpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
 
@@ -164,4 +179,4 @@ if __name__ == "__main__":
 ###################################################################################################################################
 # TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse
 # TODO: currently the filtering is done in two steps, find a way to do it in a single step
-# TODO: create output folder if not present for the output
+
