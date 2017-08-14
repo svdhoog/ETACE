@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import yaml
+import argparse
 
 
 class A:
@@ -23,8 +24,9 @@ class NP:
 
 class main_configuration():
 
-    def __init__(self):
-        self.main_f = 'config.yaml'  # the main configuration file
+    def __init__(self, in_fpath):
+        #self.main_f = 'config.yaml'  # the main configuration file
+        self.main_f = in_fpath + '/config.yaml'
         self.parsed_values = self.parse_yaml(self.main_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -96,9 +98,12 @@ class main_configuration():
 
 class Plot_configuration():
 
-    def __init__(self):
-        self.plot_f = 'plot_config.yaml'
+    def __init__(self, p_fpath):
+        #self.plot_f = 'plot_config.yaml'
+        self.plot_f = p_fpath + '/plot_config.yaml'
         self.__param = self.parse_yaml(self.plot_f)
+
+
         self.__default_plot_parameters = Figure_default_parameters()
 
     def erf(self, msg):
@@ -155,14 +160,19 @@ class Plot_configuration():
         return self.__default_plot_parameters.__dict__['number_plots']
 
     def y_label(self, key):
-        if 'y-axis label' in self.__param[key].keys():
-            return self.__param[key]['y-axis label']
-        return self.__default_plot_parameters.__dict__['y-axis label']
+        if 'yaxis_label' in self.__param[key].keys():
+            return self.__param[key]['yaxis_label']
+        return self.__default_plot_parameters.__dict__['yaxis_label']
 
     def x_label(self, key):
-        if 'x-axis label' in self.__param[key].keys():
-            return self.__param[key]['x-axis label']
-        return self.__default_plot_parameters.__dict__['x-axis label']
+        if 'xaxis_label' in self.__param[key].keys():
+            return self.__param[key]['xaxis_label']
+        return self.__default_plot_parameters.__dict__['xaxis_label']
+
+    def plot_title(self, key):
+        if 'plot_title' in self.__param[key].keys():
+            return self.__param[key]['plot_title']
+        return self.__default_plot_parameters.__dict__['plot_title']
 
     def plot_name(self, key):
         if 'plot_name' in self.__param[key].keys():
@@ -199,6 +209,40 @@ class Plot_configuration():
             return self.__param[key]['markerfacecolor']
         return self.__default_plot_parameters.__dict__['markerfacecolor']
 
+    def facecolors(self, key):
+        if 'facecolors' in self.__param[key].keys():
+            return self.__param[key]['facecolors']
+        return self.__default_plot_parameters.__dict__['facecolors']
+
+    def bins(self, key):
+        if 'number_bins' in self.__param[key].keys():
+            return self.__param[key]['number_bins']
+        return self.__default_plot_parameters.__dict__['number_bins']
+
+    def histtype(self, key):
+        if 'histtype' in self.__param[key].keys():
+            return self.__param[key]['histtype']
+        return self.__default_plot_parameters.__dict__['histtype']
+
+    def stacked(self, key):
+        if 'stacked' in self.__param[key].keys():
+            return self.__param[key]['stacked']
+        return self.__default_plot_parameters.__dict__['stacked']
+
+    def norm(self, key):
+        if 'normed' in self.__param[key].keys():
+            return self.__param[key]['normed']
+        return self.__default_plot_parameters.__dict__['normed']
+
+    def fill(self, key):
+        if 'fill' in self.__param[key].keys():
+            return self.__param[key]['fill']
+        return self.__default_plot_parameters.__dict__['fill']
+
+
+
+
+
 
 class Figure_default_parameters(object):
     def __init__(self):
@@ -215,6 +259,15 @@ class Figure_default_parameters(object):
         self.markerfacecolor = None
         self.markersize = None
         # self.label = None
+        self.facecolors = None
+        self.plot_title = None
+        self.xaxis_label = None
+        self.yaxis_label = None
+        self.number_bins = 50
+        self.histtype = 'bar'
+        self.stacked = False
+        self.normed = 1
+        self.fill = False
 
 
 if __name__ == "__main__":
