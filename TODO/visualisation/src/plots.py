@@ -8,10 +8,10 @@ plt.style.use('ggplot')
 
 
 class Plot(NP):  # TODO: remove NP here, inheritance usless for this class
-    def __init__(self, idx, data):
+    def __init__(self, idx, data, par_fpath):
         self.idx = idx
         self.__data = data
-        self.__P = Plot_configuration()
+        self.__P = Plot_configuration(par_fpath)
 
     def num_plot_mapper(self, val, obj):
         one_plot = lambda: obj.one_output()
@@ -79,17 +79,17 @@ class Timeseries(A):
             else:
                 dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
 
+            legend_label = dframe.columns
+            fig, ax = plt.subplots()
+
             if self.__analysistype == A.agent:
-                minor_index = dframe.index.get_level_values('minor').unique()                
-                legend_label = dframe.columns
-                fig, ax = plt.subplots() # initialize figure
+                minor_index = dframe.index.get_level_values('minor').unique()
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     if len(D.columns) == 2:
                         print "Quantile not possible for agent level analysis!"
                         sys.exit(1)                        
-
-                    else: # all fine for this else block ,do not change, also save fine
+                    else:
                         y = []                        
                         for l in range(0, len(D), self.__N):
                             y.append(np.array(D[l:l+self.__N]))
@@ -101,21 +101,15 @@ class Timeseries(A):
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
                 plt.close()
 
-            else:
-                # this part after else block is working as intended
-                fig, ax = plt.subplots() # initialize figure
-                legend_label = dframe.columns
+            else:                
                 if len(dframe.columns) == 2:
                     y1 = []
                     y2 = []
                     col_A = dframe[dframe.columns[0]]
                     col_B = dframe[dframe.columns[1]]
                     
-
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-
-                    for i in range(0, len(dframe), self.__N):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     x = np.arange(1, self.__N+1)
@@ -124,7 +118,6 @@ class Timeseries(A):
                         self.plot_line(ax, x, y2[r], legend_label[1]+'_inst_'+str(r))
                         plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
 
-                    plt.legend(loc='best', fancybox=True, shadow=True)
                     plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                     plt.close()
@@ -134,14 +127,13 @@ class Timeseries(A):
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                     for r in range(0, len(dframe)/self.__N):
-                        x = np.linspace(0, self.__N, self.__N, endpoint=True)
+                        x = np.arange(1, self.__N+1)
                         self.plot_line(ax, x, y1[r], legend_label[0] + "_inst_" + str(r))
-                    plt.legend(loc='best', fancybox=True, shadow=True)
+
                     plot_name = self.__P.plot_name(self.idx) 
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
                     plt.close()
             file_count = file_count + 1
-
     
     def many_output(self):
         step = 1
@@ -153,12 +145,11 @@ class Timeseries(A):
                 dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()  # one variable, one case at a time            
             else:
                 dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
+            legend_label = dframe.columns
+
             if self.__analysistype == A.agent:
-                print " -Warning: too many plots will be produced !!! " 
-                                       
-                minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
-                legend_label = dframe.columns
- 
+                print " -Warning: too many plots will be produced !!! "                                        
+                minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
                 for m in minor_index:
                     D = dframe.xs( int(m) , level='minor')
                     if len(D.columns) == 2:
@@ -174,24 +165,18 @@ class Timeseries(A):
                             plot_name = self.__P.plot_name(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_inst_" + str(m) + ".png", bbox_inches='tight')
                             plt.close()
-                            count = count + 1	                
-
+                            count = count + 1
             else:                
                 if len(dframe.columns) == 2:
                     y1 = []
                     y2 = []
                     col_A = dframe[dframe.columns[0]]
                     col_B = dframe[dframe.columns[1]]
-                    legend_label = dframe.columns
 
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-
-                    for i in range(0, len(dframe), self.__N):
                         y2.append(np.array(col_B[i:i+self.__N]))
-
-                    x = np.arange(1, self.__N+1)
-                    
+                    x = np.arange(1, self.__N+1)                    
                     for r in range(0, len(dframe)/self.__N):
                         fig, ax = plt.subplots() 
                         self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
@@ -201,23 +186,17 @@ class Timeseries(A):
                         plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                         file_count = file_count + 1
                         plt.close()
-
                 else:
                     y =[]
                     for i in range(0,len(dframe),self.__N):
-                        y.append(np.array(dframe[i:i+self.__N]))
-                    legend_label = dframe.columns        
-                                    
+                        y.append(np.array(dframe[i:i+self.__N]))                                           
                     for s in range(0, len(dframe)/self.__N):
                         fig, ax = plt.subplots() 
                         x = np.arange(1, self.__N+1)
-                        self.plot_line(ax, x, y[s], legend_label[0] + "_inst_" + str(s))
-                        
+                        self.plot_line(ax, x, y[s], legend_label[0] + "_inst_" + str(s))                       
                         plot_name = self.__P.plot_name(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
                         plt.close()    
-      
-        
 
 
 class Histogram():
