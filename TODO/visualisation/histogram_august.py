@@ -8,10 +8,10 @@ plt.style.use('ggplot')
 import matplotlib.cm as cm
 
 class Plot(NP):  # TODO: remove NP here, inheritance usless for this class
-    def __init__(self, idx, data):
+    def __init__(self, idx, data, par_fpath):
         self.idx = idx
         self.__data = data
-        self.__P = Plot_configuration()
+        self.__P = Plot_configuration(par_fpath)
 
     def num_plot_mapper(self, val, obj):
         one_plot = lambda: obj.one_output()
