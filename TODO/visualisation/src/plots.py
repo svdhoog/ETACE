@@ -5,9 +5,10 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 plt.style.use('ggplot')
+import matplotlib.cm as cm
 
 
-class Plot(NP):  # TODO: remove NP here, inheritance usless for this class
+class Plot():
     def __init__(self, idx, data, par_fpath):
         self.idx = idx
         self.__data = data
@@ -46,8 +47,6 @@ class Timeseries(A):
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
         self.summary = main_param['summary']
-        print "main data received from summary module inside plot module: "
-        print self.__data.head(5)
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
@@ -95,8 +94,7 @@ class Timeseries(A):
                             y.append(np.array(D[l:l+self.__N]))
                         x = np.arange(1, self.__N+1)
                         for r in range(0, len(y)):                                                        
-                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m))
-                #plt.show()                           
+                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m))                           
                 plot_name = self.__P.plot_name(self.idx)           
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
                 plt.close()
@@ -205,46 +203,333 @@ class Histogram():
         self.idx = idx
         self.__data = data
         self.outpath = outpath          
-        self.__N = len(main_param['major'])
+        #self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
-        print "lau hai aayo lili lai"
+        self.summary = main_param['summary']
+        if self.__analysistype == A.agent and self.summary  == 'custom_quantile':
+            print ">> Quantile not possible for agent level analysis!"
+            sys.exit(1)
 
     def map_analysis(self, val):             
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val] 
 
 
-    def many_output(self): ####TODO###
-        return
-        y =[]
-        for i in range(0,len(self.__data),self.__N):
-            y.append(np.array(self.__data[i:i+self.__N]))
-        for i in range(0,len(self.__data)/self.__N):
-            hist, bins = np.histogram(y[i],bins = 50)
-            width = 0.7 * (bins[1] - bins[0])
-            center = (bins[:-1] + bins[1:]) / 2
-            plt.bar(center, hist, align='center', width=width)
-            #plt.show()
-            #plt.plot(x,y[i])
-            plot_name = "histogram_"+str(i)+".png"
-            plt.savefig(plot_name, bbox_inches='tight')	 
-            
-            # plt.show() # reset the plot, but gives output in display
-            # So, alternatively:
-            # plt.cla() # clear current axes
-            plt.clf() # clear current figure
-            # plt.close() # close the whole plot
-        plt.close()    
-    
+    def plot_histogram(self, ax, data, label, colors, n_bins):
+       
+        if self.__P.legend_label(self.idx) is None:      
+            le_label = label
+        else:
+            le_label = self.__P.legend_label(self.idx)
+        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.norm(self.idx), fill=self.__P.fill(self.idx), color=colors, label=le_label)
+        if self.__P.legend(self.idx) is True:
+            plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        if self.__P.plot_title(self.idx) is not None:
+            ax.set_title(self.__P.plot_title(self.idx))
+        if self.__P.x_label(self.idx) is not None:
+            plt.xlabel(self.__P.x_label(self.idx))
+        if self.__P.y_label(self.idx) is not None:        
+            plt.ylabel(self.__P.y_label(self.idx))
+        return out
+
+
     def one_output(self):
-        self.__data.hist(bins = 50)
-        plt.savefig('histogram_main.png', bbox_inches='tight')
-        plt.close()
+        file_count = 0
+        step = 1
+        if self.summary == 'custom_quantile':
+            step = 2
+        
+        for col in range(0, len(self.__data.columns), step): # one variable, one case at a time 
+            if self.summary == 'custom_quantile':
+                dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy().dropna() # hist method does not support NaN            
+            else:
+                dframe = pd.DataFrame(self.__data[self.__data.columns[col]]).dropna() 
+
+            self.__N = len(dframe.index.get_level_values('major').unique())
+                        
+            legend_label = dframe.columns
+            if self.__analysistype == A.agent:
+                minor_index = dframe.index.get_level_values('minor').unique()
+                fig, ax = plt.subplots()                              
+                for m in minor_index:
+                    D = dframe.xs(int(m), level='minor')                    
+                    if len(D.columns) == 2:  # TODO: this check done in class constructor, so no need
+                        print "Quantile not possible for agent level analysis!"
+                        sys.exit(1)                        
+                    else: 
+                        y = []                        
+                        for l in range(0, len(D), self.__N):
+                            y.append(np.array(D[l:l+self.__N]))
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                        for r in range(0, len(y)):
+                            clr = next(colors)
+                            self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m), clr, self.__P.bins(self.idx))                                                      
+                plot_name = self.__P.plot_name(self.idx)           
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+                plt.close()
+
+            else:
+                fig, ax = plt.subplots()
+                if len(dframe.columns) == 2:
+                    y1 = []
+                    y2 = []
+                    col_A = dframe[dframe.columns[0]] 
+                    col_B = dframe[dframe.columns[1]]
+                    
+                    for i in range(0, len(dframe), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
+                    for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
+                        clr = next(colors)
+                        self.plot_histogram(ax, y1[r], legend_label[0]+'_inst_'+str(r), clr, self.__P.bins(self.idx)) 
+                        clr = next(colors)
+                        self.plot_histogram(ax, y2[r], legend_label[1]+'_inst_'+str(r), clr, self.__P.bins(self.idx)) 
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    plt.close()
+                else:
+                    y1 = []
+                    col_A = dframe[dframe.columns[0]]
+                    for i in range(0, len(dframe), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                    for r in range(0, len(dframe)/self.__N):
+                        clr = next(colors)
+                        self.plot_histogram(ax, y1[r], legend_label[0]+'_inst_'+str(r), clr, self.__P.bins(self.idx))
+         
+                    plot_name = self.__P.plot_name(self.idx) 
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
+                    plt.close()
+            file_count = file_count + 1        
 
 
-class Boxplot(NP, A):
+    def many_output(self):
+        step = 1
+        if self.summary == 'custom_quantile':
+            step = 2
+        file_count = 0
+        for col in range(0, len(self.__data.columns),step):
+            if self.summary == 'custom_quantile':
+                dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy().dropna()  # one variable, one case at a time            
+            else:
+                dframe = pd.DataFrame(self.__data[self.__data.columns[col]]).dropna()
+
+            legend_label = dframe.columns
+            self.__N = len(dframe.index.get_level_values('major').unique())
+
+            if self.__analysistype == A.agent:
+                print " -Warning: too many plots will be produced !!! "                                        
+                minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
+                for m in minor_index:
+                    D = dframe.xs( int(m) , level='minor')
+                    if len(D.columns) == 2:
+                        print "Quantile not possible for agent level analysis"                    
+                        sys.exit(1)
+                    else:
+                        count = 0 
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                        for r in range(0,len(D),self.__N):
+                            fig, ax = plt.subplots()                  
+                            y = np.array(D[r:r+self.__N])
+                            clr = next(colors)
+                            self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx))
+                            plot_name = self.__P.plot_name(self.idx)
+                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_inst_" + str(m) + ".png", bbox_inches='tight')
+                            plt.close()
+                            count = count + 1
+            else:                
+                if len(dframe.columns) == 2:
+                    y1 = []
+                    y2 = []
+                    col_A = dframe[dframe.columns[0]]
+                    col_B = dframe[dframe.columns[1]]
+
+                    for i in range(0, len(dframe), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))                                      
+                    for r in range(0, len(dframe)/self.__N):
+                        fig, ax = plt.subplots()
+                        clr = next(colors)
+                        self.plot_histogram(ax, y1[r], legend_label[0] + "_run_" + str(r), clr, self.__P.bins(self.idx))                         
+                        clr = next(colors)
+                        self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx)) 
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        file_count = file_count + 1
+                        plt.close()
+                else:
+                    y =[]
+                    for i in range(0,len(dframe),self.__N):
+                        y.append(np.array(dframe[i:i+self.__N]))
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))                                           
+                    for s in range(0, len(dframe)/self.__N):
+                        fig, ax = plt.subplots() 
+                        clr = next(colors)
+                        self.plot_histogram(ax, y[s], legend_label[0] + "_inst_" + str(s), clr, self.__P.bins(self.idx))                      
+                        plot_name = self.__P.plot_name(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                        plt.close()  
+
+
+class Scatterplot(A):
+    
     def __init__(self, idx, data, plt_config, main_param, outpath):
+        self.idx = idx  
+        self.__data = data
+        self.__P = plt_config
+        self.outpath = outpath          
+        self.__N = len(main_param['major'])
+        self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.delay = main_param['delay']
+        self.summary = main_param['summary']       
+
+        if self.delay is True:
+            if self.summary == 'custom_quantile':
+                print ">> Delay not supported for Quantiles! Adjust parameter and retry!"
+                sys.exit(1)
+            delayed_df = self.__data.shift(periods = 1, axis = 0)
+            delayed_df.rename(columns=lambda x: x+ "_delay", inplace=True)
+            D = pd.concat([self.__data, delayed_df], axis =1)            
+            self.__data = D[list(sum(zip(self.__data.columns, delayed_df.columns), ()))]
+
+
+    def map_analysis(self, val):             
+        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
+        return analysis_values[val]                  
+
+
+    def plot_scatterplot(self, ax, x, y, l_label, x_label, y_label, clr):        
+        if self.__P.legend_label(self.idx) is None:      
+            le_label = l_label
+        else:
+            le_label = self.__P.legend_label(self.idx)
+
+        out = ax.scatter(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
+        facecolor=self.__P.facecolors(self.idx), label=le_label, color=clr)
+       
+        if self.__P.legend(self.idx) is True:
+            ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        plt.xlabel(x_label)
+        plt.ylabel(y_label)
+        return out
+
+    def one_output(self):
+        file_count = 0
+        step = 2        
+        for col in range(0, len(self.__data.columns), step):
+            if len(self.__data.columns) < 2:
+                print ">> Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                sys.exit(1)
+            dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
+           
+            if self.__analysistype == A.agent:
+                minor_index = dframe.index.get_level_values('minor').unique()                
+                fig, ax = plt.subplots() # initialize figure
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
+                for m in minor_index:
+                    D = dframe.xs(int(m), level='minor')
+                    legend_label = D.columns
+                    if len(dframe.columns) != 2:
+                        print ">> Something wrong with data, check and retry!"
+                        sys.exit (1)
+                    y1 = []
+                    y2 = []
+                    col_A = D[D.columns[0]]
+                    col_B = D[D.columns[1]]
+                    for i in range(0, len(D), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+                    for r in range(0, len(D)/self.__N):
+                        clr = next(colors)
+                        self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [inst'+str(m) + ' run' + str(r) + ']', legend_label[0], legend_label[1], clr )
+                plot_name = self.__P.plot_name(self.idx)           
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                plt.close()
+
+            else:
+                fig, ax = plt.subplots() # initialize figure
+                legend_label = dframe.columns
+                if len(dframe.columns) != 2:
+                    print ">> Something wrong with data, check and retry!"
+                    sys.exit (1)
+                y1 = []
+                y2 = []
+                col_A = dframe[dframe.columns[0]]
+                col_B = dframe[dframe.columns[1]]                
+                for i in range(0, len(dframe), self.__N):
+                    y1.append(np.array(col_A[i:i+self.__N]))
+                    y2.append(np.array(col_B[i:i+self.__N]))
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                for r in range(0, len(dframe)/self.__N):
+                    clr = next(colors)
+                    self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
+                plot_name = self.__P.plot_name(self.idx)           
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                plt.close()                
+            file_count = file_count + 1
+
+    def many_output(self):
+        file_count = 0
+        step = 2        
+        for col in range(0, len(self.__data.columns), step):
+            if len(self.__data.columns) < 2:
+                print "Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                sys.exit(1)
+            dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
+           
+            if self.__analysistype == A.agent:
+                minor_index = dframe.index.get_level_values('minor').unique()                                
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
+                for m in minor_index:
+                    D = dframe.xs(int(m), level='minor')
+                    legend_label = D.columns
+                    if len(dframe.columns) != 2:
+                        print "Something wrong with data, check and retry!"
+                        sys.exit (1)
+                    y1 = []
+                    y2 = []
+                    col_A = D[D.columns[0]]
+                    col_B = D[D.columns[1]]
+                    for i in range(0, len(D), self.__N):                        
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+                    for r in range(0, len(D)/self.__N):
+                        fig, ax = plt.subplots()
+                        clr = next(colors)
+                        self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + ".png", bbox_inches='tight')
+                        plt.close()
+            else:
+                legend_label = dframe.columns
+                if len(dframe.columns) != 2:
+                    print "Something wrong with data, check and retry!"
+                    sys.exit (1)
+                y1 = []
+                y2 = []
+                col_A = dframe[dframe.columns[0]]
+                col_B = dframe[dframe.columns[1]]                
+                for i in range(0, len(dframe), self.__N):
+                    y1.append(np.array(col_A[i:i+self.__N]))
+                    y2.append(np.array(col_B[i:i+self.__N]))
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                for r in range(0, len(dframe)/self.__N):
+                    fig, ax = plt.subplots() 
+                    clr = next(colors)
+                    self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_inst_'+ str(r) + ".png", bbox_inches='tight')
+                    plt.close()                
+            file_count = file_count + 1
+
+
+class Boxplot(A):
+    def __init__(self, idx, data, plt_config, main_param, outpath):
+
         self.idx = idx 
         self.__data = data
         self.__P = plt_config
@@ -252,116 +537,82 @@ class Boxplot(NP, A):
         self.outpath = outpath 
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        if self.__analysistype == A.agent:
+            print "Boxplot not possible for agent-level analysis!"
+            sys.exit(1)
               
-    def map_analysis(self, val):             
+    def map_analysis(self, val): 
+            
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val] 
         
-    def one_output(self):
-        s = SummaryStats(self.__data, self.__main_param)   # Fix this for summary accordingly
-        box_df = pd.DataFrame()
-        box_df['mean'] = [x for sublist in s.mean().values for x in sublist]  # [x for sublist in s.mean().values for x in sublist] done to flatten a 2D list to 1D so pandas accepts it
-        # box_df['mean'] = s.mean() # this was the old simpler method which did not work once the config file variables was turned to a hierarchy with filters (bug in df, see for new patches)
-        box_df['median'] = [x for sublist in s.median().values for x in sublist]
-        box_df['upper_quartile'] = [x for sublist in s.upper_quartile().values for x in sublist]
-        box_df['lower_quartile'] = [x for sublist in s.lower_quartile().values for x in sublist]
-        box_df['max'] = [x for sublist in s.maximum().values for x in sublist]
-        box_df['min'] = [x for sublist in s.minimum().values for x in sublist]
+    def process_boxplot_data(self, data):
 
-        # box_df['mean'].plot() # shortcut pandas method to plot the whole thing
-        # box_df.plot()
-        # plt.show()
-        t_df = box_df.T
-        
-        bp = t_df.boxplot(column = [100,250,500,750,999], positions =[1,2,3,4,5])           
-        plot_name = self.__P.plot_name(self.idx)            
-        plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')      
-        plt.clf()
-
-    def many_output(self):
-        print "many ma ni aaucha ta?"
-        s = SummaryStats(self.__data, self.__analysistype )           
+        s = SummaryStats(data, self.__main_param) 
         box_df = pd.DataFrame()
+        #print s.mean().values
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
         box_df['upper_quartile'] = s.upper_quartile()
         box_df['lower_quartile'] = s.lower_quartile()
         box_df['max'] = s.maximum()
         box_df['min'] = s.minimum()
+        return box_df
 
-        count = 0
-        for i in range(0,len(box_df.index)/self.__N):                    
-            tmp_df = box_df[count:count+self.__N]
-            bp = tmp_df.boxplot(column = ['min','median','mean','upper_quartile','lower_quartile','max'], positions =[1,3,4,5,2,6])
-            plot_name = "boxplot_"+str(i)+".png"        
-            plt.savefig(self.outpath +'/'+plot_name, bbox_inches='tight')  
-            plt.clf()           
-            count = count + self.__N
-        plt.close()
+    def plot_boxplot(self, ax, data, l_label):
 
-
-
-
-class Scatterplot(A):
-    
-    def __init__(self, idx, data, plt_config, main_param, outpath):
-    #def __init__(self, data, n, a, parameter, idx):
-        self.idx = idx  
-        self.__data = data
-        self.__P = plt_config
-        self.outpath = outpath          
-        self.__N = len(main_param['major'])
-        self.__analysistype = self.map_analysis(main_param['analysis'])
-        
-        #print "main data received from summary module to scatterplot module: "
-        #print self.__data.head(10)
-            
-    def map_analysis(self, val):             
-        analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
-        return analysis_values[val]                  
-    
-    def one_output(self):
-        if self.__analysistype == A.agent:
-            print " -Warning: too many lines will be printed in a single plot !!! "
-            minor_index = self.__data.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
-            for i in minor_index:
-                D = self.__data.xs( int(i) , level='minor')
-            count = 0          
-            for i in range(0,len(D),self.__N):
-                y = np.array(D[i:i+self.__N])
-                x = np.linspace(0, self.__N, self.__N, endpoint=True)
-                #print x
-
-                plt.plot(x,y, linestyle = self.__P.linestyle(self.idx), marker='o', markerfacecolor = 'green', markersize =1, label = self.__P.legend_label(self.idx)+"_"+str(count))
-                count = count + 1
-                plt.hold(True)
-            plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__P.plot_name(self.idx) 
-            plt.savefig(plot_name, bbox_inches='tight')
-            plt.close()
-
+        if self.__P.legend_label(self.idx) is None:      
+            le_label = l_label
         else:
-            y1 = []
-            y2 = []
-            col_A = self.__data[self.__data.columns[0]]
-            col_B = self.__data[self.__data.columns[1]]
-            for i in range(0,len(self.__data),self.__N):
-                y1.append(np.array(col_A[i:i+self.__N]))
-            
-            for i in range(0,len(self.__data),self.__N):
-                y2.append(np.array(col_B[i:i+self.__N]))  
+            le_label = self.__P.legend_label(self.idx)
 
-            for i in range(0,len(self.__data)/self.__N):                    
-                colors = (0,0,0)
-                area = np.pi*3
-                
-                plt.scatter(y1[i], y2[i], s=area, c=colors, alpha=0.5)
-                plt.title('Scatter plot')
-                plt.xlabel('x')
-                plt.ylabel('y')
-                
-            #plt.legend(loc='best', fancybox=True, shadow=True)
-            plot_name = self.__P.plot_name(self.idx)           
-            plt.savefig(plot_name, bbox_inches='tight')
-            plt.close()
-            
+        t_df = data.T 
+        ax = t_df.boxplot(column = [100,250,500,750,900], positions =[1,2,3,4,5]) 
+        ax.set_title(l_label)
+        ax.set_xlabel('xlabel')
+        ax.set_ylabel('ylabel')
+        return ax            
+
+    def one_output(self):
+
+        for col in range(0, len(self.__data.columns)):
+            dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
+            fig, ax = plt.subplots()
+            if self.__analysistype == A.agent: # check done above, redundant, to remove
+                print "Boxplot not possible for agent-level analysis!"
+                sys.exit(1)
+            else:                
+                col_A = dframe[dframe.columns[0]]
+                D = self.process_boxplot_data(col_A)
+                y = []
+                for i in range(0, len(D), self.__N):                    
+                    y.append(pd.DataFrame(D[i:i+self.__N]))
+                for r in range(0, len(D)/self.__N):
+                    self.plot_boxplot(ax, y[r], self.__data.columns[col])
+                   
+                plot_name = self.__P.plot_name(self.idx) 
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')          
+                plt.close()
+
+    def many_output(self):
+
+        for col in range(0, len(self.__data.columns)):
+            dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
+            if self.__analysistype == A.agent: # check done above, redundant, to remove
+                print "Boxplot not possible for agent-level analysis!"
+                sys.exit(1)
+            else:                
+                col_A = dframe[dframe.columns[0]]
+                D = self.process_boxplot_data(col_A)
+                y =[]
+                for i in range(0,len(D),self.__N):
+                    y.append(pd.DataFrame(D[i:i+self.__N]))                                           
+                for s in range(0, len(D)/self.__N):
+                    fig, ax = plt.subplots() 
+                    self.plot_boxplot(ax, y[s], self.__data.columns[col])
+                                          
+                    plot_name = self.__P.plot_name(self.idx)
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                    plt.close()  
+
+          
