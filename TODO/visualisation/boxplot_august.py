@@ -25,7 +25,7 @@ class Plot():
         self.num_plot_mapper(self.__P.num_plots(self.idx), B)
 
 
-class Boxplot(NP, A):
+class Boxplot(A):
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx 
         self.__data = data
@@ -34,6 +34,9 @@ class Boxplot(NP, A):
         self.outpath = outpath 
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        if self.__analysistype == A.agent:
+            print "Boxplot not possible for agent-level analysis!"
+            sys.exit(1)
               
     def map_analysis(self, val):             
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
@@ -52,7 +55,7 @@ class Boxplot(NP, A):
         return box_df
 
     def plot_boxplot(self, ax, data, l_label):
-        print l_label
+
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
@@ -69,7 +72,7 @@ class Boxplot(NP, A):
         for col in range(0, len(self.__data.columns)):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             fig, ax = plt.subplots()
-            if self.__analysistype == A.agent:
+            if self.__analysistype == A.agent: # check done above, redundant, to remove
                 print "Boxplot not possible for agent-level analysis!"
                 sys.exit(1)
             else:                
@@ -85,7 +88,24 @@ class Boxplot(NP, A):
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')          
                 plt.close()
 
-
-
+    def many_output(self):
+        for col in range(0, len(self.__data.columns)):
+            dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
+            if self.__analysistype == A.agent: # check done above, redundant, to remove
+                print "Boxplot not possible for agent-level analysis!"
+                sys.exit(1)
+            else:                
+                col_A = dframe[dframe.columns[0]]
+                D = self.process_boxplot_data(col_A)
+                y =[]
+                for i in range(0,len(D),self.__N):
+                    y.append(pd.DataFrame(D[i:i+self.__N]))                                           
+                for s in range(0, len(D)/self.__N):
+                    fig, ax = plt.subplots() 
+                    self.plot_boxplot(ax, y[s], self.__data.columns[col])
+                                          
+                    plot_name = self.__P.plot_name(self.idx)
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                    plt.close()  
 
           
