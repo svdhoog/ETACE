@@ -6,8 +6,8 @@ import pandas as pd
 # helper classes, imported from same directory
 from parameters import A, main_configuration
 from summarystats import SummaryStats
+from boxplot_august import Plot
 #from plots import Plot
-from histogram_august import Plot
 from transform import Transform
 
 
@@ -73,7 +73,7 @@ def filter_by_value(dkey, dval, filtered):  # Function to filter the variables b
 
 
 # Function to bridge other classes (summarystats, transform, and plot)
-def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter object, df = data
+def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter object, df = data, parameter_filepath
     param = P.get_parameters()[idx]
     key = P.get_plotname_by_idx(idx)
     outpath = P.output_fpath()
@@ -101,7 +101,7 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
 
     def var_transform():
         Tf = Transform(idx, data, par_fpath)
-        Tf.main_method()
+        Tf.main_method(outpath)
 
     def plt_histogram():
         H = Plot(idx, data, par_fpath)
@@ -179,4 +179,4 @@ if __name__ == "__main__":
 ###################################################################################################################################
 # TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse
 # TODO: currently the filtering is done in two steps, find a way to do it in a single step
-
+# TODO: main data reprocessed for different types of plot (separate the processing and plot from loop to process main data just once
