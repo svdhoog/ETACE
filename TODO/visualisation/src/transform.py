@@ -3,110 +3,107 @@ import sys, os
 import yaml
 import numpy as np
 import pandas as pd
-
-
-class transform_configuration():
-
-    def __init__(self, in_fpath):
- 
-        self.transform_f = in_fpath + '/config_transform.yaml' # the main configuration file
-        self.parsed_values = self.parse_yaml(self.transform_f)
-
-    def erf(self, msg):  # function to output the error message and exit
-        print " >> Error: %s" % msg
-        sys.exit()
-
-    def parse_yaml(self, fname):  # Function to parse input parameters from the main configuration file
-        try:
-            f = open(fname, 'r')
-        except IOError:
-            self.erf("unable to read file: %s" % fname)
-        with f as stream:
-            try:
-                p = yaml.load(stream)
-            except yaml.YAMLError, exc:  # error-check for incorrect yaml syntax
-                if hasattr(exc, 'problem_mark'):
-                    mark = exc.problem_mark
-                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname)
-                else:
-                    print " >> Unknown problem with %s file:" % fname
-                sys.exit()
-            return p
-   
-    def get_parameters(self, idx):
-        inner_dic = self.parsed_values[idx]
-        return inner_dic
+from parameters import transform_configuration
 
 
 class Transform():
+
     def __init__(self, idx, data, par_fpath):
         self.__idx = idx 
         self.__data = data
         self.P = transform_configuration(par_fpath)
-        
+        self.df_out = pd.DataFrame(data=None, columns=self.__data.columns,index=self.__data.index)
+
 
     def main_method(self, outpath):            
         transform_function = {'q_o_q': self.q_o_q, 'q_o_q_ONE_CYCLE': self.q_o_q_ONE_CYCLE, 'm_o_m': self.m_o_m, 'm_o_m_ONE_CYCLE': self.m_o_m_ONE_CYCLE,'annual_P_I_T': self.annual_P_I_T}            
         fn = self.P.get_parameters(self.__idx)['aggregate']
-        data_out = transform_function[self.P.get_parameters(self.__idx)['transform_function']](fn)
-        
+        data_out = transform_function[self.P.get_parameters(self.__idx)['transform_function']](fn, self.df_out)
         f_out = self.P.get_parameters(self.__idx)['write_file']
-        
         if f_out is True:
-            data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), 'ratite', mode = 'a', format = 'table')           
-
+            data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), 'ratite', mode = 'a', format = 'table')
+        print data_out           
         return data_out
 
 
+    def col_name_mapper(self): # map old var name with transformed var name
+        d ={}
+        for k, v in self.P.get_parameters(self.__idx)['variables'].items():
+            for key, value in self.P.get_parameters(self.__idx)['new_variables'].items():
+                if key == k:
+                    d[v] = value
+        return d
 
-#TODO: Change the data in below functions with the data returned from get_parameters function above
 
-    def q_o_q(self,fn): # method to print quaterly growth rate (quarter on quarter)
-        variables = self.get_parameters()['variables']
-        def mean():
-            roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean().dropna() # first get rolling window values with step 3 and initial buffer 3
-            return roll_mean[::3].pct_change(4) # compute rate between values with a step size 4 
+    def q_o_q(self,fn, d_out): # method to print quaterly growth rate (quarter on quarter)
+        variables = self.P.get_parameters(self.__idx)['variables']
+        col_d = self.col_name_mapper()
+
+        def mean(df_out): # TODO: value seems wrong, check, multi agent causing error 
+            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3           
+            #df_out[variables.values()] = roll_mean[::3].pct_change(4)
+            df_out[variables.values()] = roll_mean[::3][variables.values()]
+            df_out = df_out.pct_change(4)
+
+            return df_out.rename(columns = col_d)
             
-        def summation():
-            roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum().dropna()
-            return roll_sum[::3].pct_change(4)
-            
+        def summation(df_out):
+            roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
+            df_out[variables.values()] = roll_sum[::3].pct_change(4)
+            return df_out.rename(columns = col_d)        
+
         f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
-        return f_mapper[fn]()
+        return f_mapper[fn](d_out)
 
 
-    def m_o_m(self,fn): # method to print monthly growth rate (month on month)
+    def m_o_m(self,fn, df_out): # method to print monthly growth rate (month on month)
         variables = self.P.get_parameters(self.__idx)['variables']
-        return self.P.__data[variables.values(self.__idx)].pct_change(12)
+        col_d = self.col_name_mapper()
+        df_out[variables.values()] = self.__data[variables.values()].pct_change(12)
+        return df_out.rename(columns = col_d)
 
 
-    def m_o_m_ONE_CYCLE(self,fn): # method to print monthly growth rate (month on month in one cycle)
+    def m_o_m_ONE_CYCLE(self,fn, df_out): # method to print monthly growth rate (month on month in one cycle)
+
         variables = self.P.get_parameters(self.__idx)['variables']
-        return self.__data[variables.values()].pct_change(1)
+        col_d = self.col_name_mapper()
+        df_out[variables.values()] = self.__data[variables.values()].pct_change(1)
+        return df_out.rename(columns = col_d)
 
-    def annual_P_I_T(self,fn): # method to print annual growth rate, point in time. TODO: point in time not added yet
+
+    def annual_P_I_T(self,fn, df_out): # method to print annual growth rate, point in time. TODO: point in time not added yet
+
         variables = self.P.get_parameters(self.__idx)['variables']
+        col_d = self.col_name_mapper()
+
         def mean():
-            roll_mean = self.__data[variables.values()].rolling(window=12,min_periods=12).mean().dropna() # first get rolling window values with step 12 and initial buffer 12
-            return (roll_mean[::12]).pct_change(1) # compute rate between values with a step size 1
+            roll_mean = self.__data[variables.values()].rolling(window=12,min_periods=12).mean() # first get rolling window values with step 12 and initial buffer 12
+            df_out[variables.values()] = roll_mean[::12].pct_change(1) # compute rate between values with a step size 1
+            return df_out.rename(columns = col_d)
                
         def summation():
-            roll_sum = self.__data[variables.values()].rolling(window=12,min_periods=12).sum().dropna()
-            return (roll_sum[::12]).pct_change(1)
-            
+            roll_sum = self.__data[variables.values()].rolling(window=12,min_periods=12).sum()
+            df_out[variables.values()] = roll_sum[::12].pct_change(1)
+            return df_out.rename(columns = col_d)
+
+           
         f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
         return f_mapper[fn]()
 
 
-    def q_o_q_ONE_CYCLE(self,fn): # method to print quaterly growth rate (quarter on quarter)
+    def q_o_q_ONE_CYCLE(self,fn, df_out): # method to print quaterly growth rate (quarter on quarter)
         variables = self.P.get_parameters(self.__idx)['variables']
+        col_d = self.col_name_mapper()
+
         def mean():
-            roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean().dropna() # first get rolling window values with step 3 and initial buffer 3
-            return roll_mean[::3].pct_change(1) # compute rate between values with a step size 4 
+            roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3
+            df_out[variables.values()] = roll_mean[::3].pct_change(1)
+            return df_out.rename(columns = col_d)
             
         def summation():
-            roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum().dropna()
-            return roll_sum[::3].pct_change(1)
+            roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
+            df_out[variables.values()] = roll_sum[::3].pct_change(1)
+            return df_out.rename(columns = col_d)
             
         f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
         return f_mapper[fn]()
