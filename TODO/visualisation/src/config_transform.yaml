@@ -2,12 +2,14 @@
 plot2:
     variables: 
         var1: total_credit
-        var2: total_credit        
-    transform_function: m_o_m_ONE_CYCLE
-    aggregate: mean    
- 
+        var2: equity        
+    transform_function: q_o_q
+    aggregate: mean
+    new_variables:
+        var1: total_credit_q_o_q
+        var2: equity_q_o_q    
     write_file: yes
-    output_path: '/home/susupta/Desktop/GitHub/ETACE/TODO/visualisation/transform_out/outsent.h5'
+    output_file_name: 'sents.h5'
     hdf_groupname: 'total_credit_ratio'   
     
 
