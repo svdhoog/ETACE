@@ -6,8 +6,7 @@ import pandas as pd
 # helper classes, imported from same directory
 from parameters import A, main_configuration
 from summarystats import SummaryStats
-from boxplot_august import Plot
-#from plots import Plot
+from plots import Plot
 from transform import Transform
 
 
