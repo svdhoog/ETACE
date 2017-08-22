@@ -1,62 +1,43 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 #################################################################################################################
 ## This script creates HDF5 files from corresponding XML files in many-to-one fashion. So, for all xml files 
 ## present in one input folder, one equivalent HDF5 file is created in the output folder. For input folders 
 ## containing more hierarchies, one HDF5 file is created for contents of each subfolder.
 #################################################################################################################
+from __future__ import print_function
 
-import os, sys, re, argparse, glob, errno
+import os, sys, argparse, glob, errno
 import lxml.etree as ET
 from xml.dom import minidom
 from xml.parsers.expat import ExpatError
-from glob import glob as g
 import pandas as pd
+
 pd.set_option('io.hdf.default_format','table')    # Commenting this line out will write HDF5 as a fixed format, and not as a table format
                                                   # Writing as a fixed format is faster than writing as a table, but the file cannot be 'modified/ appended to' later on
 XML_SUFFIX = '.xml'
 
 def file_exist(fname):
-    f = g(fname)
+    f = glob.glob(fname)
     if fname in f: return True
     else: return False
 
 # Function to check for existing directories, and create a new one if not present 
 def dir_check(d):
     if os.path.exists(d):
-        reply = raw_input("Specified output directory already exists!! Delete existing directory named <<"+os.path.basename(d)+">> and all its contents? [y/n] ")
-        if reply in ['y', 'Y', 'yes']:
-            try:
-                os.system('rm -r '+ d)
-                print("Directory named <<"+os.path.basename(d)+ ">> and all its contents deleted!!")
-                # Make new output folder
-                try:
-                    os.makedirs(d)
-                except OSError as exception:
-                    if exception.errno != errno.EEXIST:
-                        raise                
-            except:
-                error("- Could not delete directory <<" +os.path.basename(d)+">>. Directory may contain additional files, remove files manually and try again!")
-        else:
-            replytwo = raw_input("Continue & write output files inside existing directory: <<"+os.path.basename(d)+">> ? WARNING: This will overwrite old files having same name, if present in the folder! [y/n]: ")
-            if not replytwo in ['y', 'Y', 'yes']:
-                try:              
-                    print ("Please remove or rename the existing directory <<"+os.path.basename(d)+">> and try again, or choose a different directory for the output")
-                    sys.exit()
-                except OSError as exception:
-                    if exception.errno != errno.EEXIST:
-                        raise                        
+        print("- Directory ["+os.path.basename(d)+ "] is used for output files")    
     else:
         os.makedirs(d)
+        print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
 # Function to print out the error messages,if any, and exit
 def error(mesg):
-    print >>sys.stderr, ">>>>> (Error): %s" % mesg
+    print(">>>>> (Error): %s" % mesg, file = sys.stderr)
     sys.exit(1)
 
 # Function to print out the error messages,if any
 def warn(mesg):
-    print >>sys.stderr, ">> (Warning): %s" % mesg
+    print(">>>>> (Warning): %s" % mesg, file = sys.stderr)
 
 def get_node_text(node):
     if len(node.childNodes) != 1 or node.childNodes[0].nodeType != node.TEXT_NODE:
@@ -121,6 +102,8 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--outpath', help='Path to the folder where the output is desired', nargs=1, type=str)
     parser.add_argument('-v', '--verbose', help='Get the status of the intermediate processing steps', action='store_true')   
     parser.add_argument('-s', '--status', help='Get the total progress of the processing', action='store_true')
+    parser.add_argument('-r', '--recursive', help = 'Use recursion to process all subfolders within given folder',action='store_true')
+
     args = parser.parse_args()
     model = args.modelpath[0]+ '/' + args.model_file_name[0]
     
@@ -129,23 +112,19 @@ if __name__ == "__main__":
         error("- Model file (%s) does not exist" % model)
         
     # Set input parameters
-    input_xml_folder =  ''
     input_xml_folder = args.datapath[0]
-    dir_list =[]
-    # Checking for nested subdirectories within a directory
-    for (dirpath,dirnames,filenames) in os.walk(input_xml_folder):
-        dir_list.append(dirpath)
-    if len(dir_list) == 0:
-        error("- Make sure the specified input directory is an actual directory, and not a file!")
+
     if os.getcwd() == os.path.abspath(input_xml_folder):    
-        error("- BAD IDEA!!! Execution script and input db files both inside a single folder <<" +os.getcwd()+">>. Might cause a recursive loop leading to erroneous output in some cases. Expected at least one level of separation. Please keep the script somewhere else and retry!")
-        
-    if len(dir_list)>1:
-        N = 1
-        F = len(dir_list)-1
+        error("- Python script and data files not allowed in a single folder. Expects atleast a level of folder hierarchy. Fix issue and retry! ")
+
+    dir_list =[]
+    if args.recursive:
+        # Checking for nested subdirectories within a directory
+        for (dirpath,dirnames,filenames) in os.walk(input_xml_folder):
+            dir_list.append(os.path.abspath(dirpath))
     else:
-        N = 0 
-        F = len(dir_list)
+        dir_list.append(os.path.dirname(input_xml_folder))    
+   
  
     # Set output parameters
     output_folder =  ''
@@ -154,8 +133,9 @@ if __name__ == "__main__":
     else:
         # Choose one of the options below and comment out the other as desired.
         
-        #output_folder =  './output_'+os.path.basename(input_xml_folder) # Creates output folder in the same folder where Python script is located.
-        output_folder =  os.path.dirname(input_xml_folder)+'/output_'+os.path.basename(input_xml_folder)  # Creates output folder in the same folder where input folder is located
+        #output_folder =  './output_'+os.path.basename(os.path.dirname(input_xml_folder)) # Creates output folder in the same folder where Python script is located.
+        #output_folder =  os.path.dirname(input_xml_folder)+'/output_'+os.path.basename(os.path.dirname(input_xml_folder))  # Creates output folder in the same folder where input folder is located
+        output_folder =  os.path.dirname(input_xml_folder)  # Creates no output folder and places h5 file in same folder as input file
         
     
     # Function call to check if the output folder already exists, and create if not present 
@@ -165,8 +145,8 @@ if __name__ == "__main__":
     if args.verbose:
         def verboseprint(*args):
             for arg in args:
-                print arg,
-            print 
+                print (arg, end=' '),
+            print() 
     else:
         verboseprint = lambda *a: None 
         
@@ -174,11 +154,12 @@ if __name__ == "__main__":
     if args.status:
         def statusprint(*args):
             for arg in args:
-                sys.stdout.write("\r" + arg)
-                sys.stdout.flush()
-            print
+                print (arg, end=' ')
+            print()
     else:
         statusprint = lambda *a: None    
+
+    F = len(dir_list)
         
     # Parse model_xml file to determine required agents
     verboseprint ("\n- Analysing model file\n")
@@ -221,15 +202,17 @@ if __name__ == "__main__":
     # Process each folder in the input directory
     processed_folders = 0
     statusprint('\n- Analysing input folders... total no. of input folders: '+ str(F)+'\n') 
-    for i in range(N,len(dir_list)):
-        statusprint('- Started processing folder: '+os.path.basename(dir_list[i]))          
+    for dr in dir_list:
+        statusprint('- Started processing folder: '+os.path.basename(dr))          
         # Populate the list with all xml file names in that input folder
         xml_filenames = []
-        for fname in glob.glob(os.path.join(dir_list[i], '*'+XML_SUFFIX)):
+        for fname in glob.glob(os.path.join(dr, '*'+XML_SUFFIX)):
             xml_filenames.append(fname)
         statusprint('- Total number of files in current folder: '+ str(len(xml_filenames)))
+                
+        agentnames = list(set(alist))  # done to remove duplicates
         
-        agentnames = list(set(alist))
+
         # Store each dataframes for a particular agent in a dict, with agentnames as dict keys
         d = {}
         for f in xml_filenames:
@@ -240,26 +223,24 @@ if __name__ == "__main__":
                 else:
                     if gendf(f, a) is not None:
                         d[a]=[[gendf(f, a)]]
-        
+
         # Generate the datapanels for each agents and store them in a HDF5 file
-        agt = d.keys()
         n = 0
-        for f in agt:
-            w = agt[n]
+        for k,v in d.items():
             # Setting up HDF5 file for storing output
-            verboseprint ('\n- Preparing HDF5 file for writing contents of input folder: '+os.path.basename(dir_list[i]))
-            fname_tostore = output_folder +'/'+os.path.basename(dir_list[i])+'.h5'    
-            store = pd.HDFStore(fname_tostore) 
-            ##store = pd.HDFStore(fname_tostore, 'w', complevel = 1, complib ='bzip2', fletcher32 = True)
-            store[f] = gendp(w)
+            verboseprint ('\n- Preparing HDF5 file for writing contents of input folder: '+os.path.basename(dr))
+            fname_tostore = output_folder +'/'+os.path.basename(dr)+'.h5'    
+            #store = pd.HDFStore(fname_tostore) 
+            store = pd.HDFStore(fname_tostore, 'w', complevel = 1, complib ='bzip2', fletcher32 = True)
+            store[k] = gendp(k)
             store.close()           
             n = n+1 
             # Get the progress status within a folder
-            percent = round((float(n)/len(agt))*100,2)   
-            statusprint('- Number processed agents: '+str(n)+', of total: '+str(len(agt))+'    Current Folder progress:'+ str(percent) +'%'),
-            verboseprint ('- Successfully closed HDF5 file for: '+os.path.basename(dir_list[i]))
+            percent = round((float(n)/len(d.keys()))*100,2)   
+            statusprint('- Number processed agents: '+str(n)+', of total: '+str(len(d.keys()))+'    Current Folder progress:'+ str(percent) +'%'),
+            verboseprint ('- Successfully closed HDF5 file for: '+os.path.basename(dr))
         # Get the overall progress status
-        statusprint('- Finished processing folder: '+ os.path.basename(dir_list[i])+'\n')
+        statusprint('- Finished processing folder: '+ os.path.basename(dr)+'\n')
         processed_folders = processed_folders + 1    
         main_percent = round((float(processed_folders)/F)*100,2)   
         statusprint('- Number processed folders: '+str(processed_folders)+', of total: '+str(F)+'   Total progress:'+ str(main_percent) +'%\n'),

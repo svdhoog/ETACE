@@ -6,9 +6,11 @@
 ## a single HDF5 file , use version 1 of script named db_hdf5_v1.py instead
 #################################################################################################################
 
-import sqlite3, sys, glob, os, argparse, errno
+from __future__ import print_function
+import sqlite3, sys, glob, os, argparse
 import pandas as pd
-from glob import glob as g
+
+
 pd.set_option('io.hdf.default_format','table')  # Commenting this line out will write HDF5 as a fixed format, and not as a table format
                                                 # Writing as a fixed format is faster than writing as a table, but the file cannot be 'modified/appended to' later on 
 DB_SUFFIX = '.db'
@@ -16,30 +18,11 @@ DB_SUFFIX = '.db'
 # Function to check for existing directories, and create a new one if not present 
 def dir_check(d):
     if os.path.exists(d):
-        reply = input("Specified output directory already exists!! Delete existing directory named <<"+os.path.basename(d)+">> and all its contents? [y/n] ")
-        if reply in ['y', 'Y', 'yes']:
-            try:
-                os.system('rm -r '+ d)
-                print("Directory named <<"+os.path.basename(d)+ ">> and all its contents deleted!!")
-                # Make new output folder
-                try:
-                    os.makedirs(d)
-                except OSError as exception:
-                    if exception.errno != errno.EEXIST:
-                        raise                
-            except:
-                error("- Could not delete directory <<" +os.path.basename(d)+">>. Directory may contain additional files, remove files manually and try again!")
-        else:
-            replytwo = input("Continue & write output files inside existing directory: <<"+os.path.basename(d)+">> ? WARNING: This will overwrite old files having same name, if present in the folder! [y/n]: ")
-            if not replytwo in ['y', 'Y', 'yes']:
-                try:              
-                    print ("Please remove or rename the existing directory <<"+os.path.basename(d)+">> and try again, or choose a different directory for the output")
-                    sys.exit()
-                except OSError as exception:
-                    if exception.errno != errno.EEXIST:
-                        raise                        
+        print("- Directory ["+os.path.basename(d)+ "] is used for output files")
+                    
     else:
         os.makedirs(d)
+        print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
 
 # Function to print out the error messages,if any, and exit
@@ -50,7 +33,6 @@ def error(mesg):
 
 def agent_dataframe(agent_name):
     agent_name = agent_name.decode('utf-8')
-    #df = pd.read_sql_query(("SELECT * from "+ agent_name), con)
     df = pd.read_sql(("SELECT * from "+ agent_name), con)
       
     # Ignoring the empty tables 
@@ -128,7 +110,6 @@ def gen_hdf(fname, output_folder):
             con.close()       
     verboseprint ('- Successfully closed HDF5 file: '+os.path.basename(fname_tostore)+'\n')
     store.close()
-    #verboseprint('- Done processing: ',os.path.basename(fname))
     del dfa
 
 
@@ -139,39 +120,36 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--outpath', help='Path to the folder where the output is desired', nargs=1, type=str)
     parser.add_argument('-v', '--verbose', help='Get the status of the intermediate processing steps', action='store_true')   
     parser.add_argument('-s', '--status', help='Get the total progress of the processing', action='store_true')
+    parser.add_argument('-r', '--recursive', help = 'Use recursion to process all subfolders within given folder',action='store_true')
 
     args = parser.parse_args()
     
     # Set input parameters
-    input_dbfolder =  ''
     input_dbfolder = args.dbpath[0]
-    dir_list =[]
-    # Checking for nested subdirectories within a directory
-    for (dirpath,dirnames,filenames) in os.walk(input_dbfolder):
-        dir_list.append(dirpath)
-    if len(dir_list) == 0:
-        error("- Make sure the specified input directory is an actual directory, and not a file!")
-    if os.getcwd() == os.path.abspath(input_dbfolder):    
-        error("- BAD IDEA!!! Execution script and input db files both inside a single folder <<" +os.getcwd()+">>. Might cause a recursive loop leading to erroneous output in some cases. Expected at least one level of separation. Please keep the script somewhere else and retry!")
 
-    if len(dir_list)>1:
-        N = 1
-        F = len(dir_list)-1
+    if os.getcwd() == os.path.abspath(input_dbfolder):    
+        error("- Python script and data files not allowed in a single folder. Expects atleast a level of folder hierarchy. Fix issue and retry! ")
+
+    dir_list =[]
+    if args.recursive:
+        # Checking for nested subdirectories within a directory
+        for (dirpath,dirnames,filenames) in os.walk(input_dbfolder):            
+            dir_list.append(os.path.abspath(dirpath))
     else:
-        N = 0
-        F = len(dir_list) 
+        dir_list.append(os.path.dirname(input_dbfolder))
+  
     
-    
+
+
     # Set output parameters
     output_folder =  ''
     if args.outpath:
         output_folder = args.outpath[0]
     else:
         # Choose one of the options below and comment out the other as desired.
-        
-        #output_folder =  './output_'+os.path.basename(input_dbfolder) # Creates output folder in the same folder where Python script is located.
-        output_folder =  os.path.dirname(input_dbfolder)+'/output_'+os.path.basename(input_dbfolder)  # Creates output folder in the same folder where input folder is located
-        
+        #output_folder =  './output_'+os.path.basename(os.path.dirname(input_dbfolder)) # Creates output folder in the same folder where Python script is located.
+        #output_folder =  os.path.dirname(input_dbfolder)+'/output_'+os.path.basename(os.path.dirname(input_dbfolder))  # Creates output folder in the same folder where input folder is located
+        output_folder =  os.path.dirname(input_dbfolder)  # Creates no output folder and places h5 file in same folder as input file
         
     # Function call to check if the output folder already exists, and create if not present 
     dir_check(output_folder)
@@ -189,38 +167,37 @@ if __name__ == "__main__":
     if args.status:
         def statusprint(*args):
             for arg in args:
-                sys.stdout.write("\r" + arg)
-                sys.stdout.flush()
+                print(arg, end=' ')
             print()
     else:
         statusprint = lambda *a: None    
     
+    F = len(dir_list)
     # Process each folder in the input directory    
     processed_folders = 0
     statusprint('\n- Total number of folders: '+ str(F)+'\n')
-    for i in range(N,len(dir_list)):
-        statusprint('- Started processing folder: '+os.path.basename(dir_list[i]))   
+
+    for d in dir_list:
+        statusprint('- Started processing folder: '+os.path.basename(d))    
         # Populate the list with all sql file names in the folder
         db_file_list = []
-        for fname in glob.glob(os.path.join(dir_list[i], '*'+DB_SUFFIX)):
+        for fname in glob.glob(os.path.join(d, '*'+DB_SUFFIX)):
             db_file_list.append(fname)
         statusprint('- Total number of files within folder: '+ str(len(db_file_list)))      
         # Generate panels
         processed_files =[]
-        for fname in db_file_list:
+        for fname in sorted(db_file_list):
             verboseprint('\n- Started processing: '+os.path.basename(fname))
             
             gen_hdf(fname, output_folder)
             processed_files.append(fname)
             percent = round((float(len(processed_files))/len(db_file_list))*100,2)
             statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress:'+ str(percent) +'%'),
-        statusprint('- Finished processing folder: '+os.path.basename(dir_list[i])+'\n')
+        statusprint('- Finished processing folder: '+os.path.basename(d)+'\n')
         processed_folders = processed_folders+1
         f_percent = round((float(processed_folders)/F)*100,2)
         statusprint('- Total progress:'+ str(f_percent) +'%', '\n')
         
         
         
-        
-        
-        
+      
