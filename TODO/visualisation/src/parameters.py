@@ -25,8 +25,8 @@ class NP:
 class main_configuration():
 
     def __init__(self, in_fpath):
-        #self.main_f = 'config.yaml'  # the main configuration file
-        self.main_f = in_fpath + '/config.yaml'
+ 
+        self.main_f = in_fpath + '/config.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.main_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -95,11 +95,49 @@ class main_configuration():
             return self.parsed_values['i/o']['output_path']
         return self.erf("Missing output path!")
 
+    def input_files(self):
+        if 'i/o' in self.parsed_values.keys():
+            return self.parsed_values['i/o']['input_files']
+        return self.erf("Missing input path!")        
+
+
+class transform_configuration():
+
+    def __init__(self, in_fpath):
+ 
+        self.transform_f = in_fpath + '/config_transform.yaml' # the main configuration file
+        self.parsed_values = self.parse_yaml(self.transform_f)
+
+    def erf(self, msg):  # function to output the error message and exit
+        print " >> Error: %s" % msg
+        sys.exit()
+
+    def parse_yaml(self, fname):  # Function to parse input parameters from the main configuration file
+        try:
+            f = open(fname, 'r')
+        except IOError:
+            self.erf("unable to read file: %s" % fname)
+        with f as stream:
+            try:
+                p = yaml.load(stream)
+            except yaml.YAMLError, exc:  # error-check for incorrect yaml syntax
+                if hasattr(exc, 'problem_mark'):
+                    mark = exc.problem_mark
+                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname)
+                else:
+                    print " >> Unknown problem with %s file:" % fname
+                sys.exit()
+            return p
+   
+    def get_parameters(self, idx):
+        inner_dic = self.parsed_values[idx]
+        return inner_dic
+
 
 class Plot_configuration():
 
     def __init__(self, p_fpath):
-        #self.plot_f = 'plot_config.yaml'
+
         self.plot_f = p_fpath + '/plot_config.yaml'
         self.__param = self.parse_yaml(self.plot_f)
 
@@ -241,9 +279,6 @@ class Plot_configuration():
 
 
 
-
-
-
 class Figure_default_parameters(object):
     def __init__(self):
         self.plot_legend = 'no'
@@ -268,6 +303,7 @@ class Figure_default_parameters(object):
         self.stacked = False
         self.normed = 1
         self.fill = False
+
 
 
 if __name__ == "__main__":
