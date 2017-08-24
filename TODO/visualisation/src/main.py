@@ -6,7 +6,8 @@ import pandas as pd
 # helper classes, imported from same directory
 from parameters import A, main_configuration
 from summarystats import SummaryStats
-from plots import Plot
+from boxplot_august import Plot
+#from plots import Plot
 from transform import Transform
 
 
@@ -98,8 +99,8 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
         S = Plot(idx, data, par_fpath)
         S.scatterplot(param, outpath)
 
-    def var_transform():
-        Tf = Transform(idx, data, par_fpath)
+    def var_transform():  # for transform whole df passed, not the one with summary
+        Tf = Transform(idx, df, par_fpath)
         Tf.main_method(outpath)
 
     def plt_histogram():
@@ -117,11 +118,13 @@ if __name__ == "__main__":
     args = parser.parse_args()
     
     P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
-    inpath = P.input_fpath()
-
+    inpath = P.input_fpath()    
+    infiles = P.input_files()
+    
     agent_storelist = {}  # all the agent HDF files are stored in this dict
-    for key, value in inpath.iteritems():
-        agent_storelist[key] = pd.io.pytables.HDFStore(value)
+    for key, value in infiles.iteritems():
+        f_p = str(inpath) + "/" + str(value)
+        agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
     for agentname, agentstore in agent_storelist.iteritems():
