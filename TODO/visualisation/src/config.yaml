@@ -1,8 +1,9 @@
 i/o:
-    input_path: 
-        Bank: '/home/susupta/Desktop/GitHub/Bank/Bank.h5' # please name the key as the agent name
-        Eurostat: '/home/susupta/Desktop/GitHub/Bank/Eurostat.h5'
+    input_path: '/home/susupta/Desktop/GitHub/Bank'
 
+    input_files:
+        Bank: Bank.h5  # please name the key as the agent name
+        Eurostat: Eurostat.h5
 
     output_path: '/home/susupta/Desktop/Fix_preprocess/visualize/src/output'
 
