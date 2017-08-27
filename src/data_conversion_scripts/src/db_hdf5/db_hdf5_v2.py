@@ -136,7 +136,7 @@ if __name__ == "__main__":
         for (dirpath,dirnames,filenames) in os.walk(input_dbfolder):            
             dir_list.append(os.path.abspath(dirpath))
     else:
-        dir_list.append(os.path.dirname(input_dbfolder))
+        dir_list.append(os.path.abspath(input_dbfolder))
   
     
 
