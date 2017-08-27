@@ -123,7 +123,7 @@ if __name__ == "__main__":
         for (dirpath,dirnames,filenames) in os.walk(input_xml_folder):
             dir_list.append(os.path.abspath(dirpath))
     else:
-        dir_list.append(os.path.dirname(input_xml_folder))    
+        dir_list.append(os.path.abspath(input_xml_folder))    
    
  
     # Set output parameters
