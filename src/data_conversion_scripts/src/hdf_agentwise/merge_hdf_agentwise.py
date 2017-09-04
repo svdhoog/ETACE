@@ -16,8 +16,8 @@ pd.set_option('io.hdf.default_format','table')  # Commenting this line out will 
 DB_SUFFIX = '.h5'
 agentlist = ["Eurostat", "Government"] # Enter all agent-names that is to be processed
 
-def write_hdf(fname, input_dbfolder):
-    set_run_name = fname[len(os.path.normpath(input_dbfolder))+3:-3]
+def write_hdf(fname):
+    set_run_name = os.path.splitext(os.path.basename(fname))[0]
     # Read the input HDF5 file in memory
     store = pd.io.pytables.HDFStore(fname)
     # Filtering out each agent types from the input HDF5 file
