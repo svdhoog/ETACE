@@ -13,7 +13,7 @@ class Transform():
         self.__data = data
         self.P = transform_configuration(par_fpath)
         self.df_out = pd.DataFrame(data=None, columns=self.__data.columns,index=self.__data.index)
-
+        print self.__data.head(25)
 
     def main_method(self, outpath):            
         transform_function = {'q_o_q': self.q_o_q, 'q_o_q_ONE_CYCLE': self.q_o_q_ONE_CYCLE, 'm_o_m': self.m_o_m, 'm_o_m_ONE_CYCLE': self.m_o_m_ONE_CYCLE,'annual_P_I_T': self.annual_P_I_T}            
@@ -22,7 +22,9 @@ class Transform():
         f_out = self.P.get_parameters(self.__idx)['write_file']
         if f_out is True:
             data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), 'ratite', mode = 'a', format = 'table')
-        print data_out           
+        print "Data for the function:", self.P.get_parameters(self.__idx)['transform_function']
+        print data_out.head(25) 
+                  
         return data_out
 
 
@@ -40,9 +42,11 @@ class Transform():
         col_d = self.col_name_mapper()
 
         def mean(df_out): # TODO: value seems wrong, check, multi agent causing error 
-            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3           
+            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3 
+            print roll_mean.head(25)          
             #df_out[variables.values()] = roll_mean[::3].pct_change(4)
             df_out[variables.values()] = roll_mean[::3][variables.values()]
+            print df_out.head(25)
             df_out = df_out.pct_change(4)
 
             return df_out.rename(columns = col_d)
@@ -97,11 +101,13 @@ class Transform():
 
         def mean():
             roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3
+            print roll_mean.head(20)
             df_out[variables.values()] = roll_mean[::3].pct_change(1)
             return df_out.rename(columns = col_d)
             
         def summation():
             roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
+            
             df_out[variables.values()] = roll_sum[::3].pct_change(1)
             return df_out.rename(columns = col_d)
             
