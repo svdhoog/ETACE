@@ -13,6 +13,7 @@ class Plot():
         self.idx = idx
         self.__data = data
         self.__P = Plot_configuration(par_fpath)
+	
 
     def num_plot_mapper(self, val, obj):
         one_plot = lambda: obj.one_output()
@@ -52,15 +53,15 @@ class Timeseries(A):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
-    def plot_line(self, ax, x, y, l_label): 
+    def plot_line(self, ax, x, y, l_label):
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
-
         out = ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
         markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
-       
+        plt.xlabel(self.__P.x_label(self.idx))
+        plt.ylabel(self.__P.y_label(self.idx))
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
         return out
@@ -127,9 +128,8 @@ class Timeseries(A):
                     for r in range(0, len(dframe)/self.__N):
                         x = np.arange(1, self.__N+1)
                         self.plot_line(ax, x, y1[r], legend_label[0] + "_inst_" + str(r))
-
                     plot_name = self.__P.plot_name(self.idx) 
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
+                    plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
                     plt.close()
             file_count = file_count + 1
     
