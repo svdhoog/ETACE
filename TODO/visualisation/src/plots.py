@@ -14,7 +14,6 @@ class Plot():
         self.__data = data
         self.__P = Plot_configuration(par_fpath)
 	
-
     def num_plot_mapper(self, val, obj):
         one_plot = lambda: obj.one_output()
         many_plot = lambda: obj.many_output()
@@ -48,20 +47,22 @@ class Timeseries(A):
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
         self.summary = main_param['summary']
+        # self.ticklabels = main_param['major']  # only needed for tick labe, which is temp atm
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
 
-    def plot_line(self, ax, x, y, l_label):
+    def plot_line(self, ax, x, y, l_label, clr):
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
         out = ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx), 
-        markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label)
+        markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label, color = clr)
         plt.xlabel(self.__P.x_label(self.idx))
         plt.ylabel(self.__P.y_label(self.idx))
+
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
         return out
@@ -95,7 +96,7 @@ class Timeseries(A):
                             y.append(np.array(D[l:l+self.__N]))
                         x = np.arange(1, self.__N+1)
                         for r in range(0, len(y)):                                                        
-                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m))                           
+                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m))                           
                 plot_name = self.__P.plot_name(self.idx)           
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
                 plt.close()
@@ -112,10 +113,13 @@ class Timeseries(A):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     x = np.arange(1, self.__N+1)
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
                     for r in range(0, len(dframe)/self.__N):
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'_inst_'+str(r))
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'_inst_'+str(r))
-                        plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
+                        clr = next(colors)
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'-'+str(r), clr)
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'-'+str(r), clr)
+                        plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
+                        
 
                     plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
@@ -125,9 +129,11 @@ class Timeseries(A):
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
                     for r in range(0, len(dframe)/self.__N):
                         x = np.arange(1, self.__N+1)
-                        self.plot_line(ax, x, y1[r], legend_label[0] + "_inst_" + str(r))
+                        clr = next(colors)
+                        self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr)
                     plot_name = self.__P.plot_name(self.idx) 
                     plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
                     plt.close()
@@ -161,7 +167,7 @@ class Timeseries(A):
                             x = np.arange(1, self.__N+1)
                             self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m))
                             plot_name = self.__P.plot_name(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_inst_" + str(m) + ".png", bbox_inches='tight')
+                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
                             plt.close()
                             count = count + 1
             else:                
@@ -191,9 +197,9 @@ class Timeseries(A):
                     for s in range(0, len(dframe)/self.__N):
                         fig, ax = plt.subplots() 
                         x = np.arange(1, self.__N+1)
-                        self.plot_line(ax, x, y[s], legend_label[0] + "_inst_" + str(s))                       
+                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s))                       
                         plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
                         plt.close()    
 
 
@@ -264,7 +270,7 @@ class Histogram():
                         colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
                         for r in range(0, len(y)):
                             clr = next(colors)
-                            self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_inst_'+str(m), clr, self.__P.bins(self.idx))                                                      
+                            self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx))                                                      
                 plot_name = self.__P.plot_name(self.idx)           
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
                 plt.close()
@@ -283,9 +289,9 @@ class Histogram():
                     colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
                     for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
                         clr = next(colors)
-                        self.plot_histogram(ax, y1[r], legend_label[0]+'_inst_'+str(r), clr, self.__P.bins(self.idx)) 
+                        self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx)) 
                         clr = next(colors)
-                        self.plot_histogram(ax, y2[r], legend_label[1]+'_inst_'+str(r), clr, self.__P.bins(self.idx)) 
+                        self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx)) 
                     plot_name = self.__P.plot_name(self.idx)           
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                     plt.close()
@@ -297,7 +303,7 @@ class Histogram():
                     colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
                     for r in range(0, len(dframe)/self.__N):
                         clr = next(colors)
-                        self.plot_histogram(ax, y1[r], legend_label[0]+'_inst_'+str(r), clr, self.__P.bins(self.idx))
+                        self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
          
                     plot_name = self.__P.plot_name(self.idx) 
                     plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
@@ -336,7 +342,7 @@ class Histogram():
                             clr = next(colors)
                             self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx))
                             plot_name = self.__P.plot_name(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_inst_" + str(m) + ".png", bbox_inches='tight')
+                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
                             plt.close()
                             count = count + 1
             else:                
@@ -369,9 +375,9 @@ class Histogram():
                     for s in range(0, len(dframe)/self.__N):
                         fig, ax = plt.subplots() 
                         clr = next(colors)
-                        self.plot_histogram(ax, y[s], legend_label[0] + "_inst_" + str(s), clr, self.__P.bins(self.idx))                      
+                        self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx))                      
                         plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
                         plt.close()  
 
 
@@ -522,7 +528,7 @@ class Scatterplot(A):
                     clr = next(colors)
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
                     plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_inst_'+ str(r) + ".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_'+ str(r) + ".png", bbox_inches='tight')
                     plt.close()                
             file_count = file_count + 1
 
@@ -612,7 +618,7 @@ class Boxplot(A):
                     self.plot_boxplot(ax, y[s], self.__data.columns[col])
                                           
                     plot_name = self.__P.plot_name(self.idx)
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_inst_" + str(s) + ".png", bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
                     plt.close()  
 
           
