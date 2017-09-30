@@ -26,7 +26,7 @@ class main_configuration():
 
     def __init__(self, in_fpath):
  
-        self.main_f = in_fpath + '/config.yaml' # the main configuration file
+        self.main_f = in_fpath + '/main.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.main_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -105,7 +105,7 @@ class transform_configuration():
 
     def __init__(self, in_fpath):
  
-        self.transform_f = in_fpath + '/config_transform.yaml' # the main configuration file
+        self.transform_f = in_fpath + '/transform.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.transform_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -138,7 +138,7 @@ class Plot_configuration():
 
     def __init__(self, p_fpath):
 
-        self.plot_f = p_fpath + '/plot_config.yaml'
+        self.plot_f = p_fpath + '/plot.yaml'
         self.__param = self.parse_yaml(self.plot_f)
 
 
@@ -277,6 +277,10 @@ class Plot_configuration():
             return self.__param[key]['fill']
         return self.__default_plot_parameters.__dict__['fill']
 
+    def fillcolor(self, key):
+        if 'fillcolor' in self.__param[key].keys():
+            return self.__param[key]['fillcolor']
+        return self.__default_plot_parameters.__dict__['fillcolor']
 
 
 class Figure_default_parameters(object):
@@ -303,6 +307,7 @@ class Figure_default_parameters(object):
         self.stacked = False
         self.normed = 1
         self.fill = False
+        self.fillcolor = 'black'
 
 
 
