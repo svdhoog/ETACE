@@ -84,36 +84,41 @@ plot.yaml::
    :align: right
 
 
-**Example 2** (*For agent Firm, four sets, twenty runs each, eighty instances, plotted in a single plot* ):
+**Example 2** (*For agent Firm, one set, one run, quantile values of of distribution over eighty instances, plotted in a single plot* ):
 
 main.yaml::
 
     plot2:
         timeseries:
             agent: Firm
-            analysis: multiple_batch
+            analysis: multiple_run
             variables:
-                var1: [total_debt]
-            set: [10,13,16,17]
-            run: [range,[1,20]]
+                var1: [price]
+            set: [10]
+            run: [1]
             major: [range,[6020,12500,20]]
             minor: [range,[1,80]] 
-            summary: mean
+            summary: custom_quantile
+            quantile_values:          
+               lower_quantile : 0.20
+               upper_quantile : 0.80
 
 plot.yaml::
 
     plot2:
         number_plots: one
-        plot_name: timeseries_agentanalysis.png
+        plot_name: one_set_multiple_runs_ts_quantile.png
         plot_legend: yes
         legend_location: best
-        x-axis label: Time
-        y-axis label: total_debt
-        linestyle: dashed
+        xaxis_label: Time
+        yaxis_label: price
+        linestyle: solid
         marker: None
+        fill_between_quartiles: yes
+        fillcolor: red
 
 
-.. image:: ./images/P2_ts_total_debt.png
+.. image:: ./plots/one_set_multiple_runs_ts_quantile_0.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
