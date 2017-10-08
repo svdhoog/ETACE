@@ -47,18 +47,18 @@ the parameters of the configuration files are shown below, along with the plots 
 
 Using the dataset <insert dataset url>, and the following parameter settings, the following plots can be produced.
 
-**Example 1** (*For agent Firm, four sets, twenty runs each, eighty instances, plotted in a single plot* ):
+**Example 1** (*For agent Firm, one set, ten runs, eighty instances, plotted in a single plot* ):
 
 main.yaml::
 
     plot1:
         timeseries:
             agent: Firm
-            analysis: multiple_batch
+            analysis: multiple_run
             variables:
-                var1: [technology]
-            set: [10,13,16,17]
-            run: [range,[1,20]]
+                var1: [price]
+            set: [13]
+            run: [range,[1,10]]
             major: [range,[6020,12500,20]]
             minor: [range,[1,80]] 
             summary: mean
@@ -67,16 +67,16 @@ plot.yaml::
 
     plot1:
         number_plots: one
-        plot_name: timeseries_agentanalysis.png
+        plot_name: one_set_multiple_runs_timeseries.png
         plot_legend: yes
         legend_location: best
-        x-axis label: technology
-        y-axis label: Time
-        linestyle: dashed
+        xaxis_label: Time
+        yaxis_label: price
+        linestyle: solid
         marker: None
 
 
-.. image:: ./images/P1_ts_technology.png
+.. image:: ./plots/one_set_multiple_runs_timeseries_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
