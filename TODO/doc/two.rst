@@ -201,35 +201,36 @@ plot.yaml::
 
 
 
-**Example 5** (*For agent Eurostat, four sets, twenty runs each, one instance each, plotted in a single plot* ):
+**Example 5** (*For agent Firm, one set, twenty runs each, eighty instances each, delay plot for one variable* ):
 
 main.yaml::
 
     plot5:
-        timeseries:
-            agent: Eurostat
+        scatterplot:
+            agent: Firm
             analysis: multiple_batch
             variables:
-                var1: [unemployment_rate]
-            set: [10,13,16,17]
+                var1: [price]
+            delay: yes
+            set: [13]
             run: [range,[1,20]]
             major: [range,[6020,12500,20]]
-            minor: [0] 
+            minor: [range,[1,80]] 
             summary: mean
 
 plot.yaml::
 
     plot5:
         number_plots: one
-        plot_name: timeseries_multibatchanalysis.png
-        plot_legend: no
-        x-axis label: Time
-        y-axis label: unemployment_rate
+        plot_name: one_set_multiple_runs_sp_price_delay.png
+        plot_legend: yes
+        legend_location: best
+        legend_label: price vs. price_delay
         linestyle: solid
-        marker: None
+        marker: +
 
 
-.. image:: ./images/P5_ts_unemployment_rate.png
+.. image:: ./plots/one_set_multiple_runs_sp_price_delay_0.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
