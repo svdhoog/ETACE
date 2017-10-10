@@ -162,17 +162,19 @@ plot.yaml::
    :align: right
    
 
-**Example 4** (*For agent Firm, four sets, twenty runs each, eighty instances, plotted in a single plot* ):
+**Example 4** (*For agent Firm, one set, twenty runs each, eighty instances, scatterplot of two variables* ):
 
 main.yaml::
 
     plot4:
-        timeseries:
+        scatterplot:
             agent: Firm
             analysis: multiple_batch
             variables:
                 var1: [price]
-            set: [10,13,16,17]
+                var2: [output]
+            delay: no    
+            set: [13]
             run: [range,[1,20]]
             major: [range,[6020,12500,20]]
             minor: [range,[1,80]] 
@@ -182,16 +184,15 @@ plot.yaml::
 
     plot3:
         number_plots: one
-        plot_name: timeseries_agentanalysis.png
+        plot_name: one_set_multiple_runs_sp_price_output.png
         plot_legend: yes
         legend_location: best
-        x-axis label: Time
-        y-axis label: price
-        linestyle: dashed
-        marker: None
+        legend_label: price vs. output
+        linestyle: solid
+        marker: +
 
 
-.. image:: ./images/P4_ts_price.png
+.. image:: ./plots/one_set_multiple_runs_sp_price_output_0.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
