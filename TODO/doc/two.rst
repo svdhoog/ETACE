@@ -154,7 +154,7 @@ plot.yaml::
         number_bars: 5
 
 
-.. image:: ./plots/one_set_one_run_bp_price.png
+.. image:: ./plots/one_set_one_run_bp_price_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
