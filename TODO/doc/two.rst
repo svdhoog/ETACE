@@ -279,41 +279,39 @@ plot.yaml::
    :align: right
 
 
-**Example 7** (*For agent Firm, four sets, twenty runs each, eighty instances, quantile values plotted in a single plot* ):
+**Example 7** (*For agent Firm, one set, twenty runs, eighty instances, histogram of distribution over the sets* ):
 
 main.yaml::
 
     plot7:
-        timeseries:
+        histogram:
             agent: Firm
-            analysis: multiple_batch
+            analysis: multiple_set
             variables:
                 var1: [price]
-            set: [10,13,16,17]
+            set: [10]
             run: [range,[1,20]]
             major: [range,[6020,12500,20]]
             minor: [range,[1,80]] 
-            summary: custom_quantile
-            quantile_values:          
-                lower_quantile : 0.20
-                upper_quantile : 0.80
-
+            summary: mean
 
 plot.yaml::
 
     plot7:
         number_plots: one
-        plot_name: ts_multibatch_analysis.png
+        plot_name: one_set_multiple_runs_hg_price.png
+        plot_title: (Agent = Firm, var = Price)
+        number_bins: 50
+        histtype: step
         plot_legend: yes
+        fill: no
+        stacked: False
         legend_location: best
-        x-axis label: Time
-        y-axis label: price
-        linestyle: solid
-        marker: None
-        fill_between_quartiles: yes
+        xaxis_label: xlabel
+        yaxis_label: ylabel
 
 
-.. image:: ./images/P7_ts_price.png
+.. image:: ./plots/one_set_multiple_runs_hg_price_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
