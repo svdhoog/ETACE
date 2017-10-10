@@ -126,36 +126,35 @@ plot.yaml::
    :align: right
 
 
-**Example 3** (*For agent Firm, four sets, twenty runs each, eighty instances, plotted in a single plot* ):
+**Example 3** (*For agent Firm, one set, one run, eighty instances, boxplot* ):
 
 main.yaml::
 
     plot3:
-        timeseries:
+        boxplot:
             agent: Firm
-            analysis: multiple_batch
+            analysis: multiple_set
             variables:
-                var1: [output]
-            set: [10,13,16,17]
-            run: [range,[1,20]]
+                var1: [price]
+            set: [13]
+            run: [1]
             major: [range,[6020,12500,20]]
-            minor: [range,[1,80]] 
-            summary: mean
+            minor: [range,[1,80]]
 
 plot.yaml::
 
     plot3:
         number_plots: one
-        plot_name: timeseries_agentanalysis.png
+        plot_name: one_set_one_run_bp_price.png
         plot_legend: yes
+        legend_label: (Agent = Firm, var = Price)
         legend_location: best
-        x-axis label: Time
-        y-axis label: output
-        linestyle: dashed
-        marker: None
+        xaxis_label: Time
+        yaxis_label: Distribution over price
+        number_bars: 5
 
 
-.. image:: ./images/P3_ts_output.png
+.. image:: ./plots/one_set_one_run_bp_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
