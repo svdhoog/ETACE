@@ -182,7 +182,7 @@ main.yaml::
 
 plot.yaml::
 
-    plot3:
+    plot4:
         number_plots: one
         plot_name: one_set_multiple_runs_sp_price_output.png
         plot_legend: yes
