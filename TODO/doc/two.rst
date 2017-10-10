@@ -239,35 +239,39 @@ plot.yaml::
 
 
 
-**Example 6** (*For agent Eurostat, four sets, twenty runs each, one instance each, plotted in a single plot* ):
+**Example 6** (*For agent Firm, one set, one run, eighty instances each, histogram of one variable* ):
 
 main.yaml::
 
     plot6:
-        timeseries:
-            agent: Eurostat
-            analysis: multiple_batch
+        histogram:
+            agent: Firm
+            analysis: multiple_run
             variables:
-                var1: [monthly_output]
-            set: [10,13,16,17]
-            run: [range,[1,20]]
+                var1: [price]
+            set: [10]
+            run: [1]
             major: [range,[6020,12500,20]]
-            minor: [0] 
+            minor: [range,[1,80]] 
             summary: mean
 
 plot.yaml::
 
     plot6:
         number_plots: one
-        plot_name: timeseries_multibatchanalysis.png
-        plot_legend: no
-        x-axis label: Time
-        y-axis label: monthly_output
-        linestyle: solid
-        marker: None
+        plot_name: one_set_one_run_hg_price.png
+        plot_title: (Agent = Firm, var = Price)
+        number_bins: 50
+        histtype: bar
+        plot_legend: yes
+        fill: yes
+        stacked: False
+        legend_location: best
+        xaxis_label: xlabel
+        yaxis_label: ylabel
 
 
-.. image:: ./images/P6_ts_monthly_output.png
+.. image:: ./plots/one_set_one_run_hg_price_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
