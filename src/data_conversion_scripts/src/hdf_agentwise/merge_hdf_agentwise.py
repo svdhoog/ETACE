@@ -14,7 +14,7 @@ pd.set_option('io.hdf.default_format','table')  # Commenting this line out will 
                                                 # Writing as a fixed format is faster than writing as a table, but the file cannot be 'modified/appended to' later on 
 
 DB_SUFFIX = '.h5'
-agentlist = ["Eurostat", "Government"] # Enter all agent-names that is to be processed
+#agentlist = ["Eurostat", "Government"] # Enter all agent-names that is to be processed
 
 def write_hdf(fname):
     set_run_name = os.path.splitext(os.path.basename(fname))[0]
@@ -35,7 +35,6 @@ def dir_check(d):
         os.makedirs(d)
         print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
-
 # Function to print out the error messages,if any, and exit
 def error(mesg):
     print(">>>>> (Error): %s" % mesg, file = sys.stderr)
@@ -44,15 +43,22 @@ def error(mesg):
 if __name__ == "__main__":
     # Setup for command line arguments
     parser = argparse.ArgumentParser(prog='merge_hdf_agentwise.py', description='Converts the SQLite database files to HDF5 files. For each db files, creates an equivalent HDF5 file.')
-    parser.add_argument('dbpath', help='Path to folder containing the .db files', nargs=1, type=str)
+    parser.add_argument('hdfpath', help='Path to folder containing the individual hdf files', nargs=1, type=str)
+    parser.add_argument('agentlist', help='File containing name of agent-types to process', nargs=1, type=str) 
     parser.add_argument('-o', '--outpath', help='Path to the folder where the output is desired', nargs=1, type=str)
     parser.add_argument('-v', '--verbose', help='Get the status of the intermediate processing steps', action='store_true')   
     parser.add_argument('-s', '--status', help='Get the total progress of the processing', action='store_true')
 
     args = parser.parse_args()
     
+    f_agentnames = args.agentlist[0]
+    agentlist = []
+    with open(f_agentnames, 'r') as f_in:
+        for line in f_in:
+            agentlist.append(line.strip())
+
     # Set input parameters
-    input_dbfolder = args.dbpath[0]
+    input_dbfolder = args.hdfpath[0]
 
     if os.getcwd() == os.path.abspath(input_dbfolder):    
         error("- Python script and data files not allowed in a single folder. Expects atleast a level of folder hierarchy. Fix issue and retry! ")
@@ -67,7 +73,7 @@ if __name__ == "__main__":
     else:
         N = 0
         F = len(dir_list) 
-        
+       
     # Set output parameters
     targetFolder =  ''
     if args.outpath:
@@ -107,7 +113,8 @@ if __name__ == "__main__":
     for agentname in agentlist: # looping through each agent (memory conserving option)
         for i in range(N,len(dir_list)):
             n = len(os.path.normpath(input_dbfolder)) + 2
-            statusprint('- Started processing folder: '+os.path.basename(dir_list[i]))   
+            statusprint('- Processing files for agent-type: '+str(agentname)+'\n')
+            statusprint('- Started processing folder: '+os.path.basename(os.path.abspath(dir_list[i])))   
             if N == 1:
                 output_folder = targetFolder +  dir_list[i][n:]
                 dir_check(output_folder)        
@@ -127,13 +134,14 @@ if __name__ == "__main__":
             store_out = pd.HDFStore(outFileName, 'w', chunksize = 500, complevel = 1, complib ='bzip2', fletcher32 = True) # store with compression
             for fname in sorted(db_file_list):
                 verboseprint('\n- Started processing: '+os.path.basename(fname))
-                write_hdf(fname, input_dbfolder)
+                write_hdf(fname)
                 processed_files.append(fname)
                 percent = round((float(len(processed_files))/len(db_file_list))*100,2)
                 statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress:'+ str(percent) +'%'),
             store_out.close()
-            statusprint('- Finished processing folder: '+os.path.basename(dir_list[i])+'\n')
+            statusprint('- Finished processing folder: '+os.path.basename(os.path.abspath(dir_list[i]))+'\n')
             processed_folders = processed_folders+1
-            f_percent = round((float(processed_folders)/F)*100,2)
-            statusprint('- Total progress:'+ str(f_percent) +'%', '\n')
+            if F > 1:
+                f_percent = round((float(processed_folders)/F)*100,2)
+                statusprint('- Total progress:'+ str(f_percent) +'%', '\n')
         
