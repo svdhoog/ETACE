@@ -137,9 +137,6 @@ if __name__ == "__main__":
             dir_list.append(os.path.abspath(dirpath))
     else:
         dir_list.append(os.path.abspath(input_dbfolder))
-  
-    
-
 
     # Set output parameters
     output_folder =  ''
