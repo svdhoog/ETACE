@@ -88,7 +88,7 @@ class Timeseries(A):
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     if len(D.columns) == 2:
-                        print "Quantile not possible for agent level analysis!"
+                        print("Quantile not possible for agent level analysis!")
                         sys.exit(1)                        
                     else:
                         y = []                        
@@ -113,8 +113,8 @@ class Timeseries(A):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     x = np.arange(1, self.__N+1)
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
-                    for r in range(0, len(dframe)/self.__N):
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                    for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
                         self.plot_line(ax, x, y1[r], legend_label[0]+'-'+str(r), clr)
                         self.plot_line(ax, x, y2[r], legend_label[1]+'-'+str(r), clr)
@@ -129,8 +129,8 @@ class Timeseries(A):
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
-                    for r in range(0, len(dframe)/self.__N):
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                    for r in range(0, len(dframe)//self.__N):
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
                         self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr)
@@ -152,12 +152,12 @@ class Timeseries(A):
             legend_label = dframe.columns
 
             if self.__analysistype == A.agent:
-                print " -Warning: too many plots will be produced !!! "                                        
+                print(" -Warning: too many plots will be produced !!! ")                                        
                 minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
                 for m in minor_index:
                     D = dframe.xs( int(m) , level='minor')
                     if len(D.columns) == 2:
-                        print "Quantile not possible for agent level analysis"                    
+                        print("Quantile not possible for agent level analysis")                    
                         sys.exit(1)
                     else:
                         count = 0 
@@ -181,7 +181,7 @@ class Timeseries(A):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
                     x = np.arange(1, self.__N+1)                    
-                    for r in range(0, len(dframe)/self.__N):
+                    for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots() 
                         self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
                         self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r))
@@ -194,7 +194,7 @@ class Timeseries(A):
                     y =[]
                     for i in range(0,len(dframe),self.__N):
                         y.append(np.array(dframe[i:i+self.__N]))                                           
-                    for s in range(0, len(dframe)/self.__N):
+                    for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots() 
                         x = np.arange(1, self.__N+1)
                         self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s))                       
@@ -214,7 +214,7 @@ class Histogram():
         self.__P = plt_config
         self.summary = main_param['summary']
         if self.__analysistype == A.agent and self.summary  == 'custom_quantile':
-            print ">> Quantile not possible for agent level analysis!"
+            print(">> Quantile not possible for agent level analysis!")
             sys.exit(1)
 
     def map_analysis(self, val):             
@@ -261,7 +261,7 @@ class Histogram():
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')                    
                     if len(D.columns) == 2:  # TODO: this check done in class constructor, so no need
-                        print "Quantile not possible for agent level analysis!"
+                        print("Quantile not possible for agent level analysis!")
                         sys.exit(1)                        
                     else: 
                         y = []                        
@@ -300,8 +300,8 @@ class Histogram():
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
-                    for r in range(0, len(dframe)/self.__N):
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                    for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
                         self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
          
@@ -326,16 +326,16 @@ class Histogram():
             self.__N = len(dframe.index.get_level_values('major').unique())
 
             if self.__analysistype == A.agent:
-                print " -Warning: too many plots will be produced !!! "                                        
+                print(" -Warning: too many plots will be produced !!! ")                                        
                 minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe 
                 for m in minor_index:
                     D = dframe.xs( int(m) , level='minor')
                     if len(D.columns) == 2:
-                        print "Quantile not possible for agent level analysis"                    
+                        print("Quantile not possible for agent level analysis")                    
                         sys.exit(1)
                     else:
                         count = 0 
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
                         for r in range(0,len(D),self.__N):
                             fig, ax = plt.subplots()                  
                             y = np.array(D[r:r+self.__N])
@@ -356,8 +356,8 @@ class Histogram():
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
 
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))                                      
-                    for r in range(0, len(dframe)/self.__N):
+                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)//self.__N)))                                      
+                    for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
                         self.plot_histogram(ax, y1[r], legend_label[0] + "_run_" + str(r), clr, self.__P.bins(self.idx))                         
@@ -372,7 +372,7 @@ class Histogram():
                     for i in range(0,len(dframe),self.__N):
                         y.append(np.array(dframe[i:i+self.__N]))
                     colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))                                           
-                    for s in range(0, len(dframe)/self.__N):
+                    for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots() 
                         clr = next(colors)
                         self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx))                      
@@ -395,7 +395,7 @@ class Scatterplot(A):
 
         if self.delay is True:
             if self.summary == 'custom_quantile':
-                print ">> Delay not supported for Quantiles! Adjust parameter and retry!"
+                print(">> Delay not supported for Quantiles! Adjust parameter and retry!")
                 sys.exit(1)
             delayed_df = self.__data.shift(periods = 1, axis = 0)
             delayed_df.rename(columns=lambda x: x+ "_delay", inplace=True)
@@ -428,19 +428,19 @@ class Scatterplot(A):
         step = 2        
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
-                print ">> Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                print(">> Problem with data! Either set delay to True, or specify atleast two variables to plot!")              
                 sys.exit(1)
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
            
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()                
                 fig, ax = plt.subplots() # initialize figure
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     legend_label = D.columns
                     if len(dframe.columns) != 2:
-                        print ">> Something wrong with data, check and retry!"
+                        print(">> Something wrong with data, check and retry!")
                         sys.exit (1)
                     y1 = []
                     y2 = []
@@ -449,7 +449,7 @@ class Scatterplot(A):
                     for i in range(0, len(D), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
-                    for r in range(0, len(D)/self.__N):
+                    for r in range(0, len(D)//self.__N):
                         clr = next(colors)
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [inst'+str(m) + ' run' + str(r) + ']', legend_label[0], legend_label[1], clr )
                 plot_name = self.__P.plot_name(self.idx)           
@@ -460,7 +460,7 @@ class Scatterplot(A):
                 fig, ax = plt.subplots() # initialize figure
                 legend_label = dframe.columns
                 if len(dframe.columns) != 2:
-                    print ">> Something wrong with data, check and retry!"
+                    print(">> Something wrong with data, check and retry!")
                     sys.exit (1)
                 y1 = []
                 y2 = []
@@ -470,7 +470,7 @@ class Scatterplot(A):
                     y1.append(np.array(col_A[i:i+self.__N]))
                     y2.append(np.array(col_B[i:i+self.__N]))
                 colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
-                for r in range(0, len(dframe)/self.__N):
+                for r in range(0, len(dframe)//self.__N):
                     clr = next(colors)
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
                 plot_name = self.__P.plot_name(self.idx)           
@@ -483,18 +483,18 @@ class Scatterplot(A):
         step = 2        
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
-                print "Problem with data! Either set delay to True, or specify atleast two variables to plot!"                
+                print("Problem with data! Either set delay to True, or specify atleast two variables to plot!")               
                 sys.exit(1)
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
            
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()                                
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)/self.__N)))
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
                     legend_label = D.columns
                     if len(dframe.columns) != 2:
-                        print "Something wrong with data, check and retry!"
+                        print("Something wrong with data, check and retry!")
                         sys.exit (1)
                     y1 = []
                     y2 = []
@@ -503,7 +503,7 @@ class Scatterplot(A):
                     for i in range(0, len(D), self.__N):                        
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
-                    for r in range(0, len(D)/self.__N):
+                    for r in range(0, len(D)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
@@ -513,7 +513,7 @@ class Scatterplot(A):
             else:
                 legend_label = dframe.columns
                 if len(dframe.columns) != 2:
-                    print "Something wrong with data, check and retry!"
+                    print("Something wrong with data, check and retry!")
                     sys.exit (1)
                 y1 = []
                 y2 = []
@@ -523,7 +523,7 @@ class Scatterplot(A):
                     y1.append(np.array(col_A[i:i+self.__N]))
                     y2.append(np.array(col_B[i:i+self.__N]))
                 colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
-                for r in range(0, len(dframe)/self.__N):
+                for r in range(0, len(dframe)//self.__N):
                     fig, ax = plt.subplots() 
                     clr = next(colors)
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
@@ -544,7 +544,7 @@ class Boxplot(A):
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         if self.__analysistype == A.agent:
-            print "Boxplot not possible for agent-level analysis!"
+            print("Boxplot not possible for agent-level analysis!")
             sys.exit(1)
               
     def map_analysis(self, val): 
@@ -566,17 +566,26 @@ class Boxplot(A):
         return box_df
 
     def plot_boxplot(self, ax, data, l_label):
-
+        
         if self.__P.legend_label(self.idx) is None:      
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
 
-        t_df = data.T 
-        ax = t_df.boxplot(column = [100,250,500,750,900], positions =[1,2,3,4,5]) 
-        ax.set_title(l_label)
-        ax.set_xlabel('xlabel')
-        ax.set_ylabel('ylabel')
+        t_df = data.T
+        intervals = []
+        pos = []
+        N_bars = self.__P.numboxplotbars(self.idx)
+        count = 1
+        for i in range(0,len(self.__main_param['major']), int(np.floor(len(self.__main_param['major'])//N_bars))):
+            intervals.append(self.__main_param['major'][i])
+            pos.append(count)
+            count = count + 1
+        #ax = t_df.boxplot(column = [100,250,500,750,900], positions =[1,2,3,4,5])        
+        ax = t_df.boxplot(column = intervals, positions =pos)     
+        ax.set_title(le_label)
+        ax.set_xlabel(self.__P.x_label(self.idx))
+        ax.set_ylabel(self.__P.y_label(self.idx))
         return ax            
 
     def one_output(self):
@@ -585,7 +594,7 @@ class Boxplot(A):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             fig, ax = plt.subplots()
             if self.__analysistype == A.agent: # check done above, redundant, to remove
-                print "Boxplot not possible for agent-level analysis!"
+                print("Boxplot not possible for agent-level analysis!")
                 sys.exit(1)
             else:                
                 col_A = dframe[dframe.columns[0]]
@@ -593,7 +602,7 @@ class Boxplot(A):
                 y = []
                 for i in range(0, len(D), self.__N):                    
                     y.append(pd.DataFrame(D[i:i+self.__N]))
-                for r in range(0, len(D)/self.__N):
+                for r in range(0, len(D)//self.__N):
                     self.plot_boxplot(ax, y[r], self.__data.columns[col])
                    
                 plot_name = self.__P.plot_name(self.idx) 
@@ -605,7 +614,7 @@ class Boxplot(A):
         for col in range(0, len(self.__data.columns)):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             if self.__analysistype == A.agent: # check done above, redundant, to remove
-                print "Boxplot not possible for agent-level analysis!"
+                print("Boxplot not possible for agent-level analysis!")
                 sys.exit(1)
             else:                
                 col_A = dframe[dframe.columns[0]]
@@ -613,7 +622,7 @@ class Boxplot(A):
                 y =[]
                 for i in range(0,len(D),self.__N):
                     y.append(pd.DataFrame(D[i:i+self.__N]))                                           
-                for s in range(0, len(D)/self.__N):
+                for s in range(0, len(D)//self.__N):
                     fig, ax = plt.subplots() 
                     self.plot_boxplot(ax, y[s], self.__data.columns[col])
                                           
