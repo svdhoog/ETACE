@@ -30,7 +30,7 @@ class main_configuration():
         self.parsed_values = self.parse_yaml(self.main_f)
 
     def erf(self, msg):  # function to output the error message and exit
-        print " >> Error: %s" % msg
+        print(" >> Error: %s" % msg)
         sys.exit()
 
     def parse_yaml(self, fname):  # Function to parse input parameters from the main configuration file
@@ -41,12 +41,12 @@ class main_configuration():
         with f as stream:
             try:
                 p = yaml.load(stream)
-            except yaml.YAMLError, exc:  # error-check for incorrect yaml syntax
+            except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
-                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname)
+                    print(" >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname))
                 else:
-                    print " >> Unknown problem with %s file:" % fname
+                    print(" >> Unknown problem with %s file:" % fname)
                 sys.exit()
             return p
 
@@ -109,7 +109,7 @@ class transform_configuration():
         self.parsed_values = self.parse_yaml(self.transform_f)
 
     def erf(self, msg):  # function to output the error message and exit
-        print " >> Error: %s" % msg
+        print(" >> Error: %s" % msg)
         sys.exit()
 
     def parse_yaml(self, fname):  # Function to parse input parameters from the main configuration file
@@ -120,12 +120,12 @@ class transform_configuration():
         with f as stream:
             try:
                 p = yaml.load(stream)
-            except yaml.YAMLError, exc:  # error-check for incorrect yaml syntax
+            except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
-                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname)
+                    print(" >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname))
                 else:
-                    print " >> Unknown problem with %s file:" % fname
+                    print(" >> Unknown problem with %s file:" % fname)
                 sys.exit()
             return p
    
@@ -145,7 +145,7 @@ class Plot_configuration():
         self.__default_plot_parameters = Figure_default_parameters()
 
     def erf(self, msg):
-        print " >> Error: %s" % msg
+        print(" >> Error: %s" % msg)
         sys.exit()
 
     def get_fig_values(self, key):
@@ -163,12 +163,12 @@ class Plot_configuration():
         with f as stream:
             try:
                 p = yaml.load(stream)
-            except yaml.YAMLError, exc:  # error-check for incorrect yaml syntax
+            except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
-                    print " >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname)
+                    print(" >> Error in line: (%s:%s) in file: %s" % (mark.line+1, mark.column+1, fname))
                 else:
-                    print " >> Unknown problem with %s file:" % fname
+                    print(" >> Unknown problem with %s file:" % fname)
                 sys.exit()
             return p
 
@@ -282,6 +282,11 @@ class Plot_configuration():
             return self.__param[key]['fillcolor']
         return self.__default_plot_parameters.__dict__['fillcolor']
 
+    def numboxplotbars(self, key):
+        if 'number_bars' in self.__param[key].keys():
+            return self.__param[key]['number_bars']
+        return self.__default_plot_parameters.__dict__['number_bars']
+
 
 class Figure_default_parameters(object):
     def __init__(self):
@@ -308,6 +313,7 @@ class Figure_default_parameters(object):
         self.normed = 1
         self.fill = False
         self.fillcolor = 'black'
+        self.number_bars = 5
 
 
 
