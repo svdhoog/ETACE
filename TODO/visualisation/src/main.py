@@ -6,13 +6,12 @@ import pandas as pd
 # helper classes, imported from same directory
 from parameters import A, main_configuration
 from summarystats import SummaryStats
-from boxplot_august import Plot
-#from plots import Plot
+from plots import Plot
 from transform import Transform
 
 
 def erf(msg):  # function to output the error message and exit
-    print " >> Error: %s" % msg
+    print(" >> Error: %s" % msg)
     sys.exit()
 
 def dir_check(d):
@@ -122,12 +121,12 @@ if __name__ == "__main__":
     infiles = P.input_files()
     
     agent_storelist = {}  # all the agent HDF files are stored in this dict
-    for key, value in infiles.iteritems():
+    for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
         agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
-    for agentname, agentstore in agent_storelist.iteritems():
+    for agentname, agentstore in agent_storelist.items():
         d = pd.DataFrame()  # Main dataframe to hold all the dataframes of each instance (one agenttype)
         df_list = []
         for key in agentstore.keys():  # go through sets and runs in the HDF file
@@ -160,13 +159,15 @@ if __name__ == "__main__":
                 var_dic[j[0]] = var_filter_list
             else:
                 var_dic[j[0]] = None
-            var_list = var_dic.keys()
+            var_list = list(var_dic.keys())
         d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity
 
+	#print d
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
 
+	#print filtered
         df_main = pd.DataFrame()
-        for dkey, dval in var_dic.iteritems():
+        for dkey, dval in var_dic.items():
             df = filter_by_value(dkey, dval, filtered)  # stage-II filtering for selecting variables according to their values
             if df_main.empty:
                 df_main = df
