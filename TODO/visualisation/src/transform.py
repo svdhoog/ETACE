@@ -13,18 +13,17 @@ class Transform():
         self.__data = data
         self.P = transform_configuration(par_fpath)
         self.df_out = pd.DataFrame(data=None, columns=self.__data.columns,index=self.__data.index)
-        print self.__data.head(25)
+        print("lau laus")
+
 
     def main_method(self, outpath):            
-        transform_function = {'q_o_q': self.q_o_q, 'q_o_q_ONE_CYCLE': self.q_o_q_ONE_CYCLE, 'm_o_m': self.m_o_m, 'm_o_m_ONE_CYCLE': self.m_o_m_ONE_CYCLE,'annual_P_I_T': self.annual_P_I_T}            
+        transform_function = {'qoq_annual_frequency': self.qoq_annual_frequency, 'qoq_quaterly_frequency': self.qoq_quaterly_frequency, 'mom_annual_frequency': self.mom_annual_frequency, 'mom': self.mom,'annual_P_I_T': self.annual_P_I_T}            
         fn = self.P.get_parameters(self.__idx)['aggregate']
         data_out = transform_function[self.P.get_parameters(self.__idx)['transform_function']](fn, self.df_out)
         f_out = self.P.get_parameters(self.__idx)['write_file']
         if f_out is True:
-            data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), 'ratite', mode = 'a', format = 'table')
-        print "Data for the function:", self.P.get_parameters(self.__idx)['transform_function']
-        print data_out.head(25) 
-                  
+            data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), str(self.P.get_parameters(self.__idx)['hdf_groupname']), mode = 'a', format = 'table')
+           
         return data_out
 
 
@@ -37,16 +36,14 @@ class Transform():
         return d
 
 
-    def q_o_q(self,fn, d_out): # method to print quaterly growth rate (quarter on quarter)
+    def qoq_annual_frequency(self,fn, d_out): # method to print quaterly growth rate (quarter on quarter)
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
 
         def mean(df_out): # TODO: value seems wrong, check, multi agent causing error 
-            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3 
-            print roll_mean.head(25)          
+            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3           
             #df_out[variables.values()] = roll_mean[::3].pct_change(4)
             df_out[variables.values()] = roll_mean[::3][variables.values()]
-            print df_out.head(25)
             df_out = df_out.pct_change(4)
 
             return df_out.rename(columns = col_d)
@@ -60,14 +57,14 @@ class Transform():
         return f_mapper[fn](d_out)
 
 
-    def m_o_m(self,fn, df_out): # method to print monthly growth rate (month on month)
+    def mom_annual_frequency(self,fn, df_out): # method to print monthly growth rate (month on month)
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
         df_out[variables.values()] = self.__data[variables.values()].pct_change(12)
         return df_out.rename(columns = col_d)
 
 
-    def m_o_m_ONE_CYCLE(self,fn, df_out): # method to print monthly growth rate (month on month in one cycle)
+    def mom(self,fn, df_out): # method to print monthly growth rate (month on month in one cycle)
 
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
@@ -95,19 +92,17 @@ class Transform():
         return f_mapper[fn]()
 
 
-    def q_o_q_ONE_CYCLE(self,fn, df_out): # method to print quaterly growth rate (quarter on quarter)
+    def qoq_quaterly_frequency(self,fn, df_out): # method to print quaterly growth rate (quarter on quarter)
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
 
         def mean():
             roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3
-            print roll_mean.head(20)
             df_out[variables.values()] = roll_mean[::3].pct_change(1)
             return df_out.rename(columns = col_d)
             
         def summation():
             roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
-            
             df_out[variables.values()] = roll_sum[::3].pct_change(1)
             return df_out.rename(columns = col_d)
             
@@ -119,6 +114,6 @@ class Transform():
 if __name__ == "__main__":
 
     C = transform_configuration('/home/susupta/Desktop/Fix_preprocess/visualize/src')
-    print C.get_parameters()['variables']
+    print(C.get_parameters()['variables'])
 
     
