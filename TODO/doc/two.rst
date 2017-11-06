@@ -317,4 +317,49 @@ plot.yaml::
    :scale: 50 %
    :alt: alternate text
    :align: right
+   
+   
+**Example 8** (*For agent Firm, one set, one run, twenty instances, timeseries plot of one variable* ):
+
+main.yaml::
+
+    plot8:
+       timeseries:
+           agent: Firm
+           analysis: agent
+           variables:
+               var1: [price]
+           set: [13]
+           run: [1]
+           major: [range,[6020,12500,20]]
+           minor: [range,[1,20]] 
+           summary: mean
+           
+**Note:** In case where analysis: agent, the full set is plotted, so it is not necessary to specify summary. The distribution over agent-instances can be computed by calling multiple batch analysis, with a single set value and a single run value. 
+
+plot.yaml::
+
+    plot8:
+       number_plots: one
+       plot_name: one_set_one run_agentanalysis_timeseries.png
+       plot_legend: no
+       legend_location: best
+       xaxis_label: Time
+       yaxis_label: price
+       linestyle: solid
+       marker: None
+
+
+.. image:: ./plots/one_set_one run_agentanalysis_timeseries.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
+   
+   
+   
+   
+   
+   
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
