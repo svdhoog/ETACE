@@ -95,8 +95,10 @@ class Timeseries(A):
                         for l in range(0, len(D), self.__N):
                             y.append(np.array(D[l:l+self.__N]))
                         x = np.arange(1, self.__N+1)
-                        for r in range(0, len(y)):                                                        
-                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m))                           
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(D)//self.__N)))
+                        for r in range(0, len(y)):
+                            clr = next(colors)                                                        
+                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)                           
                 plot_name = self.__P.plot_name(self.idx)           
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
                 plt.close()
