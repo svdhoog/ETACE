@@ -350,7 +350,7 @@ plot.yaml::
        marker: None
 
 
-.. image:: ./plots/one_set_one run_agentanalysis_timeseries.png
+.. image:: ./plots/one_set_one_run_agentanalysis_timeseries.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
