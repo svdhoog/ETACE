@@ -341,7 +341,7 @@ plot.yaml::
 
     plot8:
        number_plots: one
-       plot_name: one_set_one run_agentanalysis_timeseries.png
+       plot_name: one_set_one_run_agentanalysis_timeseries.png
        plot_legend: no
        legend_location: best
        xaxis_label: Time
@@ -350,7 +350,7 @@ plot.yaml::
        marker: None
 
 
-.. image:: ./plots/one_set_one_run_agentanalysis_timeseries.png
+.. image:: ./plots/one_set_one_run_agentanalysis_timeseries_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
