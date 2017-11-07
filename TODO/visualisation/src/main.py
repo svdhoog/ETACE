@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, os, argparse
 import operator
 import pandas as pd
@@ -162,7 +162,6 @@ if __name__ == "__main__":
             var_list = list(var_dic.keys())
         d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity
 
-	#print d
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
 
 	#print filtered
