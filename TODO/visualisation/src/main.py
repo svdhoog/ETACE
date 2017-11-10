@@ -119,7 +119,7 @@ if __name__ == "__main__":
     P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()    
     infiles = P.input_files()
-    
+    primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
@@ -148,7 +148,7 @@ if __name__ == "__main__":
         agentstore.close()
     del agent_storelist
 
-    for idx, param in P.get_parameters().items():  # read filter conditions from yaml
+    for idx, param in primary_parameters.items():  # read filter conditions from yaml
         frames = []  # list to store filtered dfs according to vars
         var_dic = {}
         for i, j in param['variables'].items():
