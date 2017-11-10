@@ -12,7 +12,7 @@ class A:
 
 class M:
     # Types of statistical summary
-    mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum = range(7)
+    mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum, full = range(8)
     # 0, 1, 2, 3, 4, 5
 
 
@@ -81,6 +81,10 @@ class main_configuration():
         for key in self.parsed_values.keys():
             if key not in 'i/o':
                 inner_dic = self.parsed_values[key]
+                req_par =['agent','analysis','variables','set','run','major','minor','summary']
+                for p in req_par:
+                    if p not in inner_dic[self.get_plotname_by_idx(key)].keys():
+                        self.erf(p + " not specified in configuration file")                        
                 for v in inner_dic.values():
                     d[key] = self.process_parameters(v)
         return d
