@@ -25,12 +25,15 @@ class SummaryStats(A):
         #print self.__data.head(5)
 
     def compute_summary(self):
-        summary_type = {'mean': self.mean, 'median': self.median, 'upper_quartile': self.upper_quartile, 'lower_quartile': self.lower_quartile, 'custom_quantile': self.custom_quantile, 'minimum': self.minimum, 'maximum': self.maximum}
+        summary_type = {'mean': self.mean, 'median': self.median, 'upper_quartile': self.upper_quartile, 'lower_quartile': self.lower_quartile, 'custom_quantile': self.custom_quantile, 'minimum': self.minimum, 'maximum': self.maximum, 'full':self.full}
         return summary_type[self.__param['summary']]()
 
     def map_analysis(self):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[self.__param['analysis']]
+
+    def full(self):
+        return self.__data
 
     def mean(self):
         agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).mean()
