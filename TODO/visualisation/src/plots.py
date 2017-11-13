@@ -402,7 +402,7 @@ class Scatterplot(A):
             delayed_df = self.__data.shift(periods = 1, axis = 0)
             delayed_df.rename(columns=lambda x: x+ "_delay", inplace=True)
             D = pd.concat([self.__data, delayed_df], axis =1)            
-            self.__data = D[list(sum(zip(self.__data.columns, delayed_df.columns), ()))]
+            self.__data = D[list(sum(zip(delayed_df.columns, self.__data.columns), ()))]
 
 
     def map_analysis(self, val):             
