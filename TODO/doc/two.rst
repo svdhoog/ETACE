@@ -225,9 +225,9 @@ plot.yaml::
         plot_name: one_set_multiple_runs_sp_price_delay.png
         plot_legend: yes
         legend_location: best
-        legend_label: price vs. price_delay
+        legend_label: price delay vs. price
         linestyle: solid
-        marker: +
+        marker: o
 
 
 .. image:: ./plots/one_set_multiple_runs_sp_price_delay_0.png
