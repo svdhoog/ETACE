@@ -239,7 +239,7 @@ plot.yaml::
 
 
 
-**Example 6** (*For agent Firm, one set, one run, eighty instances each, histogram of one variable* ):
+**Example 6** (*For agent Firm, one set, one run, eighty instances, histogram of population distribution of one variable* ):
 
 main.yaml::
 
@@ -279,7 +279,7 @@ plot.yaml::
    :align: right
 
 
-**Example 7** (*For agent Firm, one set, twenty runs, eighty instances, histogram of distribution over the sets* ):
+**Example 7** (*For agent Firm, one set, histogram of ensemble distribution across twenty runs* ):
 
 main.yaml::
 
