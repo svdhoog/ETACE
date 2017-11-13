@@ -162,7 +162,7 @@ plot.yaml::
    :align: right
    
 
-**Example 4** (*For agent Firm, one set, twenty runs each, eighty instances, scatterplot of two variables* ):
+**Example 4** (*For agent Firm, one set, twenty runs, averages of eighty instances, scatterplot of the ensemble of two variables* ):
 
 main.yaml::
 
