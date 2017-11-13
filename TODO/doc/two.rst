@@ -200,6 +200,44 @@ plot.yaml::
    :align: right
 
 
+**Example 4.2** (*For agent Firm, one set, twenty runs, eighty instances, scatterplot for the agent level of one variable with delay* ):
+
+main.yaml::
+
+    plot4:
+        scatterplot:
+            agent: Firm
+            analysis: agent
+            variables:
+                var1: [price]
+            delay: yes    
+            set: [13]
+            run: [range,[1,20]]
+            major: [range,[6020,12500,20]]
+            minor: [range,[1,80]] 
+            summary: full
+
+plot.yaml::
+
+    plot4:
+        number_plots: one
+        plot_name: one_set_agent_sp_price_delay.png
+        plot_legend: no
+        legend_location: best
+        legend_label: price delay vs. price
+        marker: +
+
+
+.. image:: ./plots/one_set_agent_sp_price_delay_0.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
+
+
+
+
 
 **Example 5** (*For agent Firm, one set, twenty runs each, eighty instances each, delay plot for one variable* ):
 
