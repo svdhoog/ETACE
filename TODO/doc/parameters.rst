@@ -296,3 +296,11 @@ A particular *transform.yaml* file may, therefore, look as follows::
         hdf_groupname: 'total_credit_equity_ratio'
 
 
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**References:**
+
+ Matplotlib: https://matplotlib.org/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
