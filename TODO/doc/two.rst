@@ -160,7 +160,7 @@ plot.yaml::
         fillcolor: darkgreen
 
 
-.. image:: ./images/P7_ts_price.png
+.. image:: ./plots/ts_multibatch_analysis_0.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
