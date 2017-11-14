@@ -19,3 +19,12 @@ Currently, the ``HDF5`` file is arranged as follows:
 A HDF5 file as described above can be created from the SQLite db files by using the data processing scripts, included in the data processing directory
 
 *Note:* To avoid any unwanted errors, it is imperative to name the ``SQLite`` db files with the following convention: ``set_*_run_*_iters.db``
+
+
+**References:**
+
+ Python Pandas: http://pandas.pydata.org/
+
+ HDF5: https://support.hdfgroup.org/HDF5/
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
