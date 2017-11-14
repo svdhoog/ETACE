@@ -125,6 +125,53 @@ plot.yaml::
    :alt: alternate text
    :align: right
 
+**Example 2.2** (*For agent Firm, four sets, twenty runs each, eighty instances, quantile values plotted in a single plot* ):
+
+main.yaml::
+
+    plot7:
+        timeseries:
+            agent: Firm
+            analysis: multiple_batch
+            variables:
+                var1: [price]
+            set: [10,13,16,17]
+            run: [range,[1,20]]
+            major: [range,[6020,12500,20]]
+            minor: [range,[1,80]] 
+            summary: custom_quantile
+            quantile_values:          
+                lower_quantile : 0.20
+                upper_quantile : 0.80
+
+
+plot.yaml::
+
+    plot7:
+        number_plots: one
+        plot_name: ts_multibatch_analysis.png
+        plot_legend: yes
+        legend_location: best
+        x-axis label: Time
+        y-axis label: price
+        linestyle: solid
+        marker: None
+        fill_between_quartiles: yes
+        fillcolor: darkgreen
+
+
+.. image:: ./images/P7_ts_price.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
+
+
+
+
+
+
 
 **Example 3** (*For agent Firm, one set, one run, eighty instances, boxplot* ):
 
