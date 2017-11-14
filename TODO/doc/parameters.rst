@@ -263,11 +263,11 @@ the input of multiple variables for any agent type.
 
 *Possible functions:*
 
-- Quarterly growth rate (quarter on quarter) ``q_o_q``
-- Quarterly growth rate (for one cycle) ``q_o_q_ONE_CYCLE``
-- Monthly growth rate (month on month) ``m_o_m``
-- Monthly growth rate (for one cycle) ``m_o_m_ONE_CYCLE``
-- Annual growth (for two given points on time) ``annual_P_I_T``
+- Quarterly growth rate (quarter on quarter freq quaterly) ``q_o_q_q``
+- Quarterly growth rate (quarter on quarter freq annual) ``q_o_q_a``
+- Monthly growth rate (month on month freq annual) ``m_o_m_a``
+- Monthly growth rate (month on month freq monthly) ``m_o_m_m``
+- Annual growth (year on year freq annual) ``y_o_y_a``
 - Other custom functions
 
 *Note:* Other elementary functions such as **sum**, **difference**, **product**, and **division** can also be performed, which has been left for the user (will be added as custom functions).
