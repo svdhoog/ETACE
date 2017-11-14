@@ -485,16 +485,6 @@ plot.yaml::
    :align: right
       
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-**References:**
-
-Matplotlib:: https://matplotlib.org/
-
-Python Pandas:: http://pandas.pydata.org/
-
-HDF5:: https://support.hdfgroup.org/HDF5/
-
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 
 
 
