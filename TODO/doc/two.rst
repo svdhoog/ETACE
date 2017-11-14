@@ -363,6 +363,46 @@ plot.yaml::
    :alt: alternate text
    :align: right
 
+**Example 6.2** (*For agent Firm, two sets, twenty runs each, eighty instances, histogram of population distribution of one variable* ):
+
+main.yaml::
+
+    plot6:
+        histogram:
+            agent: Firm
+            analysis: multiple_batch
+            variables:
+                var1: [price]
+            set: [10,13]
+            run: [range,[1,20]]
+            major: [range,[6020,12500,20]]
+            minor: [range,[1,80]] 
+            summary: mean
+
+plot.yaml::
+
+    plot6:
+        number_plots: one
+        plot_name: two_sets_multiple_runs_hg_price.png
+        plot_title: (Agent = Firm, var = Price)
+        number_bins: 50
+        histtype: bar
+        plot_legend: yes
+        fill: yes
+        stacked: False
+        legend_location: best
+        xaxis_label: xlabel
+        yaxis_label: ylabel
+
+
+.. image:: ./plots/one_set_one_run_hg_price_price.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: alternate text
+   :align: right
+
+
 
 **Example 7** (*For agent Firm, one set, histogram of ensemble distribution across twenty runs* ):
 
