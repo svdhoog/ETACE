@@ -395,7 +395,7 @@ plot.yaml::
         yaxis_label: ylabel
 
 
-.. image:: ./plots/one_set_one_run_hg_price_price.png
+.. image:: ./plots/two_set_multiple_runs_hg_price_price.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
