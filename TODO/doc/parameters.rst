@@ -11,11 +11,14 @@ main.yaml
 ``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``::
   
   i/o:
-    input_path: 
-        Bank: '/home/etace/Desktop/GitHub/Bank/Bank.h5' 
-        Eurostat: '/home/etace/Desktop/GitHub/Bank/Eurostat.h5'
+    input_path: '/home/etace/Desktop/GitHub/Bank/Bank.h5'
 
-*Note:* The key name to the input path should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
+    input_files: 
+        CentralBank: CentralBank.h5
+        Eurostat: Eurostat.h5
+        Firm: Firm.h5
+        
+*Note:* The key name to the input files should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
 
 Similarly, the output path::
 
