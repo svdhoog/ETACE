@@ -488,11 +488,11 @@ plot.yaml::
 
 **References:**
 
-.._ Matplotlib: https://matplotlib.org/
+ Matplotlib: https://matplotlib.org/
 
-.._ Python Pandas: http://pandas.pydata.org/
+ Python Pandas: http://pandas.pydata.org/
 
-.._ HDF5: https://support.hdfgroup.org/HDF5/
+ HDF5: https://support.hdfgroup.org/HDF5/
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
