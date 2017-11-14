@@ -224,6 +224,7 @@ main.yaml::
             run: [1]
             major: [range,[6020,12500,20]]
             minor: [range,[1,80]]
+            summary: full
 
 plot.yaml::
 
