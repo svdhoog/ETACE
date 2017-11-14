@@ -488,7 +488,7 @@ plot.yaml::
 
 **References:**
 
-Matplotlib:: < https://matplotlib.org/ >
+.. _Matplotlib: https://matplotlib.org/
 
 Python Pandas:: < http://pandas.pydata.org/ >
 
