@@ -278,42 +278,70 @@ class Histogram():
                 plt.close()
 
             else:
-                fig, ax = plt.subplots()
-                if len(dframe.columns) == 2:
-                    y1 = []
-                    y2 = []
-                    col_A = dframe[dframe.columns[0]] 
-                    col_B = dframe[dframe.columns[1]]
-                    
-                    for i in range(0, len(dframe), self.__N):
-                        y1.append(np.array(col_A[i:i+self.__N]))
-                        y2.append(np.array(col_B[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
-                    for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
+                if self.summary != 'full':
+                    fig, ax = plt.subplots()
+                    if len(dframe.columns) == 2:
+                        y1 = []
+                        y2 = []
+                        col_A = dframe[dframe.columns[0]] 
+                        col_B = dframe[dframe.columns[1]]
+                        
+                        for i in range(0, len(dframe), self.__N):
+                            y1.append(np.array(col_A[i:i+self.__N]))
+                            y2.append(np.array(col_B[i:i+self.__N]))
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
+                        for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
+                            clr = next(colors)
+                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx)) 
+                            clr = next(colors)
+                            self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx)) 
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plt.close()
+                    else:
+                        y1 = []
+                        col_A = dframe[dframe.columns[0]]
+                        print(col_A)
+                        for i in range(0, len(dframe), self.__N):
+                            y1.append(np.array(col_A[i:i+self.__N]))
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                        for r in range(0, len(dframe)//self.__N):
+                            clr = next(colors)
+                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
+             
+                        plot_name = self.__P.plot_name(self.idx) 
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
+                        plt.close()
+
+                else:  # for the whole ensemble of data, if analysis is not agent level
+                    fig, ax = plt.subplots()
+                    if len(dframe.columns) == 2:
+                        col_A = dframe[dframe.columns[0]] 
+                        col_B = dframe[dframe.columns[1]]
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4)))
                         clr = next(colors)
-                        self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx)) 
+                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx)) 
+                        clr = next(colors)                        
+                        self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx))
+                        plot_name = self.__P.plot_name(self.idx)           
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plt.close()
+                    else:
+                        col_A = dframe[dframe.columns[0]]
+                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 1)))
                         clr = next(colors)
-                        self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx)) 
-                    plot_name = self.__P.plot_name(self.idx)           
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plt.close()
-                else:
-                    y1 = []
-                    col_A = dframe[dframe.columns[0]]
-                    for i in range(0, len(dframe), self.__N):
-                        y1.append(np.array(col_A[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
-                    for r in range(0, len(dframe)//self.__N):
-                        clr = next(colors)
-                        self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
-         
-                    plot_name = self.__P.plot_name(self.idx) 
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
-                    plt.close()
+                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
+                        plot_name = self.__P.plot_name(self.idx) 
+                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')          
+                        plt.close()                    
             file_count = file_count + 1        
 
-
     def many_output(self):
+
+        if (self.summary == 'full' and self.__analysistype != A.agent):
+            print(">> Multiple plots not possible for full ensemble of the data, select single plot option instead and retry!")
+            sys.exit(1)
+
         step = 1
         if self.summary == 'custom_quantile':
             step = 2
