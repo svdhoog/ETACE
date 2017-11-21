@@ -47,6 +47,9 @@ the parameters of the configuration files are shown below, along with the plots 
 
 Using the dataset <insert dataset url>, and the following parameter settings, the following plots can be produced.
 
+Timeseries
+==========
+
 **Example 1.1** (*For agent Firm, one set, ten runs, eighty instances, plotted in a single plot* ):
 
 main.yaml::
@@ -208,6 +211,8 @@ plot.yaml::
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Boxplot
+=======
 
 
 **Example 2.1** (*For agent Firm, one set, one run, eighty instances, boxplot* ):
@@ -248,7 +253,8 @@ plot.yaml::
    
    
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
-   
+Scatterplot
+===========
 
 **Example 3.1** (*For agent Firm, one set, twenty runs, averages of eighty instances, scatterplot of the ensemble of two variables* ):
 
@@ -365,6 +371,8 @@ plot.yaml::
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Histogram
+=========
 
 **Example 4.1** (*For agent Firm, one set, one run, eighty instances, histogram of population distribution of one variable* ):
 
