@@ -211,8 +211,6 @@ plot.yaml::
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Boxplot
-=======
 
 
 **Example 2.1** (*For agent Firm, one set, one run, eighty instances, boxplot* ):
@@ -253,8 +251,6 @@ plot.yaml::
    
    
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~   
-Scatterplot
-===========
 
 **Example 3.1** (*For agent Firm, one set, twenty runs, averages of eighty instances, scatterplot of the ensemble of two variables* ):
 
@@ -371,8 +367,6 @@ plot.yaml::
 
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-Histogram
-=========
 
 **Example 4.1** (*For agent Firm, one set, one run, eighty instances, histogram of population distribution of one variable* ):
 
