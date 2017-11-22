@@ -1,6 +1,6 @@
 from parameters import NP, A, Plot_configuration
 from summarystats import SummaryStats
-import sys
+import sys, os
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -42,16 +42,25 @@ class Timeseries(A):
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
         self.__data = data
-        self.outpath = outpath
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
         self.summary = main_param['summary']
-        # self.ticklabels = main_param['major']  # only needed for tick labe, which is temp atm
+        self.outpath = outpath + '/timeseries'
+        self.dir_check(self.outpath)
+        # self.ticklabels = main_param['major']  # only needed for tick label, which is temp atm
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
         return analysis_values[val]
+
+    # Function to check for existing directories, and create a new one if not present 
+    def dir_check(self, d):
+        if os.path.exists(d):
+            print("- Directory ["+os.path.basename(d)+ "] is used for output files")                        
+        else:
+            os.makedirs(d)
+            print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
     def plot_line(self, ax, x, y, l_label, clr):
         if self.__P.legend_label(self.idx) is None:      
@@ -210,7 +219,8 @@ class Histogram():
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
         self.__data = data
-        self.outpath = outpath          
+        self.outpath = outpath + '/histogram'
+        self.dir_check(self.outpath)          
         #self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.__P = plt_config
@@ -223,6 +233,13 @@ class Histogram():
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val] 
 
+    # Function to check for existing directories, and create a new one if not present 
+    def dir_check(self, d):
+        if os.path.exists(d):
+            print("- Directory ["+os.path.basename(d)+ "] is used for output files")                        
+        else:
+            os.makedirs(d)
+            print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
     def plot_histogram(self, ax, data, label, colors, n_bins):
        
@@ -301,7 +318,6 @@ class Histogram():
                     else:
                         y1 = []
                         col_A = dframe[dframe.columns[0]]
-                        print(col_A)
                         for i in range(0, len(dframe), self.__N):
                             y1.append(np.array(col_A[i:i+self.__N]))
                         colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
@@ -315,7 +331,7 @@ class Histogram():
 
                 else:  # for the whole ensemble of data, if analysis is not agent level
                     fig, ax = plt.subplots()
-                    if len(dframe.columns) == 2:
+                    if len(dframe.columns) == 2:   ################TODO: two option not needed because when summary full, no sustom quantile possible
                         col_A = dframe[dframe.columns[0]] 
                         col_B = dframe[dframe.columns[1]]
                         colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4)))
@@ -417,7 +433,8 @@ class Scatterplot(A):
         self.idx = idx  
         self.__data = data
         self.__P = plt_config
-        self.outpath = outpath          
+        self.outpath = outpath + '/scatterplot'
+        self.dir_check(self.outpath)          
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         self.delay = main_param['delay']
@@ -437,6 +454,13 @@ class Scatterplot(A):
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val]                  
 
+    # Function to check for existing directories, and create a new one if not present 
+    def dir_check(self, d):
+        if os.path.exists(d):
+            print("- Directory ["+os.path.basename(d)+ "] is used for output files")                        
+        else:
+            os.makedirs(d)
+            print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
     def plot_scatterplot(self, ax, x, y, l_label, x_label, y_label, clr):        
         if self.__P.legend_label(self.idx) is None:      
@@ -487,25 +511,40 @@ class Scatterplot(A):
                 plt.close()
 
             else:
-                fig, ax = plt.subplots() # initialize figure
-                legend_label = dframe.columns
-                if len(dframe.columns) != 2:
-                    print(">> Something wrong with data, check and retry!")
-                    sys.exit (1)
-                y1 = []
-                y2 = []
-                col_A = dframe[dframe.columns[0]]
-                col_B = dframe[dframe.columns[1]]                
-                for i in range(0, len(dframe), self.__N):
-                    y1.append(np.array(col_A[i:i+self.__N]))
-                    y2.append(np.array(col_B[i:i+self.__N]))
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
-                for r in range(0, len(dframe)//self.__N):
+                if self.summary != 'full':
+                    fig, ax = plt.subplots() # initialize figure
+                    legend_label = dframe.columns
+                    if len(dframe.columns) != 2:
+                        print(">> Something wrong with data, check and retry!")
+                        sys.exit (1)
+                    y1 = []
+                    y2 = []
+                    col_A = dframe[dframe.columns[0]]
+                    col_B = dframe[dframe.columns[1]]                
+                    for i in range(0, len(dframe), self.__N):
+                        y1.append(np.array(col_A[i:i+self.__N]))
+                        y2.append(np.array(col_B[i:i+self.__N]))
+                    colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                    for r in range(0, len(dframe)//self.__N):
+                        clr = next(colors)
+                        self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    plt.close()
+                else:               
+                    fig, ax = plt.subplots() # initialize figure
+                    legend_label = dframe.columns
+                    if len(dframe.columns) != 2:
+                        print(">> Something wrong with data, check and retry!")
+                        sys.exit (1)
+                    col_A = dframe[dframe.columns[0]]
+                    col_B = dframe[dframe.columns[1]]
+                    colors = iter(cm.rainbow(np.linspace(0, 1, 1)))
                     clr = next(colors)
-                    self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)                
-                plot_name = self.__P.plot_name(self.idx)           
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                plt.close()                
+                    self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)                
+                    plot_name = self.__P.plot_name(self.idx)           
+                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    plt.close()              
             file_count = file_count + 1
 
     def many_output(self):
@@ -570,7 +609,8 @@ class Boxplot(A):
         self.__data = data
         self.__P = plt_config
         self.__main_param = main_param
-        self.outpath = outpath 
+        self.outpath = outpath + '/boxplot'
+        self.dir_check(self.outpath) 
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
         if self.__analysistype == A.agent:
@@ -581,6 +621,14 @@ class Boxplot(A):
             
         analysis_values = {'agent' : A.agent, 'multiple_run' : A.multiple_run, 'multiple_batch' : A.multiple_batch, 'multiple_set' : A.multiple_set}    
         return analysis_values[val] 
+
+    # Function to check for existing directories, and create a new one if not present 
+    def dir_check(self, d):
+        if os.path.exists(d):
+            print("- Directory ["+os.path.basename(d)+ "] is used for output files")                        
+        else:
+            os.makedirs(d)
+            print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
         
     def process_boxplot_data(self, data):
 
