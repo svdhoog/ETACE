@@ -1,1 +1,0 @@
-unicode support only present in ptyhon3 when writing to HDF store directly. Throws errors for python2. (Jan 6)
