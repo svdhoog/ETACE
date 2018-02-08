@@ -18,7 +18,7 @@ pytables
 
 scipi
 
-numy
+numpy
 
 #### Usage
 
