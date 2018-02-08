@@ -1,5 +1,9 @@
 # Data processing and analyzing scripts 
 
+For more detailed user help, see:
+
+src/data_conversion_scripts/doc/usage_help.rst
+
 #### Depends 
 
 Python core libraries
