@@ -3,11 +3,17 @@
 #### Depends 
 
 Python core libraries
+
 Pandas
+
 matplotlib
+
 h5py
+
 pytables
+
 scipi
+
 numy
 
 #### Usage
