@@ -17,7 +17,7 @@ def erf(msg):  # function to output the error message and exit
 def dir_check(d):
     if os.path.exists(d):
         print("- Directory ["+os.path.basename(d)+ "] is used for output files")
-                   
+
     else:
         os.makedirs(d)
         print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
@@ -115,9 +115,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog='main.py', description='Visualise and transform various time-series data.')
     parser.add_argument('parameterpath', help='Path to folder containing the parameter (.yaml) files', nargs=1, type=str)
     args = parser.parse_args()
-    
+
     P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
-    inpath = P.input_fpath()    
+    inpath = P.input_fpath()
     infiles = P.input_files()
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
@@ -161,10 +161,8 @@ if __name__ == "__main__":
                 var_dic[j[0]] = None
             var_list = list(var_dic.keys())
         d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity
-
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
 
-	#print filtered
         df_main = pd.DataFrame()
         for dkey, dval in var_dic.items():
             df = filter_by_value(dkey, dval, filtered)  # stage-II filtering for selecting variables according to their values

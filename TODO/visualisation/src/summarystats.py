@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import pandas as pd
 from parameters import A  # imported self written class from directory
 
@@ -76,8 +76,8 @@ class SummaryStats(A):
             s2 = s2.append(self.quantile(Q2))  # data frame for upper quantile
             for i in range(len(list(s2))):
                 s2.rename(columns={list(s2)[i]: str(list(s2)[i])+"_u_quantile ("+str(Q2)+")"}, inplace=True)
-            
-            D = pd.concat([s1, s2], axis=1)  
+
+            D = pd.concat([s1, s2], axis=1)
             return D[list(sum(zip(s1.columns, s2.columns), ()))] # arrange columns (l_q, u_q) in alternating fashion
 
     def maximum(self):

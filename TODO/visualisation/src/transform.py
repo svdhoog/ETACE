@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys, os
 import yaml
 import numpy as np
@@ -9,21 +9,21 @@ from parameters import transform_configuration
 class Transform():
 
     def __init__(self, idx, data, par_fpath):
-        self.__idx = idx 
+        self.__idx = idx
         self.__data = data
         self.P = transform_configuration(par_fpath)
         self.df_out = pd.DataFrame(data=None, columns=self.__data.columns,index=self.__data.index)
         print("lau laus")
 
 
-    def main_method(self, outpath):            
-        transform_function = {'qoq_annual_frequency': self.qoq_annual_frequency, 'qoq_quaterly_frequency': self.qoq_quaterly_frequency, 'mom_annual_frequency': self.mom_annual_frequency, 'mom': self.mom,'annual_P_I_T': self.annual_P_I_T}            
+    def main_method(self, outpath):
+        transform_function = {'qoq_annual_frequency': self.qoq_annual_frequency, 'qoq_quaterly_frequency': self.qoq_quaterly_frequency, 'mom_annual_frequency': self.mom_annual_frequency, 'mom': self.mom,'annual_P_I_T': self.annual_P_I_T}
         fn = self.P.get_parameters(self.__idx)['aggregate']
         data_out = transform_function[self.P.get_parameters(self.__idx)['transform_function']](fn, self.df_out)
         f_out = self.P.get_parameters(self.__idx)['write_file']
         if f_out is True:
             data_out.to_hdf(str(outpath)+ '/' + str(self.P.get_parameters(self.__idx)['output_file_name']), str(self.P.get_parameters(self.__idx)['hdf_groupname']), mode = 'a', format = 'table')
-           
+
         return data_out
 
 
@@ -40,20 +40,20 @@ class Transform():
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
 
-        def mean(df_out): # TODO: value seems wrong, check, multi agent causing error 
-            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3           
+        def mean(df_out): # TODO: value seems wrong, check, multi agent causing error
+            roll_mean = self.__data[variables.values()].rolling(window=3, min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3
             #df_out[variables.values()] = roll_mean[::3].pct_change(4)
             df_out[variables.values()] = roll_mean[::3][variables.values()]
             df_out = df_out.pct_change(4)
 
             return df_out.rename(columns = col_d)
-            
+
         def summation(df_out):
             roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
             df_out[variables.values()] = roll_sum[::3].pct_change(4)
-            return df_out.rename(columns = col_d)        
+            return df_out.rename(columns = col_d)
 
-        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
+        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input
         return f_mapper[fn](d_out)
 
 
@@ -81,14 +81,14 @@ class Transform():
             roll_mean = self.__data[variables.values()].rolling(window=12,min_periods=12).mean() # first get rolling window values with step 12 and initial buffer 12
             df_out[variables.values()] = roll_mean[::12].pct_change(1) # compute rate between values with a step size 1
             return df_out.rename(columns = col_d)
-               
+
         def summation():
             roll_sum = self.__data[variables.values()].rolling(window=12,min_periods=12).sum()
             df_out[variables.values()] = roll_sum[::12].pct_change(1)
             return df_out.rename(columns = col_d)
 
-           
-        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
+
+        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input
         return f_mapper[fn]()
 
 
@@ -100,13 +100,13 @@ class Transform():
             roll_mean = self.__data[variables.values()].rolling(window=3,min_periods=3).mean() # first get rolling window values with step 3 and initial buffer 3
             df_out[variables.values()] = roll_mean[::3].pct_change(1)
             return df_out.rename(columns = col_d)
-            
+
         def summation():
             roll_sum = self.__data[variables.values()].rolling(window=3,min_periods=3).sum()
             df_out[variables.values()] = roll_sum[::3].pct_change(1)
             return df_out.rename(columns = col_d)
-            
-        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input    
+
+        f_mapper = {'mean': mean, 'sum': summation} # map the function to apply with the desired input
         return f_mapper[fn]()
 
 
@@ -115,5 +115,3 @@ if __name__ == "__main__":
 
     C = transform_configuration('/home/susupta/Desktop/Fix_preprocess/visualize/src')
     print(C.get_parameters()['variables'])
-
-    

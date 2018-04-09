@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import sys
 import yaml
 import argparse
@@ -25,8 +25,9 @@ class NP:
 class main_configuration():
 
     def __init__(self, in_fpath):
- 
-        self.main_f = in_fpath + '/main.yaml' # the main configuration file
+
+#        self.main_f = in_fpath + '/main.yaml' # the main configuration file
+        self.main_f = in_fpath + '/config.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.main_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -84,7 +85,7 @@ class main_configuration():
                 req_par =['agent','analysis','variables','set','run','major','minor','summary']
                 for p in req_par:
                     if p not in inner_dic[self.get_plotname_by_idx(key)].keys():
-                        self.erf(p + " not specified in configuration file")                        
+                        self.erf(p + " not specified in configuration file")
                 for v in inner_dic.values():
                     d[key] = self.process_parameters(v)
         return d
@@ -102,14 +103,14 @@ class main_configuration():
     def input_files(self):
         if 'i/o' in self.parsed_values.keys():
             return self.parsed_values['i/o']['input_files']
-        return self.erf("Missing input path!")        
+        return self.erf("Missing input path!")
 
 
 class transform_configuration():
 
     def __init__(self, in_fpath):
- 
-        self.transform_f = in_fpath + '/transform.yaml' # the main configuration file
+
+        self.transform_f = in_fpath + '/config_transform.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.transform_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -132,7 +133,7 @@ class transform_configuration():
                     print(" >> Unknown problem with %s file:" % fname)
                 sys.exit()
             return p
-   
+
     def get_parameters(self, idx):
         inner_dic = self.parsed_values[idx]
         return inner_dic
@@ -142,7 +143,7 @@ class Plot_configuration():
 
     def __init__(self, p_fpath):
 
-        self.plot_f = p_fpath + '/plot.yaml'
+        self.plot_f = p_fpath + '/plot_config.yaml'
         self.__param = self.parse_yaml(self.plot_f)
 
 
@@ -302,7 +303,7 @@ class Figure_default_parameters(object):
         self.plot_name = 'default_fig.png'
         self.l_lim = None
         self.u_lim = None
-        self.linestyle = 1
+        self.linestyle = 'solid'
         self.marker = 4
         self.markerfacecolor = None
         self.markersize = None
