@@ -8,11 +8,14 @@ sometimes, therefore resulting in undesired output. Hence, extra care is advised
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``.
- You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). ::
+``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). ::
 
   i/o:
+    # for absolute path use:
     input_path: '/path/to/Etace/data'
+
+    # for relative path use:
+    input_path: 'data'
 
     input_files:
         CentralBank: CentralBank.h5
@@ -22,9 +25,11 @@ config.yaml
 *Note:* The key name to the input files should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
 
 Similarly, the output path::
-
+    # for absolute path use:
     output_path: '/path/to/Etace/results'
 
+    # for relative path use:
+    output_path: 'results'
 
 **Plot-key (i.e.** ``plot1`` **) :** Specify a key for the plot (mainly to keep track of the plot-number for other configuration files). Can be any string.
 
