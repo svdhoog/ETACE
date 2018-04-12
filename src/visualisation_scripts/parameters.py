@@ -2,7 +2,7 @@
 import sys
 import yaml
 import argparse
-
+from pathlib import Path
 
 class A:
     # Types of analysis
@@ -92,12 +92,16 @@ class main_configuration():
 
     def input_fpath(self):
         if 'i/o' in self.parsed_values.keys():
-            return self.parsed_values['i/o']['input_path']
+            #input_path = Path(self.parsed_values['i/o']['input_path'])
+            input_path = str(Path("").absolute() / self.parsed_values['i/o']['rel_input_path'])
+            return input_path
         return self.erf("Missing input path!")
 
     def output_fpath(self):
         if 'i/o' in self.parsed_values.keys():
-            return self.parsed_values['i/o']['output_path']
+            #output_path = Path(self.parsed_values['i/o']['output_path'])
+            output_path = str(Path("").absolute() / self.parsed_values['i/o']['rel_output_path'])
+            return output_path
         return self.erf("Missing output path!")
 
     def input_files(self):

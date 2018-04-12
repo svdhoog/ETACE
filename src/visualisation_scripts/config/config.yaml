@@ -1,14 +1,20 @@
 i/o:
     # set up your input_path for the input_files
-    input_path: '/Users/fherrmann/Documents/Conquaire/ETACE/data'
+    #input_path: '/Users/fherrmann/Documents/Conquaire/ETACE/data'
+    # set up your output_path
+    #output_path: '/Users/fherrmann/Documents/Conquaire/ETACE/results'
+
+    # set up your input_path for the input_files, it's relative to the project path
+    rel_input_path: 'data'
+
+    # set up your output_path for the resulting plots, it's relative to the project path
+    rel_output_path: 'results'
+
 
     input_files:
         CentralBank: CentralBank.h5 # please name the key as the agent name
         Eurostat: Eurostat.h5
         Firm: Firm.h5
-
-    # set up your output_path
-    output_path: '/Users/fherrmann/Documents/Conquaire/ETACE/results'
 
 
 plot1:

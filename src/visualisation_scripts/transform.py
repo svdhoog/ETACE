@@ -113,5 +113,5 @@ class Transform():
 
 if __name__ == "__main__":
 
-    C = transform_configuration('/home/susupta/Desktop/Fix_preprocess/visualize/src')
+    C = transform_configuration()
     print(C.get_parameters()['variables'])
