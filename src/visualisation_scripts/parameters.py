@@ -92,22 +92,31 @@ class main_configuration():
 
     def input_fpath(self):
         if 'i/o' in self.parsed_values.keys():
-            #input_path = Path(self.parsed_values['i/o']['input_path'])
-            input_path = str(Path("").absolute() / self.parsed_values['i/o']['rel_input_path'])
-            return input_path
+            path_config = self.parsed_values['i/o']['input_path']
+            if path_config[0] == '/': # check for full path inside config
+                input_path = str(Path(path_config))
+                return input_path
+            else: # use the path from config as relative path
+                input_path = str(Path("").absolute() / path_config)
+                return input_path
         return self.erf("Missing input path!")
 
     def output_fpath(self):
         if 'i/o' in self.parsed_values.keys():
             #output_path = Path(self.parsed_values['i/o']['output_path'])
-            output_path = str(Path("").absolute() / self.parsed_values['i/o']['rel_output_path'])
-            return output_path
+            path_config = self.parsed_values['i/o']['output_path']
+            if path_config[0] == '/': # check for full path inside config
+                output_path = str(Path(path_config))
+                return output_path
+            else: # use the path from config as relative path
+                output_path = str(Path("").absolute() / path_config)
+                return output_path
         return self.erf("Missing output path!")
 
     def input_files(self):
         if 'i/o' in self.parsed_values.keys():
             return self.parsed_values['i/o']['input_files']
-        return self.erf("Missing input path!")
+        return self.erf("Missing input files!")
 
 
 class transform_configuration():

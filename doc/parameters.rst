@@ -8,7 +8,8 @@ sometimes, therefore resulting in undesired output. Hence, extra care is advised
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``::
+``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``.
+ You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). ::
 
   i/o:
     input_path: '/path/to/Etace/data'
@@ -152,16 +153,18 @@ Example::
 Hence, a typical main configuration file may look like::
 
     i/o:
-        # set up your input_path for the input_files
-        input_path: '/Users/fherrmann/Documents/Conquaire/ETACE/data'
+        # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
+        input_path: 'data'
+
+        # set up your output_path for the resulting plots, it's relative unless it starts with a '/'
+        output_path: 'results'
 
         input_files:
             CentralBank: CentralBank.h5 # please name the key as the agent name
             Eurostat: Eurostat.h5
             Firm: Firm.h5
 
-        # set up your output_path
-        output_path: '/Users/fherrmann/Documents/Conquaire/ETACE/results'
+
 
 
     plot1:
