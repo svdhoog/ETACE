@@ -6,12 +6,12 @@ Data Conversion Scripts
 This repository contains all the necessary Python scripts to convert between different data formats.
 
 The conversions that are possible are:
-
+- ``xml`` format -> ``SQLite`` db format
 - ``SQLite`` db format -> ``xml`` format
 - ``SQLite`` db format -> ``hdf5`` format
 - ``xml`` format -> ``hdf5`` format
 
-The repo also includes script to convert between different structures within the hdf5 file (``set_*_run_*_iters`` format to ``Agentname`` *[Eurostat, Bank etc]* ) format.
+The repo also includes scripts to convert between different structures within the hdf5 file (``set_*_run_*_iters`` format to ``Agentname`` *[Eurostat, Bank etc]* ) format.
 
 Dependencies
 ============

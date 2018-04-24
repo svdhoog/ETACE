@@ -1,6 +1,21 @@
 Notes on usage of the python scripts
 ------------------------------------
 
+0. XML_DB
+~~~~~~~~~~
+
+- These scripts convert ``XML`` files to ``SQLite`` database files.
+
+#. The script ``gendb.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion. So, for all xml files present in one input folder, one equivalent DB file is created in the output folder.
+
+#. The script ``gendb_special.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion, and skips missing Agents.
+
+- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+
+    python gendb.py -h
+    python gendb_special.py -h
+
+
 1. DB_HDF5
 ~~~~~~~~~~
 
