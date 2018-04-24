@@ -27,7 +27,7 @@ Default output is to XML files; these scripts convert XML to SQL and HDF5.
 Conversion from SQL to HDF5 is included as well.
 
 1. src/data_conversion_scripts
-
+- src/xml_db: conversion of XML to SQL
 - src/db_hdf5: conversion of SQL to h5
 - src/db_xml: conversion of SQL to XML
 - src/hdf_agentwise/merge_hdf_agentwise.py: conversion of h5 (per set, run) to h5 (per agent type)

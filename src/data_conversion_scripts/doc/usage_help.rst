@@ -92,4 +92,17 @@ Notes on usage of the python scripts
   the option that is not preferred. Currently, the default is such that the output is created in the input folder.
   
 
+5. REPLACE_XML_FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~
 
+- replace_xml_functions.py: Python script for replacing XML writeout functions in xml.c (FLAME-models)
+- Usage:
+
+        python replace_xml_functions.py xml.c shadow_xml.c path_to_shadow_model shadow_model.xml
+        
+    where:
+    - xml.c: original xml.c file from complete model
+    - shadow_xml.c: xml.c file from 'shadow' model, with a smaller set of variables (the xml.c file results from xparsing the shadow model.xml file)
+    - path_to_shadow_model: full path to shadow model
+    - shadow_model.xml: model.xml file containing all agent types, but fewer variables
+    
