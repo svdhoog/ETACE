@@ -1,5 +1,12 @@
         FLAViz: Flexible Large-scale Agent Visualization Library (Release 0.1.0 beta)
-        
+
+-------------------------------------------------------------------------------
+
+      Copyright (c) 2018 Sander van der Hoog
+      If you have any problems or enquiries, you can contact the
+      library maintainer at <svdhoog@gmail.com>
+      
+-------------------------------------------------------------------------------
         
 The Flexible Large-scale Agent Visualization Library (FLAViz) is a data
 analysis and visualization library developed for multi-agent/agent-based
@@ -9,12 +16,6 @@ Agent-based simulation models typically generate data that spans multiple dimens
 
 To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots. 
 
--------------------------------------------------------------------------------
-
-      Copyright (c) 2018 Sander van der Hoog
-      If you have any problems or enquiries, you can contact the
-      library maintainer at <svdhoog@gmail.com>
-      
 ===============================================================================
 
 ##### Requirements: #####
@@ -55,4 +56,3 @@ $ python main.py path-to-config-folder
 
 ------------------------------------
 2018-02-08 11:00 svdh
- 

@@ -1,1 +1,0 @@
-If output folder specified as  current folder "./", asks to delete the folder, remove this. Just include a warning saying whether you want to overwrite if old files present.

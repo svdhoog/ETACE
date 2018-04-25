@@ -1,0 +1,14 @@
+
+We started by separating the project into six tasks:
+
+Task 1: Reverse engineering SQL database files to XML files
+
+Task 2: Python pandas's Data Panel format and the HDF5 format
+
+Task 3: Descriptive statistics scripts
+
+Task 4: Data visualization scripts
+
+Task 5: Input Output Facilities
+
+Task 6: Data Transformations
