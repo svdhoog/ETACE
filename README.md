@@ -39,7 +39,7 @@ For information on how to use the library, view the README.md file in the root f
 
 You can also browse the User Manual online at:
 
-https://github.com/svdhoog/ETACE/doc/tutorial.rst
+https://github.com/svdhoog/ETACE/blob/master/doc/tutorial.rst
 
 
 ##### Runing the main module #####
