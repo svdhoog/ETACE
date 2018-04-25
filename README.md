@@ -38,7 +38,8 @@ You will need the following:
 For information on how to use the library, view the README.md file in the root folder.
 
 You can also browse the User Manual online at:
-https://github.com/krdevkota/ETACE/
+
+https://github.com/svdhoog/ETACE/doc/tutorial.rst
 
 
 ##### Runing the main module #####
