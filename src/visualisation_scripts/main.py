@@ -118,6 +118,7 @@ if __name__ == "__main__":
 
     P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
+    print(inpath)
     infiles = P.input_files()
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict

@@ -4,7 +4,7 @@
 
 For more detailed user help, see:
 
-src/data_conversion_scripts/doc/usage_help.rst
+docs/data_conversion_scripts/usage_help.rst
 
 This repository contains all the necessary Python scripts to convert between different data formats.
 
@@ -38,8 +38,3 @@ Conversion from SQL to HDF5 is included as well.
 - src/db_xml: conversion of SQL to XML
 - src/hdf_agentwise/merge_hdf_agentwise.py: conversion of h5 (per set, run) to h5 (per agent type)
 - src/xml_hdf5: conversion of XML to h5
-
-2. misc/replace_xml_functions
-- replace_xml_functions.py: Python script for replacing XML writeout functions in xml.c (FLAME-models)
-
-This replacement script is useful for reducing the storage footprint of FLAME simulations. It allows the user to create a "shadow model.xml" file with a subset of the agent memory variables, resulting in fewer variables than the full model.xml file. The script replace_xml_functions.py takes as input the full-model xml.c file and the shadow-model xml.c file, and then replaces all functions called write_<agentname>_Agent() in the full-model xml.c file. The resulting full-model xml.c file can be compiled as usual with rest of the FLAME model C code. The resulting simulation will only output the subset of variables for each agent type.

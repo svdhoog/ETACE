@@ -18,7 +18,7 @@ There are several scripts, located in folder ``/src/visualisation_scripts`` that
 - ``transform.py`` : Takes in a Pandas dataframe, and returns/ writes to a file the necessary transformations.
 - ``parameters.py`` : Contains code for main configuration and reads in config files.
 
-The parameter files are contained in the folder named ``/config``. It contains three configuration files:
+The parameter files are contained in the folder named ``/src/visualisation_scripts/config``. It contains three configuration files:
 
 - ``config.yaml`` : define i/o path, plot-types, agents and appropriate variables, filter options, desired summary
 - ``plot_config.yaml`` : define plot properties i.e. name, legends, line style, fill etc.
@@ -32,9 +32,9 @@ Testing
 
 To run the module, simply use:
 
-   $ python main.py parameter-path
+   $ python /src/visualisation_scripts/main.py parameter-path
 
-where, parameter-path is the path to the folder containing the yaml files (in this git structure it is ``/Etace/src/visualisation_scripts/config/``)
+where, parameter-path is the path to the folder containing the yaml files (in this git structure it is ``/FLAViz/src/visualisation_scripts/config/``)
 
 Note: The module has only been tested under Unix/ Unix-like systems. It has not been tested for Windows and therefore
 there is no guarentee of proper execution for such systems.

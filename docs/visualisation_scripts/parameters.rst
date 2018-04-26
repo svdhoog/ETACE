@@ -15,7 +15,7 @@ config.yaml
     input_path: '/path/to/Etace/data'
 
     # for relative path use:
-    input_path: 'data'
+    input_path: 'data/visualisation'
 
     input_files:
         CentralBank: CentralBank.h5

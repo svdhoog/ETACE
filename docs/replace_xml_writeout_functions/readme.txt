@@ -2,6 +2,23 @@
 # Sander vander Hoog, ETACE, Bielefeld University
 # 9 March 2017
 
+REPLACE_XML_WRITEOUT_FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~
+- src/replace_xml_functions.py: Python script for replacing XML writeout functions in xml.c (FLAME-models)
+- Usage:
+
+        python replace_xml_functions.py xml.c shadow_xml.c path_to_shadow_model shadow_model.xml
+
+    where:
+    - xml.c: original xml.c file from complete model
+    - shadow_xml.c: xml.c file from 'shadow' model, with a smaller set of variables (the xml.c file results from xparsing the shadow model.xml file)
+    - path_to_shadow_model: full path to shadow model
+    - shadow_model.xml: model.xml file containing all agent types, but fewer variables
+
+This replacement script is useful for reducing the storage footprint of FLAME simulations. It allows the user to create a "shadow model.xml" file with a subset of the agent memory variables, resulting in fewer variables than the full model.xml file. The script replace_xml_functions.py takes as input the full-model xml.c file and the shadow-model xml.c file, and then replaces all functions called write_<agentname>_Agent() in the full-model xml.c file. The resulting full-model xml.c file can be compiled as usual with rest of the FLAME model C code. The resulting simulation will only output the subset of variables for each agent type.
+
+
+
 TEST EXAMPLES
 
 These test examples are for testing the functionality of the script replace_xml_writeout_functions.py.
