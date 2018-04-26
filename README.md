@@ -1,39 +1,59 @@
-# Data processing and analyzing scripts 
+        FLAViz: Flexible Large-scale Agent Visualization Library (Release 0.1.0 beta)
 
-For more detailed user help, see:
+-------------------------------------------------------------------------------
 
-src/data_conversion_scripts/doc/usage_help.rst
+      Copyright (c) 2018 Sander van der Hoog
+      If you have any problems or enquiries, you can contact the
+      library maintainer at <svdhoog@gmail.com>
+      
+-------------------------------------------------------------------------------
+        
+The Flexible Large-scale Agent Visualization Library (FLAViz) is a data
+analysis and visualization library developed for multi-agent/agent-based
+simulations generated using the FLAME framework.
 
-#### Depends 
+Agent-based simulation models typically generate data that spans multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, multiple agent instances per type, many variables per agent, and time periods (iterations).
 
-Python core libraries
+To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots. 
 
-Pandas
+===============================================================================
 
-matplotlib
+##### Requirements: #####
 
-h5py
+You will need the following:
+* Python core libraries
+* pandas
+* matplotlib
+* h5py
+* pyTables
+* scipi
+* numpy
 
-pytables
 
-scipi
+##### Installation: #####
 
-numpy
 
-#### Usage
+##### Using the library: #####
 
-The scripts in this repository are for converting data being produced by FLAME simulations.
-Default output is to XML files; these scripts convert XML to SQL and HDF5.
-Conversion from SQL to HDF5 is included as well.
+For information on how to use the library, view the README.md file in the root folder.
 
-1. src/data_conversion_scripts
+You can also browse the User Manual online at:
 
-- src/db_hdf5: conversion of SQL to h5
-- src/db_xml: conversion of SQL to XML
-- src/hdf_agentwise/merge_hdf_agentwise.py: conversion of h5 (per set, run) to h5 (per agent type)
-- src/xml_hdf5: conversion of XML to h5
+https://github.com/svdhoog/ETACE/blob/master/doc/tutorial.rst
 
-2. misc/replace_xml_functions
-- replace_xml_functions.py: Python script for replacing XML writeout functions in xml.c (FLAME-models)
 
-This replacement script is useful for reducing the storage footprint of FLAME simulations. It allows the user to create a "shadow model.xml" file with a subset of the agent memory variables, resulting in fewer variables than the full model.xml file. The script replace_xml_functions.py takes as input the full-model xml.c file and the shadow-model xml.c file, and then replaces all functions called write_<agentname>_Agent() in the full-model xml.c file. The resulting full-model xml.c file can be compiled as usual with rest of the FLAME model C code. The resulting simulation will only output the subset of variables for each agent type.
+##### Runing the main module #####
+
+The main Python script has a single argument, which is the path to the folder with configuration files:
+
+main.yaml
+plot.yaml
+transform.yaml [optional]
+
+To start the library, run from the /src folder
+
+$ python main.py path-to-config-folder
+
+
+------------------------------------
+2018-02-08 11:00 svdh

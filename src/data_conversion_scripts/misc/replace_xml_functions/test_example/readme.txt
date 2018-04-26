@@ -1,5 +1,5 @@
 # python script replace_xml_functions.py
-# Sander vander Hoog, ETACE, Nbielefeld Univiersit
+# Sander vander Hoog, ETACE, Bielefeld University
 # 9 March 2017
 
 TEST EXAMPLES
