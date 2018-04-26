@@ -1,0 +1,40 @@
+<xmodel version="2">
+ <name>EuraceUnibi - Financial Fragility Models</name>
+ <agents>
+
+  <xagent>
+   <name>Firm</name>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+    </variable>
+   </memory>
+      <functions>
+       <function>
+         <name>idle</name>         
+         <currentState>start</currentState>
+         <nextState>end</nextState>
+       </function>
+       </functions>
+  </xagent>
+
+  <xagent>
+   <name>Eurostat</name>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>a</name>
+    </variable>
+   </memory>
+      <functions>
+       <function>
+         <name>idle</name>         
+         <currentState>start</currentState>
+         <nextState>end</nextState>
+       </function>
+       </functions>
+  </xagent>
+
+ </agents>
+</xmodel>

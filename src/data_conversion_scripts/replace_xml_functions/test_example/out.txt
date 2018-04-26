@@ -1,0 +1,11 @@
+Running replacements for XML writeout functions in xml.c
+- Found model file (inputs/SHADOW_MODEL/shadow_model.xml)
+
+- Analysing model file
+
+   + parsing inputs/SHADOW_MODEL/shadow_model.xml
+- Parsing model file complete
+- Replacement list:
+    write_Firm_agent
+    write_Eurostat_agent
+Finished replacements
