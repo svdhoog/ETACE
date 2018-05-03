@@ -29,7 +29,7 @@ You will need the following:
 * python3-pyTables
 * python3-scipy
 * python3-numpy
-
+* python3-tk
 
 ##### Installation: #####
 
