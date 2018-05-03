@@ -21,13 +21,14 @@ To deal with such a large heterogeneity in the data dimensions, the data has to 
 ##### Requirements: #####
 
 You will need the following:
-* Python core libraries
-* pandas
-* matplotlib
-* h5py
-* pyTables
-* scipi
-* numpy
+* Python3 core libraries
+* python3-yaml
+* python3-pandas
+* python3-matplotlib
+* python3-h5py
+* python3-pyTables
+* python3-scipy
+* python3-numpy
 
 
 ##### Installation: #####
