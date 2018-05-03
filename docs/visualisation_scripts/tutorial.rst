@@ -12,29 +12,29 @@ Structure
 
 There are several scripts, located in folder ``/src/visualisation_scripts`` that deal with different steps during the data visualisation/transformation processes:
 
-- ``main.py`` : Contains code to read in the input data and primary parameter files, filter the data based on necessary conditions, and link the different Summary, Plot, and Transformation modules.
+- ``main.py`` : Contains code to read in the input data and primary config files, filter the data based on necessary conditions, and link the different Summary, Plot, and Transformation modules.
 - ``summarystats.py`` : Takes in a Pandas dataframe, and computes the necessary summary as needed, and outputs the result as a Pandas dataframe.
 - ``plots.py``: Takes in a Pandas dataframe, and returns the necessary plots as specified.
 - ``transform.py`` : Takes in a Pandas dataframe, and returns/ writes to a file the necessary transformations.
 - ``parameters.py`` : Contains code for main configuration and reads in config files.
 
-The parameter files are contained in the folder named ``/src/visualisation_scripts/config``. It contains three configuration files:
+The config files are contained in the folder named ``/src/visualisation_scripts/config``. It contains three configuration files:
 
 - ``config.yaml`` : define i/o path, plot-types, agents and appropriate variables, filter options, desired summary
 - ``plot_config.yaml`` : define plot properties i.e. name, legends, line style, fill etc.
 - ``config_transform.yaml``: define variables to transform, type of data transformations, i/o info to store data in a file after transformations
 
 
-Note: Further details on how to use the parameter (yaml) files can be found on the ``/parameters.rst`` file of the documentation.
+Note: Further details on how to use the config (yaml) files can be found on the ``/configuration.rst`` file of the documentation.
 
 Testing
 =======
 
 To run the module, simply use:
 
-   $ python /src/visualisation_scripts/main.py parameter-path
+   $ python /src/visualisation_scripts/main.py config-path
 
-where, parameter-path is the path to the folder containing the yaml files (in this git structure it is ``/FLAViz/src/visualisation_scripts/config/``)
+where, config-path is the path to the folder containing the yaml files (in this git structure it is ``/FLAViz/src/visualisation_scripts/config/``)
 
 Note: The module has only been tested under Unix/ Unix-like systems. It has not been tested for Windows and therefore
 there is no guarentee of proper execution for such systems.
@@ -42,11 +42,11 @@ there is no guarentee of proper execution for such systems.
 Examples
 ========
 
-Once the necessary parameters are set, by following the instructions specified in *parameters.rst* file, the module can be run to get the desired results. To demonstrate some of the functionalities,
+Once the necessary parameters are set, by following the instructions specified in *configuration.rst* file, the module can be run to get the desired results. To demonstrate some of the functionalities,
 the parameters of the configuration files are shown below, along with the plots they yield.
 
 
-Using the dataset <insert dataset url>, and the following parameter settings, the following plots can be produced.
+Using the dataset <insert dataset url>, and the following config settings, the following plots can be produced.
 
 Timeseries
 ==========
