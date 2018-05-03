@@ -109,14 +109,25 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram': plt_histogram, 'scatterplot': plt_scatterplot, 'transform': var_transform}
     return plot_function[key]()
 
+# function to create a progressbar in verbose mode
+def progress_bar(iteration, total, barLength=50):
+    percent = int(round((iteration / total) * 100))
+    nb_bar_fill = int(round((barLength * percent) / 100))
+    bar_fill = '#' * nb_bar_fill
+    bar_empty = ' ' * (barLength - nb_bar_fill)
+    newline = '\n'
+    sys.stdout.write("\r  [{0}] {1}%{2}".format(str(bar_fill + bar_empty), percent, newline))
+    sys.stdout.flush()
+
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='main.py', description='Visualise and transform various time-series data.')
-    parser.add_argument('parameterpath', help='Path to folder containing the parameter (.yaml) files', nargs=1, type=str)
+    parser.add_argument('--configpath', '-p', help='Path to folder containing the configuration (.yaml) files', nargs=1, type=str, required=True)
+    parser.add_argument('--verbose', '-v', help='Activate the verbose mode which contains tracking steps and progress', required=False, action='store_false')
     args = parser.parse_args()
 
-    P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
+    P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
     print(inpath)
     infiles = P.input_files()
@@ -149,6 +160,7 @@ if __name__ == "__main__":
         agentstore.close()
     del agent_storelist
 
+    index = 0
     for idx, param in primary_parameters.items():  # read filter conditions from yaml
         frames = []  # list to store filtered dfs according to vars
         var_dic = {}
@@ -172,9 +184,17 @@ if __name__ == "__main__":
             else:
                 df_main = pd.concat([df_main, df], axis=1)
             del df
-        summary_and_plot(idx, P, df_main, args.parameterpath[0])  # plot index, parameter object, data, parameter_filepath
+        summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
+
+        # print a progressbar if verbose mode is activated
+        if args.verbose is not None:
+            index+=1
+            progress_bar(index, len(primary_parameters.items()))
+
+
+
 
 
 ###################################################################################################################################
