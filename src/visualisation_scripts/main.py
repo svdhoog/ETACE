@@ -110,13 +110,13 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
     return plot_function[key]()
 
 # function to create a progressbar in verbose mode
-def progress_bar(iteration, total, barLength=50):
+def progress_bar(name, iteration, total, barLength=50):
     percent = int(round((iteration / total) * 100))
     nb_bar_fill = int(round((barLength * percent) / 100))
     bar_fill = '#' * nb_bar_fill
     bar_empty = ' ' * (barLength - nb_bar_fill)
     newline = '\n'
-    sys.stdout.write("\r  [{0}] {1}%{2}".format(str(bar_fill + bar_empty), percent, newline))
+    sys.stdout.write("\r  {0}[{1}] {2}%{3}".format(name, str(bar_fill + bar_empty), percent, newline))
     sys.stdout.flush()
 
 
@@ -129,15 +129,22 @@ if __name__ == "__main__":
 
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
-    print(inpath)
+    #print(inpath)
     infiles = P.input_files()
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
+    index = 0
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
         agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+
+        # print a progressbar if verbose mode is activated
+        if not args.verbose:
+            index+=1
+            progress_bar("Preprocessing 1: ", index, len(infiles.items()))
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
+    index = 0
     for agentname, agentstore in agent_storelist.items():
         d = pd.DataFrame()  # Main dataframe to hold all the dataframes of each instance (one agenttype)
         df_list = []
@@ -158,6 +165,13 @@ if __name__ == "__main__":
         del df_list
         agent_dframes[agentname] = d  # this dict contains agent-type names as keys, and the corresponding dataframes as values
         agentstore.close()
+
+        # print a progressbar if verbose mode is activated
+        if not args.verbose:
+            index += 1
+            progress_bar("Preprocessing 2: " ,index, len(agent_storelist.items()))
+
+
     del agent_storelist
 
     index = 0
@@ -189,9 +203,9 @@ if __name__ == "__main__":
         del var_list[:]  # clear the list of variables for next cycle
 
         # print a progressbar if verbose mode is activated
-        if args.verbose is not None:
-            index+=1
-            progress_bar(index, len(primary_parameters.items()))
+        if not args.verbose:
+            index += 1
+            progress_bar("Visualisation: ", index, len(primary_parameters.items()))
 
 
 
