@@ -20,16 +20,29 @@ To deal with such a large heterogeneity in the data dimensions, the data has to 
 
 ##### Requirements: #####
 
-You will need the following:
-* Python3 core libraries
-* python3-yaml
-* python3-pandas
-* python3-matplotlib
-* python3-h5py
-* python3-pyTables
-* python3-scipy
-* python3-numpy
-* python3-tk
+You will need to satisfy the following dependencies.
+
+1. FLAViz visualization scripts:
+("recommended version", "minimal version")
+ 
+* python3 core libraries
+* python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
+* python3-matplotlib (>= 2.0.2)
+* python3-numexp (>= 2.6)
+* python3-numpy (>= )
+* python3-pandas (0.22, >= 0.19)
+* python3-pyTables (>= 3.4) -- currently used for HDF5 files, write-once, non-appendable
+* python3-scipy (>= 0.19)
+* python3-tk (>= 3.4.3)
+* python3-yaml (>= 3.12)
+* python3-lxml (4.2.1, >= 3.3.3)
+
+2. Data conversion scripts:
+("recommended version", "minimal version")
+
+* sqlite3 (>= 3.8.2)
+* python3-pandas (0.22.0, >= 0.19)
+* python3-lxml (4.2.1, >= 3.3.3)
 
 ##### Installation: #####
 
@@ -51,10 +64,15 @@ main.yaml
 plot.yaml
 transform.yaml [optional]
 
-To start the library, run from the /src folder
+To start the library, you should run it from the root FLAViz folder:
 
-$ python main.py path-to-config-folder
+$ python3 main.py config
 
+where `config` is the path to the config folder containing the configuration files:
+
+* config.yaml
+* plot_config.yaml
+* transformations.yaml
 
 ------------------------------------
-2018-02-08 11:00 svdh
+2018-05-08 11:00 svdh
