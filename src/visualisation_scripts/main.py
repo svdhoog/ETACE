@@ -110,13 +110,13 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
     return plot_function[key]()
 
 # function to create a progressbar in verbose mode
-def progress_bar(name, iteration, total, barLength=50):
+def progress_bar(name, iteration, total, barLength=30):
     percent = int(round((iteration / total) * 100))
     nb_bar_fill = int(round((barLength * percent) / 100))
     bar_fill = '#' * nb_bar_fill
     bar_empty = ' ' * (barLength - nb_bar_fill)
-    newline = '\n'
-    sys.stdout.write("\r  {0}[{1}] {2}%{3}".format(name, str(bar_fill + bar_empty), percent, newline))
+    #newline = '\n'
+    sys.stdout.write("\r{0}[{1}] {2}%".format(name, str(bar_fill + bar_empty), percent))
     sys.stdout.flush()
 
 
@@ -141,6 +141,7 @@ if __name__ == "__main__":
         if not args.verbose:
             index+=1
             progress_bar("Step1: Preparing data structure ", index, len(infiles.items()))
+    sys.stdout.write("\n")
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
     index = 0
@@ -170,7 +171,7 @@ if __name__ == "__main__":
             index += 1
             progress_bar("Step2: Processing data file " ,index, len(agent_storelist.items()))
 
-
+    sys.stdout.write("\n")
     del agent_storelist
 
     index = 0
@@ -190,6 +191,7 @@ if __name__ == "__main__":
         filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
 
         df_main = pd.DataFrame()
+        index1 = 0
         for dkey, dval in var_dic.items():
             df = filter_by_value(dkey, dval, filtered)  # stage-II filtering for selecting variables according to their values
             if df_main.empty:
@@ -200,9 +202,10 @@ if __name__ == "__main__":
 
             # print a progressbar if verbose mode is activated
             if not args.verbose:
-                index += 1
-                progress_bar("Step3: Filtering the data ", index, len(var_dic.items()))
+                index1 += 1
+                progress_bar("Step3: Filtering the data ", index1, len(var_dic.items()))
 
+        sys.stdout.write("\n")
         summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
@@ -211,7 +214,7 @@ if __name__ == "__main__":
         if not args.verbose:
             index += 1
             progress_bar("Step4: Visualisation ", index, len(primary_parameters.items()))
-
+    sys.stdout.write("\n") 
 
 
 
