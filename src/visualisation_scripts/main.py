@@ -126,7 +126,6 @@ if __name__ == "__main__":
     parser.add_argument('--configpath', '-p', help='Path to folder containing the configuration (.yaml) files', nargs=1, type=str, required=True)
     parser.add_argument('--verbose', '-v', help='Activate the verbose mode which contains tracking steps and progress', required=False, action='store_false')
     args = parser.parse_args()
-
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
     #print(inpath)
@@ -141,7 +140,8 @@ if __name__ == "__main__":
         if not args.verbose:
             index+=1
             progress_bar("Step1: Preparing data structure ", index, len(infiles.items()))
-    sys.stdout.write("\n")
+    if not args.verbose:
+        sys.stdout.write("\n")
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
     index = 0
@@ -170,8 +170,8 @@ if __name__ == "__main__":
         if not args.verbose:
             index += 1
             progress_bar("Step2: Processing data file " ,index, len(agent_storelist.items()))
-
-    sys.stdout.write("\n")
+    if not args.verbose:
+        sys.stdout.write("\n")
     del agent_storelist
 
     index = 0
@@ -204,8 +204,8 @@ if __name__ == "__main__":
             if not args.verbose:
                 index1 += 1
                 progress_bar("Step3: Filtering the data ", index1, len(var_dic.items()))
-
-        sys.stdout.write("\n")
+        if not args.verbose:
+            sys.stdout.write("\n")
         summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
@@ -214,7 +214,8 @@ if __name__ == "__main__":
         if not args.verbose:
             index += 1
             progress_bar("Step4: Visualisation ", index, len(primary_parameters.items()))
-    sys.stdout.write("\n") 
+    if not args.verbose:
+        sys.stdout.write("\n")
 
 
 
