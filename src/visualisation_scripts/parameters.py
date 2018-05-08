@@ -93,7 +93,7 @@ class main_configuration():
     def input_fpath(self):
         if 'i/o' in self.parsed_values.keys():
             path_config = self.parsed_values['i/o']['input_path']
-            if path_config[:2] == '/': # check for full path inside config
+            if path_config[:1] == '/': # check for full path inside config
                 input_path = str(Path(path_config))
                 return input_path
             else: # use the path from config as relative path
@@ -107,7 +107,7 @@ class main_configuration():
         if 'i/o' in self.parsed_values.keys():
             #output_path = Path(self.parsed_values['i/o']['output_path'])
             path_config = self.parsed_values['i/o']['output_path']
-            if path_config[:2] == '/': # check for full path inside config
+            if path_config[:1] == '/': # check for full path inside config
                 output_path = str(Path(path_config))
                 return output_path
             else: # use the path from config as relative path

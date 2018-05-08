@@ -8,11 +8,14 @@ sometimes, therefore resulting in undesired output. Hence, extra care is advised
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). ::
+``i/o``: Specify the name of the repository root folder and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessesary to set the name of the repository root folder to make use of relative paths.
 
   i/o:
+    # set up the name of the root folder from repository
+    repo_name: 'FLAViz'
+
     # for absolute path use:
-    input_path: '/path/to/Etace/data'
+    input_path: '/path/to/FLAViz/data'
 
     # for relative path use:
     input_path: 'data/visualisation'
@@ -26,7 +29,7 @@ config.yaml
 
 Similarly, the output path::
     # for absolute path use:
-    output_path: '/path/to/Etace/results'
+    output_path: '/path/to/FLAViz/results'
 
     # for relative path use:
     output_path: 'results'
@@ -158,8 +161,11 @@ Example::
 Hence, a typical main configuration file may look like::
 
     i/o:
+        # set up the name of the root folder from repository
+        repo_name: 'FLAViz'
+
         # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
-        input_path: 'data'
+        input_path: 'data/visualisation'
 
         # set up your output_path for the resulting plots, it's relative unless it starts with a '/'
         output_path: 'results'
