@@ -25,17 +25,17 @@ You will need to satisfy the following dependencies.
 1. FLAViz visualization scripts:
 ("recommended version", "minimal version")
  
-* python3 core libraries
+* python3 (>= 3.4) core libraries
 * python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
 * python3-matplotlib (>= 2.0.2)
 * python3-numexp (>= 2.6)
 * python3-numpy (>= )
-* python3-pandas (0.22, >= 0.19)
+* python3-pandas (0.22 or >= 0.19)
 * python3-pyTables (>= 3.4) -- currently used for HDF5 files, write-once, non-appendable
 * python3-scipy (>= 0.19)
 * python3-tk (>= 3.4.3)
 * python3-yaml (>= 3.12)
-* python3-lxml (4.2.1, >= 3.3.3)
+* python3-lxml (4.2.1 or >= 3.3.3)
 
 2. Data conversion scripts:
 ("recommended version", "minimal version")
@@ -45,7 +45,12 @@ You will need to satisfy the following dependencies.
 * python3-lxml (4.2.1, >= 3.3.3)
 
 ##### Installation: #####
+NOTE: 
+On some platforms the package manager will install older versions of the above packages.
+For example, in Linux Mint 17 (Quiana), the version of matplotlib is 1.19 instead of the newer 2.0.2.
+To install the latest version of matplotlib, you may have to use the python3-pip command:
 
+$ python3 -mpip install -U matplotlib
 
 ##### Using the library: #####
 
