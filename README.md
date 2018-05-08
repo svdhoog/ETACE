@@ -16,18 +16,19 @@ Agent-based simulation models typically generate data that spans multiple dimens
 
 To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots. 
 
-===============================================================================
+-------------------------------------------------------------------------------
 
-##### Requirements: #####
+Requirements:
+--
 
 You will need to satisfy the following dependencies.
 
 1. FLAViz visualization scripts:
 ("recommended version", "minimal version")
  
-* python3 (>= 3.4) core libraries
+* python3 (>= 3.4) Python3 core libraries
 * python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
-* python3-matplotlib (>= 2.0.2)
+* python3-matplotlib (>= 2.2.2)
 * python3-numexp (>= 2.6)
 * python3-numpy (>= )
 * python3-pandas (0.22 or >= 0.19)
@@ -44,15 +45,32 @@ You will need to satisfy the following dependencies.
 * python3-pandas (0.22.0, >= 0.19)
 * python3-lxml (4.2.1, >= 3.3.3)
 
-##### Installation: #####
-NOTE: 
+Installation:
+--
+
+To see which versions of the Python packages you have installed, run:
+
+```
+$ ls /usr/local/lib/python3.4/dist-packages -lh
+```
+
+NOTE:
+--
 On some platforms the package manager will install older versions of the above packages.
-For example, in Linux Mint 17 (Quiana), the version of matplotlib is 1.19 instead of the newer 2.0.2.
-To install the latest version of matplotlib, you may have to use the python3-pip command:
+For example, in Linux Mint 17 (Quiana), the version of matplotlib that is installed using apt-get is 1.19 instead of the newer version 2.2.2. To install the latest versions of the Python packages, you may have to use the python3-pip command:
 
-$ python3 -mpip install -U matplotlib
+```
+$ python3 -mpip install -U matplotlib numpy pandas scipy
+```
+The remaining packages can be installed via your distributions package manager:
 
-##### Using the library: #####
+```
+$ sudo apt-get install sqlite3 python3-lxml python3-yaml python3-numexp python3-tables
+```
+
+
+Using the library:
+--
 
 For information on how to use the library, view the README.md file in the root folder.
 
@@ -61,18 +79,21 @@ You can also browse the User Manual online at:
 https://github.com/svdhoog/ETACE/blob/master/doc/tutorial.rst
 
 
-##### Runing the main module #####
+Running the main module
+--
 
 The main Python script has a single argument, which is the path to the folder with configuration files:
 
+```
 main.yaml
 plot.yaml
 transform.yaml [optional]
+```
 
 To start the library, you should run it from the root FLAViz folder:
-
+```
 $ python3 main.py config
-
+```
 where `config` is the path to the config folder containing the configuration files:
 
 * config.yaml
