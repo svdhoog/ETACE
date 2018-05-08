@@ -65,9 +65,8 @@ $ python3 -mpip install -U matplotlib numpy pandas scipy
 The remaining packages can be installed via your distributions package manager:
 
 ```
-$ sudo apt-get install sqlite3 python3-lxml python3-yaml python3-numexp python3-tables
+$ sudo apt-get install sqlite3 python3-lxml python3-yaml python3-numexp python3-tables python3-tk
 ```
-
 
 Using the library:
 --
