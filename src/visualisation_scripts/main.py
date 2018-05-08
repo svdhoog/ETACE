@@ -137,11 +137,10 @@ if __name__ == "__main__":
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
         agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
-
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index+=1
-            progress_bar("Preprocessing 1: ", index, len(infiles.items()))
+            progress_bar("Step1: Preparing data structure ", index, len(infiles.items()))
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
     index = 0
@@ -169,7 +168,7 @@ if __name__ == "__main__":
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index += 1
-            progress_bar("Preprocessing 2: " ,index, len(agent_storelist.items()))
+            progress_bar("Step2: Processing data file " ,index, len(agent_storelist.items()))
 
 
     del agent_storelist
@@ -198,6 +197,12 @@ if __name__ == "__main__":
             else:
                 df_main = pd.concat([df_main, df], axis=1)
             del df
+
+            # print a progressbar if verbose mode is activated
+            if not args.verbose:
+                index += 1
+                progress_bar("Step3: Filtering the data ", index, len(var_dic.items()))
+
         summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
@@ -205,7 +210,7 @@ if __name__ == "__main__":
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index += 1
-            progress_bar("Visualisation: ", index, len(primary_parameters.items()))
+            progress_bar("Step4: Visualisation ", index, len(primary_parameters.items()))
 
 
 

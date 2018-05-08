@@ -97,7 +97,7 @@ class main_configuration():
                 input_path = str(Path(path_config))
                 return input_path
             else: # use the path from config as relative path
-                input_path = str(Path("").absolute() / path_config)
+                input_path = str(Path("").absolute() / path_config) # fix to repo root
                 return input_path
         return self.erf("Missing input path!")
 
