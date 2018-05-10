@@ -132,141 +132,159 @@ def load_iteration_file(itno, basedir, db):
 
     file.close()
 
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog='gendb_special.py', description='Script creates SQLite db file from corresponding XML files in many-to-one fashion, and skips missing Agents.')
+    parser.add_argument('--modelpath', '-m', help='Set path to model file.', nargs=1, type=str, required=True)
+    parser.add_argument('--xmlpath', '-p', help='Set path for model file.', nargs=1, type=str, required=True)
+    parser.add_argument('--outputpath', '-o', help='Set path for output file.', nargs=1, type=str, required=False)
+    args = parser.parse_args()
 
-# get input arguments
-if len(sys.argv) != 3:
-    #print >>sys.stderr, "Usage: {0} <model.xml> <its_directory>".format(sys.argv[0])
-    print("Usage: {0} <model.xml> <its_directory>".format(sys.argv[0], file=sys.stderr))
-    sys.exit(0)
-model  = sys.argv[1]
-itsdir = sys.argv[2]
+    # check for output path and add an ending slash if necessary
+    if args.outputpath:
+        if args.outputpath[0][-1:] is '/':
+            outfile = str(args.outputpath[0] + outfile)
+            print(outfile)
+        else:
+            outfile = str(args.outputpath[0] + '/' + outfile)
+            print(outfile)
 
-# check that model file exists
-if not file_exist(model):
-    error("Model file ({0}) does not exist".format(model))
 
-# ensure directory exists
-if not os.path.isdir(itsdir):
-    error("Input directory ({0}) does not exist".format(itsdir))
+    # get input arguments
+    #if len(sys.argv) != 3: # old method without using argparser
+    #    #print >>sys.stderr, "Usage: {0} <model.xml> <its_directory>".format(sys.argv[0])
+    #    print("Usage: {0} <model.xml> <its_directory>".format(sys.argv[0], file=sys.stderr))
+    #    sys.exit(0)
+    #model  = sys.argv[1]
+    #itsdir = sys.argv[2]
+    model = args.modelpath[0]
+    itsdir = args.xmlpath[0]
 
-# Retrieve list of data files
-datafiles = glob(os.path.join(itsdir, "[0-9]*.xml"))
-if len(datafiles) == 0:
-    error("No data files found in {0}".format(itsdir))
+    # check that model file exists
+    if not file_exist(model):
+        error("Model file ({0}) does not exist".format(model))
 
-# get list of iters from datafile names
-print("")
-print(" - Scanning \"%s\"".format(itsdir))
-iters = []
-iter_pattern = "{0}{1}*([0-9]+)\.xml".format(itsdir, os.sep)
-iter_re = re.compile(iter_pattern)
-for df in datafiles:
-    match = iter_re.match(df)
-    if not match:
-        #error("BUG: Unknown line \nglob line = %s \npattern = %s" % (df, iter_pattern))
-        continue
-    iters.append(int(match.group(1)))
-iters.sort()
-print(" - Found iters : {0}".format(str(iters)[1:-1]))
+    # ensure directory exists
+    if not os.path.isdir(itsdir):
+        error("Input directory ({0}) does not exist".format(itsdir))
 
-# Initialise database
-print(" - Initialising database file : \"{0}\"".format(outfile))
-if file_exist(outfile):
-    print("   ... File already exist. Deleting.")
-    try:
-        os.remove(outfile)
-    except:
-        error("Could not delete file {0}".format(outfile))
-db = sqlite3.connect(outfile, isolation_level=None) # manage our own transactions
+    # Retrieve list of data files
+    datafiles = glob(os.path.join(itsdir, "[0-9]*.xml"))
+    if len(datafiles) == 0:
+        error("No data files found in {0}".format(itsdir))
 
-# some performance tuning
-db.execute("PRAGMA temp_store = MEMORY;")
-db.execute("PRAGMA synchronous = OFF;")
-db.execute("PRAGMA journal_mode = OFF;")
+    # get list of iters from datafile names
+    print("")
+    print(" - Scanning \"{0}\"".format(itsdir))
+    iters = []
+    iter_pattern = "{0}{1}*([0-9]+)\.xml".format(itsdir, os.sep)
+    iter_re = re.compile(iter_pattern)
+    for df in datafiles:
+        match = iter_re.match(df)
+        if not match:
+            #error("BUG: Unknown line \nglob line = %s \npattern = %s" % (df, iter_pattern))
+            continue
+        iters.append(int(match.group(1)))
+    iters.sort()
+    print(" - Found iters : {0}".format(str(iters)[1:-1]))
 
-# parse xmml file to determine required database structure
-print(" - Analysing model")
-agents = {}
-models = [model]
-model_count = 0
-while len(models) > 0:
-    fname = models.pop()
-    model_count = model_count + 1
-    if model_count == 1:
-	    dirname = os.path.dirname(fname)
+    # Initialise database
+    print(" - Initialising database file : \"{0}\"".format(outfile))
+    if file_exist(outfile):
+        print("   ... File already exist. Deleting.")
+        try:
+            os.remove(outfile)
+        except:
+            error("Could not delete file {0}".format(outfile))
+    db = sqlite3.connect(outfile, isolation_level=None) # manage our own transactions
 
-    # load xml file
-    print("   + parsing {0}".format(fname))
-    try:
-        dom = minidom.parse(fname)
-    except IOError:
-        error("Unable to read model file ({0})".format(fname))
-    except ExpatError:
-        error("Invalid XML file ({0})".format(fname))
+    # some performance tuning
+    db.execute("PRAGMA temp_store = MEMORY;")
+    db.execute("PRAGMA synchronous = OFF;")
+    db.execute("PRAGMA journal_mode = OFF;")
 
-    # detect nested models
-    nodes = dom.getElementsByTagName("model")
-    for node in nodes:
-        status = get_node_text(node.getElementsByTagName("enabled")[0])
-        if status != "true": continue # disabled. ignore
+    # parse xmml file to determine required database structure
+    print(" - Analysing model")
+    agents = {}
+    models = [model]
+    model_count = 0
+    while len(models) > 0:
+        fname = models.pop()
+        model_count = model_count + 1
+        if model_count == 1:
+    	    dirname = os.path.dirname(fname)
 
-        # add nested model file to list of files
-        modelfile = get_node_text(node.getElementsByTagName("file")[0])
-        models.append(os.path.join(dirname, modelfile))
-    del(nodes)
+        # load xml file
+        print("   + parsing {0}".format(fname))
+        try:
+            dom = minidom.parse(fname)
+        except IOError:
+            error("Unable to read model file ({0})".format(fname))
+        except ExpatError:
+            error("Invalid XML file ({0})".format(fname))
 
-    # detect agents
-    nodes = dom.getElementsByTagName("xagent")
-    for node in nodes:
-        # get agent name
-        aname = get_node_text(node.getElementsByTagName("name")[0])
-        varlist = []
-        vars = node.getElementsByTagName("variable")
-        # get list of agent memory vars
-        for var in vars:
-            varlist.append(get_node_text(var.getElementsByTagName("name")[0]))
-        del(vars)
+        # detect nested models
+        nodes = dom.getElementsByTagName("model")
+        for node in nodes:
+            status = get_node_text(node.getElementsByTagName("enabled")[0])
+            if status != "true": continue # disabled. ignore
 
-        # remove array brackets
-        for i in range(len(varlist)):
-            v = varlist[i]
-            if "[" in v: varlist[i] = v[:v.index("[")]
+            # add nested model file to list of files
+            modelfile = get_node_text(node.getElementsByTagName("file")[0])
+            models.append(os.path.join(dirname, modelfile))
+        del(nodes)
 
-        # add agent data to out list
-        if aname in agents.keys(): # agent already exist. Merge
-            for v in varlist:
-                if v not in agents[aname]: agents[aname].append(v)
-        else: # new agent
-            agents[aname] = varlist
-    del(nodes)
+        # detect agents
+        nodes = dom.getElementsByTagName("xagent")
+        for node in nodes:
+            # get agent name
+            aname = get_node_text(node.getElementsByTagName("name")[0])
+            varlist = []
+            vars = node.getElementsByTagName("variable")
+            # get list of agent memory vars
+            for var in vars:
+                varlist.append(get_node_text(var.getElementsByTagName("name")[0]))
+            del(vars)
 
-    # finished parsing this file
-    del(dom)
+            # remove array brackets
+            for i in range(len(varlist)):
+                v = varlist[i]
+                if "[" in v: varlist[i] = v[:v.index("[")]
 
-# Create db tables
-print(" - Initialising database structure")
-print("   + creating table : _iters_")
-db.execute("BEGIN;")
-db.execute("CREATE TABLE _iters_ (itno)") # metadata table
+            # add agent data to out list
+            if aname in agents.keys(): # agent already exist. Merge
+                for v in varlist:
+                    if v not in agents[aname]: agents[aname].append(v)
+            else: # new agent
+                agents[aname] = varlist
+        del(nodes)
 
-for a in agents: # agent data tables
-    #sql = "CREATE TABLE %s (_ITERATION_NO,%s)" % (a, ",".join(agents[a]))
-    sql = "CREATE TABLE {0} (_ITERATION_NO{1})".format(a, ",".join(agents.get(a)))
-    print("   + creating table : {0}".format(a))
-    db.execute(sql)
-db.execute("END;")
+        # finished parsing this file
+        del(dom)
 
-# Finally, load data from *.xml files
-print(" - Importing snapshot data into database")
-for i in iters:
+    # Create db tables
+    print(" - Initialising database structure")
+    print("   + creating table : _iters_")
     db.execute("BEGIN;")
-    load_iteration_file(i, itsdir, db)
+    db.execute("CREATE TABLE _iters_ (itno)") # metadata table
+
+    for a in agents: # agent data tables
+        #sql = "CREATE TABLE %s (_ITERATION_NO,%s)" % (a, ",".join(agents[a]))
+        sql = "CREATE TABLE {0} (_ITERATION_NO,{1})".format(a, ",".join(agents.get(a)))
+        print("   + creating table : {0}".format(a))
+        db.execute(sql)
     db.execute("END;")
 
-# Done!
-print(" - DONE. Output file : {0}".format(outfile))
-print("")
+    # Finally, load data from *.xml files
+    print(" - Importing snapshot data into database")
+    for i in iters:
+        db.execute("BEGIN;")
+        load_iteration_file(i, itsdir, db)
+        db.execute("END;")
 
-# close db
-db.commit()
-db.close()
+    # Done!
+    print(" - DONE. Output file : {0}".format(outfile))
+    print("")
+
+    # close db
+    db.commit()
+    db.close()
