@@ -25,7 +25,7 @@ You will need to satisfy the following dependencies.
 
 1. FLAViz visualization scripts:
 ("recommended version", "minimal version")
- 
+
 * python3 (>= 3.4) Python3 core libraries
 * python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
 * python3-matplotlib (>= 2.2.2)
@@ -80,23 +80,18 @@ https://github.com/svdhoog/FLAViz/blob/master/docs/visualisation_scripts/tutoria
 Running the main module
 --
 
-The main Python script has a single argument, which is the path to the folder with configuration files:
-
-```
-main.yaml
-plot.yaml
-transform.yaml [optional]
-```
-
+The main Python script has a single argument, which is the path to the folder containing configuration files:
 To start the library, you should run it from the root FLAViz folder:
 ```
-$ python3 main.py config
+$ python3 /src/visualisation_scripts/main.py /src/visualisation_scripts/config
 ```
 where `config` is the path to the config folder containing the configuration files:
 
 * config.yaml
 * plot_config.yaml
-* transformations.yaml
+* config_transform.yaml [optional]
+
+For more information please use the `docs/. folder.
 
 ------------------------------------
 2018-05-08 11:00 svdh
