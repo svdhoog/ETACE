@@ -1,6 +1,10 @@
 
 # Created by https://www.gitignore.io/api/c,macos,linux,latex,python,windows
 
+### Custom ###
+# remove test file iters.db
+*.db
+
 ### C ###
 # Prerequisites
 *.d
