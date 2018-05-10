@@ -9,10 +9,7 @@
 #       production use but merely to explore what is possible
 #       Use at your own risk ;)
 #
-
-import re
-import os
-import sys
+import argparse, os, re, sys
 from xml.dom import minidom
 from xml.parsers.expat import ExpatError
 from glob import glob
