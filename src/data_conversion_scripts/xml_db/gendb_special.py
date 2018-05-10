@@ -232,7 +232,7 @@ while len(models) > 0:
         del(vars)
 
         # remove array brackets
-        for i in xrange(len(varlist)):
+        for i in range(len(varlist)):
             v = varlist[i]
             if "[" in v: varlist[i] = v[:v.index("[")]
 

@@ -70,8 +70,8 @@ def get_agent_sql(data):
 
     sql = []
     sql.append("insert into {0}".format(name))
-    sql.append("(_ITERATION_NO,%s)".format(",").join(keys))
-    sql.append("values (%d,'%s');" % (iter, "','".join(values)))
+    sql.append("(_ITERATION_NO,{0})".format(",".join(keys)))
+    sql.append("values ({0},'{1}');" .format(iter, "','".join(values)))
     return " ".join(sql)
 
 def load_iteration_file(itno, basedir, db):
@@ -105,7 +105,10 @@ def load_iteration_file(itno, basedir, db):
         if in_xagent_tag:
             if line == "</xagent>": # end if this agent def
                 in_xagent_tag = False
-                db.execute( get_agent_sql(data) ) # store data in db
+
+                #error
+                #print(get_agent_sql(data))
+                db.execute(get_agent_sql(data)) # store data in db
                 del(data)
 
             else: # next agent mem
