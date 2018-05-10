@@ -105,17 +105,15 @@ class Timeseries(A):
                         for l in range(0, len(D), self.__N):
                             y.append(np.array(D[l:l+self.__N]))
                         x = np.arange(1, self.__N+1)
+                        # edit colormap here
                         #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(D)//self.__N)))
-                        #colors = iter(cm.rainbow(np.array([i/len(minor_index)])))
                         size = len(D)//self.__N
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = i/len(minor_index)
-                        print("First a: ", a)
-                        print(np.random.uniform(0, 1, size = len(D)//self.__N))
+                        #print("First a: ", a)
+                        #print(np.random.uniform(0, 1, size = len(D)//self.__N))
                         colors = iter(cm.rainbow(a))
-
-
                         for r in range(0, len(y)):
                             clr = next(colors)
                             self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)
@@ -135,17 +133,15 @@ class Timeseries(A):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     x = np.arange(1, self.__N+1)
-                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
-
                     # edit colormap here
+                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
                     size = len(dframe)//self.__N
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    print("Second a: ", a)
-                    print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
+                    #print("Second a: ", a)
+                    #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
                     colors = iter(cm.rainbow(a))
-
 
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
@@ -162,15 +158,14 @@ class Timeseries(A):
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
-                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
-
                     # edit colormap here
+                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
                     size = len(dframe)//self.__N
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    print("Third a: ", a)
-                    print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
+                    #print("Third a: ", a)
+                    #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
                     colors = iter(cm.rainbow(a))
 
                     for r in range(0, len(dframe)//self.__N):
@@ -309,7 +304,7 @@ class Histogram():
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
                 fig, ax = plt.subplots()
-                for m in minor_index:
+                for i, m in enumerate(minor_index):
                     D = dframe.xs(int(m), level='minor')
                     if len(D.columns) == 2:  # TODO: this check done in class constructor, so no need
                         print("Quantile not possible for agent level analysis!")
@@ -318,10 +313,13 @@ class Histogram():
                         y = []
                         for l in range(0, len(D), self.__N):
                             y.append(np.array(D[l:l+self.__N]))
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
-
                         # edit colormap here
-
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                        size = len(dframe)//self.__N
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = i/len(minor_index)
+                        colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(y)):
                             clr = next(colors)
@@ -342,10 +340,13 @@ class Histogram():
                         for i in range(0, len(dframe), self.__N):
                             y1.append(np.array(col_A[i:i+self.__N]))
                             y2.append(np.array(col_B[i:i+self.__N]))
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
-
                         # edit colormap here
-
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)/self.__N)))
+                        size = 4*len(dframe)/self.__N
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = s/size
+                        colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
                             clr = next(colors)
@@ -360,10 +361,13 @@ class Histogram():
                         col_A = dframe[dframe.columns[0]]
                         for i in range(0, len(dframe), self.__N):
                             y1.append(np.array(col_A[i:i+self.__N]))
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
-
                         # edit colormap here
-
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                        size = len(dframe)//self.__N
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = s/size
+                        colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(dframe)//self.__N):
                             clr = next(colors)
@@ -378,10 +382,13 @@ class Histogram():
                     if len(dframe.columns) == 2:   ################TODO: two option not needed because when summary full, no sustom quantile possible
                         col_A = dframe[dframe.columns[0]]
                         col_B = dframe[dframe.columns[1]]
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4)))
-
                         # edit colormap here
-
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4)))
+                        size = 4
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = s/size
+                        colors = iter(cm.rainbow(a))
 
                         clr = next(colors)
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
@@ -392,10 +399,10 @@ class Histogram():
                         plt.close()
                     else:
                         col_A = dframe[dframe.columns[0]]
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 1)))
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 1)))
 
                         # edit colormap here
-
+                        colors = iter(cm.rainbow(np.array([0.0]))) #0.0:blue 1.0:red
 
                         clr = next(colors)
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
@@ -433,10 +440,13 @@ class Histogram():
                         sys.exit(1)
                     else:
                         count = 0
-                        colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
-
                         # edit colormap here
-
+                        #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)//self.__N)))
+                        size = len(dframe)//self.__N
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = s/size
+                        colors = iter(cm.rainbow(a))
 
                         for r in range(0,len(D),self.__N):
                             fig, ax = plt.subplots()
@@ -457,11 +467,13 @@ class Histogram():
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
-
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)//self.__N)))
-
                     # edit colormap here
-
+                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 4*len(dframe)//self.__N)))
+                    size = 4*len(dframe)//self.__N
+                    a = np.empty(shape=size,)
+                    for s in range(size):
+                        a[s] = s/size
+                    colors = iter(cm.rainbow(a))
 
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
@@ -477,10 +489,14 @@ class Histogram():
                     y =[]
                     for i in range(0,len(dframe),self.__N):
                         y.append(np.array(dframe[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
 
                     # edit colormap here
-
+                    #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = len(dframe)/self.__N)))
+                    size = len(dframe)/self.__N
+                    a = np.empty(shape=size,)
+                    for s in range(size):
+                        a[s] = s/size
+                    colors = iter(cm.rainbow(a))
 
                     for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
@@ -553,11 +569,9 @@ class Scatterplot(A):
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
                 fig, ax = plt.subplots() # initialize figure
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 # edit colormap here
-
-
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
@@ -593,10 +607,9 @@ class Scatterplot(A):
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
-                    colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                     # edit colormap here
-
+                    colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
@@ -612,10 +625,9 @@ class Scatterplot(A):
                         sys.exit (1)
                     col_A = dframe[dframe.columns[0]]
                     col_B = dframe[dframe.columns[1]]
-                    colors = iter(cm.rainbow(np.linspace(0, 1, 1)))
 
                     # edit colormap here
-
+                    colors = iter(cm.rainbow(np.linspace(0, 1, 1)))
 
                     clr = next(colors)
                     self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)
@@ -635,10 +647,9 @@ class Scatterplot(A):
 
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 # edit colormap here
-
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
@@ -672,10 +683,9 @@ class Scatterplot(A):
                 for i in range(0, len(dframe), self.__N):
                     y1.append(np.array(col_A[i:i+self.__N]))
                     y2.append(np.array(col_B[i:i+self.__N]))
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                 # edit colormap here
-
+                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                 for r in range(0, len(dframe)//self.__N):
                     fig, ax = plt.subplots()
@@ -756,39 +766,39 @@ class Boxplot(A):
         for col in range(0, len(self.__data.columns)):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             fig, ax = plt.subplots()
-            if self.__analysistype == A.agent: # check done above, redundant, to remove
-                print("Boxplot not possible for agent-level analysis!")
-                sys.exit(1)
-            else:
-                col_A = dframe[dframe.columns[0]]
-                D = self.process_boxplot_data(col_A)
-                y = []
-                for i in range(0, len(D), self.__N):
-                    y.append(pd.DataFrame(D[i:i+self.__N]))
-                for r in range(0, len(D)//self.__N):
-                    self.plot_boxplot(ax, y[r], self.__data.columns[col])
+            #if self.__analysistype == A.agent: # check done above, redundant, to remove
+            #    print("Boxplot not possible for agent-level analysis!")
+            #    sys.exit(1)
+            #else:
+            col_A = dframe[dframe.columns[0]]
+            D = self.process_boxplot_data(col_A)
+            y = []
+            for i in range(0, len(D), self.__N):
+                y.append(pd.DataFrame(D[i:i+self.__N]))
+            for r in range(0, len(D)//self.__N):
+                self.plot_boxplot(ax, y[r], self.__data.columns[col])
 
-                plot_name = self.__P.plot_name(self.idx)
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
-                plt.close()
+            plot_name = self.__P.plot_name(self.idx)
+            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
+            plt.close()
 
     def many_output(self):
 
         for col in range(0, len(self.__data.columns)):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
-            if self.__analysistype == A.agent: # check done above, redundant, to remove
-                print("Boxplot not possible for agent-level analysis!")
-                sys.exit(1)
-            else:
-                col_A = dframe[dframe.columns[0]]
-                D = self.process_boxplot_data(col_A)
-                y =[]
-                for i in range(0,len(D),self.__N):
-                    y.append(pd.DataFrame(D[i:i+self.__N]))
-                for s in range(0, len(D)//self.__N):
-                    fig, ax = plt.subplots()
-                    self.plot_boxplot(ax, y[s], self.__data.columns[col])
+            #if self.__analysistype == A.agent: # check done above, redundant, to remove
+            #    print("Boxplot not possible for agent-level analysis!")
+            #    sys.exit(1)
+            #else:
+            col_A = dframe[dframe.columns[0]]
+            D = self.process_boxplot_data(col_A)
+            y =[]
+            for i in range(0,len(D),self.__N):
+                y.append(pd.DataFrame(D[i:i+self.__N]))
+            for s in range(0, len(D)//self.__N):
+                fig, ax = plt.subplots()
+                self.plot_boxplot(ax, y[s], self.__data.columns[col])
 
-                    plot_name = self.__P.plot_name(self.idx)
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
-                    plt.close()
+                plot_name = self.__P.plot_name(self.idx)
+                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
+                plt.close()
