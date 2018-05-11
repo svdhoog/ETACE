@@ -116,7 +116,7 @@ def progress_bar(name, iteration, total, barLength=30):
     bar_fill = '#' * nb_bar_fill
     bar_empty = ' ' * (barLength - nb_bar_fill)
     #newline = '\n'
-    sys.stdout.write("\r{0}[{1}] {2}%".format(name, str(bar_fill + bar_empty), percent))
+    sys.stdout.write(str("\r{0}".format(name)).ljust(42) + "[{0}] {1}%".format(str(bar_fill + bar_empty), percent))
     sys.stdout.flush()
 
 
@@ -128,7 +128,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
-    #print(inpath)
     infiles = P.input_files()
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
@@ -203,7 +202,7 @@ if __name__ == "__main__":
             # print a progressbar if verbose mode is activated
             if not args.verbose:
                 index1 += 1
-                progress_bar("Step3: Filtering the data ", index1, len(var_dic.items()))
+                progress_bar("Step3: Filtering the data for: {0} ".format(idx), index1, len(var_dic.items()))
         if not args.verbose:
             sys.stdout.write("\n")
         summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
