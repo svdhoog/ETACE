@@ -140,13 +140,15 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     # check for output path and add an ending slash if necessary
-    if args.outputpath:
+    if args.outputpath[0].rsplit('/', 1)[1].endswith('.db'):
+        #print(args.outputpath[0].rsplit('/', 1)[1].endswith('.db'))
+        outfile = str(args.outputpath[0])
+
+    else:
         if args.outputpath[0][-1:] is '/':
             outfile = str(args.outputpath[0] + outfile)
-            print(outfile)
         else:
             outfile = str(args.outputpath[0] + '/' + outfile)
-            print(outfile)
 
 
     # get input arguments

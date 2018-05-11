@@ -91,7 +91,7 @@ where `config` is the path to the config folder containing the configuration fil
 * plot_config.yaml
 * config_transform.yaml [optional]
 
-For more information please use the `docs/.` folder.
+For more information please use the `docs/` folder.
 
 ------------------------------------
 2018-05-08 11:00 svdh
