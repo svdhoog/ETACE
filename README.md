@@ -86,7 +86,7 @@ Running the main module
 The main Python script has a single argument, which is the path to the folder containing configuration files:
 To start the library, you should run it from the root FLAViz folder:
 ```
-$ python3 /src/visualisation_scripts/main.py /src/visualisation_scripts/config
+$ python3 /src/visualisation_scripts/main.py -p /src/visualisation_scripts/config
 ```
 where `config` is the path to the config folder containing the configuration files:
 
