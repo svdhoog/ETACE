@@ -57,15 +57,18 @@ $ ls /usr/local/lib/python3.4/dist-packages -lh
 NOTE:
 --
 On some platforms the package manager will install older versions of the above packages.
-For example, in Linux Mint 17 (Quiana), the version of matplotlib that is installed using apt-get is 1.19 instead of the newer version 2.2.2. To install the latest versions of the Python packages, you may have to use the python3-pip command:
+For example, in Linux Mint 17 (Quiana), the version of matplotlib that is installed using apt-get is 1.19 instead of the newer version 2.2.2.
+
+The following packages can be installed via your distributions package manager:
+
+```
+$ sudo apt-get install sqlite3 python3-pip python3-lxml python3-yaml python3-numexp python3-tables python3-tk
+```
+
+To install the latest versions of the Python numerical packages, you can use the python3-pip command:
 
 ```
 $ python3 -mpip install -U matplotlib numpy pandas scipy
-```
-The remaining packages can be installed via your distributions package manager:
-
-```
-$ sudo apt-get install sqlite3 python3-lxml python3-yaml python3-numexp python3-tables python3-tk
 ```
 
 Using the library:
