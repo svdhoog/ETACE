@@ -136,27 +136,30 @@ if __name__ == "__main__":
     parser.add_argument('--output', '-o', help='Set (absolute or relative) path to the directory where the output file should be written (iters.db). If the folder does not exist, it will be created.', nargs=1, type=str, required=False)
     args = parser.parse_args()
 
-    # check for output path and add an ending slash if necessary
-    if args.outputpath[0].rsplit('/', 1)[1].endswith('.db'):
-        #print(args.outputpath[0].rsplit('/', 1)[1].endswith('.db'))
-        outfile = str(args.outputpath[0])
 
-    else:
-        if args.outputpath[0][-1:] is '/':
-            outfile = str(args.outputpath[0] + outfile)
+    # check if output argument is used
+    if args.output:
+        # check if a custom .db file is used
+        if args.output[0].rsplit('/', 1)[1].endswith('.db'):
+            # check if output directory exists
+            if not os.path.isdir(args.output[0].rsplit('/', 1)[0]):
+                error("Output directory ({0}) does not exist".format(args.output[0].rsplit('/', 1)[0]))
+            else:
+                outfile = str(args.output[0])
         else:
-            outfile = str(args.outputpath[0] + '/' + outfile)
-
+            # check if output directory exists
+            if not os.path.isdir(args.output[0]):
+                error("Output directory ({0}) does not exist".format(args.output[0]))
+            else:
+                # check for output path and add an ending slash if necessary
+                if args.output[0][-1:] is '/':
+                    outfile = str(args.output[0] + outfile)
+                else:
+                    outfile = str(args.output[0] + '/' + outfile)
 
     # get input arguments
-    #if len(sys.argv) != 3: # old method without using argparser
-    #    #print >>sys.stderr, "Usage: {0} <model.xml> <its_directory>".format(sys.argv[0])
-    #    print("Usage: {0} <model.xml> <its_directory>".format(sys.argv[0], file=sys.stderr))
-    #    sys.exit(0)
-    #model  = sys.argv[1]
-    #itsdir = sys.argv[2]
-    model = args.modelpath[0]
-    itsdir = args.xmlpath[0]
+    model = args.model[0]
+    itsdir = args.xml[0]
 
     # check that model file exists
     if not file_exist(model):

@@ -8,7 +8,7 @@ sometimes, therefore resulting in undesired output. Hence, extra care is advised
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the name of the repository root folder and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessesary to set the name of the repository root folder to make use of relative paths.
+``i/o``: Specify the name of the repository root folder ``repo_name`` and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessesary to set the name of the repository root folder to make use of relative paths.
 
   i/o:
     # set up the name of the root folder from repository
