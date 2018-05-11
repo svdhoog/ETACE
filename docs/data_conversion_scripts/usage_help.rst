@@ -9,22 +9,22 @@ Notes on usage of the data conversion python scripts
 #. The script ``gendb.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion. So, for all xml files present in one input folder, one equivalent DB file is created in the output folder.
 Example usage::
 
-    python3 gendb.py -m path_to_model_xml -p path_xml_files [-o output_path]
+    python3 gendb.py -m path_to_model_xml -x path_xml_files [-o output_path]
 
 Full usage example::
 
-    python3 gendb.py -m /home/user/my_model/model.xml -p /home/user/my_xml_data/ -o /home/user/my_db_data/
+    python3 gendb.py -m /home/user/my_model/model.xml -x /home/user/my_xml_data/ -o /home/user/my_db_data/
 
 #. The script ``gendb_special.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion, and skips missing Agents.
 Example usage::
 
-    python3 gendb_special.py -m path_to_model_xml -p path_xml_files [-o output_path]
+    python3 gendb_special.py -m path_to_model_xml -x path_xml_files [-o output_path]
 
 Full usage example::
 
-    python3 gendb_special.py -m /home/user/my_model/model.xml -p /home/user/my_xml_data/ -o /home/user/my_db_data/
+    python3 gendb_special.py -m /home/user/my_model/model.xml -x /home/user/my_xml_data/ -o /home/user/my_db_data/
 
-- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+- The script runs on Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
     python gendb.py -h
     python gendb_special.py -h

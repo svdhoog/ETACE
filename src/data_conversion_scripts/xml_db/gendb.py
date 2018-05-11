@@ -102,9 +102,6 @@ def load_iteration_file(itno, basedir, db):
         if in_xagent_tag:
             if line == "</xagent>": # end if this agent def
                 in_xagent_tag = False
-
-                #error
-                #print(get_agent_sql(data))
                 db.execute(get_agent_sql(data)) # store data in db
                 del(data)
 
@@ -133,10 +130,10 @@ def load_iteration_file(itno, basedir, db):
     file.close()
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(prog='gendb_special.py', description='Script creates SQLite db file from corresponding XML files in many-to-one fashion, and skips missing Agents.')
-    parser.add_argument('--modelpath', '-m', help='Set (absolute or relative) path to the directory that contains the model, including the name of the model file (model.xml).', nargs=1, type=str, required=True)
-    parser.add_argument('--xmlpath', '-p', help='Set (absolute or relative) path to the directory that contains the data to be converted (xml files).', nargs=1, type=str, required=True)
-    parser.add_argument('--outputpath', '-o', help='Set (absolute or relative) path to the directory where the output file should be written (iters.db). If the folder does not exist, it will be created.', nargs=1, type=str, required=False)
+    parser = argparse.ArgumentParser(prog='gendb.py', description='Script creates SQLite db file from corresponding XML files in many-to-one fashion, and skips missing Agents.')
+    parser.add_argument('--model', '-m', help='Set (absolute or relative) path to the directory that contains the model, including the name of the model file (model.xml).', nargs=1, type=str, required=True)
+    parser.add_argument('--xml', '-x', help='Set (absolute or relative) path to the directory that contains the data to be converted (xml files).', nargs=1, type=str, required=True)
+    parser.add_argument('--output', '-o', help='Set (absolute or relative) path to the directory where the output file should be written (iters.db). If the folder does not exist, it will be created.', nargs=1, type=str, required=False)
     args = parser.parse_args()
 
     # check for output path and add an ending slash if necessary

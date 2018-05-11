@@ -18,7 +18,7 @@ The repo also includes scripts to convert between different structures within th
 
 #### Dependencies
 
-The scripts in this repository are tested to work with both Python 2.7.10 / Python 3.5.2 and above.
+The scripts in this repository are tested to work with Python 3.5.2 and above.
 
 The required dependencies are : Pandas >= 0.19.2 , scipy >=0.18.1, numpy >= 1.11.3
 
