@@ -11,10 +11,18 @@ Example usage::
 
     python3 gendb.py -m path_to_model_xml -p path_xml_files [-o output_path]
 
+Full usage example::
+
+    python3 gendb.py -m /home/user/my_model/model.xml -p /home/user/my_xml_data/ -o /home/user/my_db_data/
+
 #. The script ``gendb_special.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion, and skips missing Agents.
 Example usage::
 
     python3 gendb_special.py -m path_to_model_xml -p path_xml_files [-o output_path]
+
+Full usage example::
+
+    python3 gendb_special.py -m /home/user/my_model/model.xml -p /home/user/my_xml_data/ -o /home/user/my_db_data/
 
 - The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
