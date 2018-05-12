@@ -41,6 +41,7 @@ plot4:
    yaxis_label: price
    linestyle: solid
    marker: None
+   greyscale: True
 
 plot5:
     number_plots: one
@@ -51,6 +52,7 @@ plot5:
     xaxis_label: Time
     yaxis_label: Distribution over price
     number_bars: 5
+    greyscale: True
 
 plot6:
     number_plots: one

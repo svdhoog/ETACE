@@ -304,6 +304,11 @@ class Plot_configuration():
             return self.__param[key]['fillcolor']
         return self.__default_plot_parameters.__dict__['fillcolor']
 
+    def greyscale(self, key):
+        if 'greyscale' in self.__param[key].keys():
+            return self.__param[key]['greyscale']
+        return self.__default_plot_parameters.__dict__['greyscale']
+
     def numboxplotbars(self, key):
         if 'number_bars' in self.__param[key].keys():
             return self.__param[key]['number_bars']
@@ -335,6 +340,7 @@ class Figure_default_parameters(object):
         self.normed = 1
         self.fill = False
         self.fillcolor = 'black'
+        self.greyscale = False
         self.number_bars = 5
 
 

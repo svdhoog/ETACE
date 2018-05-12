@@ -113,7 +113,10 @@ class Timeseries(A):
                             a[s] = i/len(minor_index)
                         #print("First a: ", a)
                         #print(np.random.uniform(0, 1, size = len(D)//self.__N))
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
                         for r in range(0, len(y)):
                             clr = next(colors)
                             self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)
@@ -141,7 +144,10 @@ class Timeseries(A):
                         a[s] = s/size
                     #print("Second a: ", a)
                     #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
-                    colors = iter(cm.rainbow(a))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
 
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
@@ -166,7 +172,10 @@ class Timeseries(A):
                         a[s] = s/size
                     #print("Third a: ", a)
                     #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
-                    colors = iter(cm.rainbow(a))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
 
                     for r in range(0, len(dframe)//self.__N):
                         x = np.arange(1, self.__N+1)
@@ -319,7 +328,10 @@ class Histogram():
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = i/len(minor_index)
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(y)):
                             clr = next(colors)
@@ -346,7 +358,10 @@ class Histogram():
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = s/size
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
                             clr = next(colors)
@@ -367,7 +382,10 @@ class Histogram():
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = s/size
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
 
                         for r in range(0, len(dframe)//self.__N):
                             clr = next(colors)
@@ -388,7 +406,10 @@ class Histogram():
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = s/size
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
 
                         clr = next(colors)
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
@@ -402,7 +423,10 @@ class Histogram():
                         #colors = iter(cm.rainbow(np.random.uniform(0, 1, size = 1)))
 
                         # edit colormap here
-                        colors = iter(cm.rainbow(np.array([0.0]))) #0.0:blue 1.0:red
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(np.array([0.0])))
+                        else:
+                            colors = iter(cm.rainbow(np.array([0.0]))) #0.0:blue 1.0:red
 
                         clr = next(colors)
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
@@ -446,7 +470,10 @@ class Histogram():
                         a = np.empty(shape=size,)
                         for s in range(size):
                             a[s] = s/size
-                        colors = iter(cm.rainbow(a))
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
 
                         for r in range(0,len(D),self.__N):
                             fig, ax = plt.subplots()
@@ -473,7 +500,10 @@ class Histogram():
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    colors = iter(cm.rainbow(a))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
 
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
@@ -496,7 +526,10 @@ class Histogram():
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    colors = iter(cm.rainbow(a))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
 
                     for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
@@ -571,7 +604,10 @@ class Scatterplot(A):
                 fig, ax = plt.subplots() # initialize figure
 
                 # edit colormap here
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
+                if self.__P.greyscale(self.idx):
+                    colors = iter(cm.gray(np.linspace(0, 1, len(dframe)//self.__N)))
+                else:
+                    colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
@@ -609,7 +645,10 @@ class Scatterplot(A):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     # edit colormap here
-                    colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(np.linspace(0, 1, len(y1))))
+                    else:
+                        colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
@@ -627,7 +666,10 @@ class Scatterplot(A):
                     col_B = dframe[dframe.columns[1]]
 
                     # edit colormap here
-                    colors = iter(cm.rainbow(np.linspace(0, 1, 1)))
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(np.linspace(0, 1, 1)))
+                    else:
+                        colors = iter(cm.rainbow(np.linspace(0, 1, 1)))
 
                     clr = next(colors)
                     self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)
@@ -649,7 +691,10 @@ class Scatterplot(A):
                 minor_index = dframe.index.get_level_values('minor').unique()
 
                 # edit colormap here
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
+                if self.__P.greyscale(self.idx):
+                    colors = iter(cm.gray(np.linspace(0, 1, len(dframe)//self.__N)))
+                else:
+                    colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
                 for m in minor_index:
                     D = dframe.xs(int(m), level='minor')
@@ -685,7 +730,10 @@ class Scatterplot(A):
                     y2.append(np.array(col_B[i:i+self.__N]))
 
                 # edit colormap here
-                colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
+                if self.__P.greyscale(self.idx):
+                    colors = iter(cm.gray(np.linspace(0, 1, len(y1))))
+                else:
+                    colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
                 for r in range(0, len(dframe)//self.__N):
                     fig, ax = plt.subplots()
