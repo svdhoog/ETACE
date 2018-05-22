@@ -786,6 +786,7 @@ class Boxplot(A):
         box_df['min'] = s.minimum()
         return box_df
 
+    #def plot_boxplot(self, ax, data, l_label):
     def plot_boxplot(self, ax, data, l_label):
 
         if self.__P.legend_label(self.idx) is None:
@@ -803,10 +804,21 @@ class Boxplot(A):
             pos.append(count)
             count = count + 1
         #ax = t_df.boxplot(column = [100,250,500,750,900], positions =[1,2,3,4,5])
-        ax = t_df.boxplot(column = intervals, positions =pos)
+        #ax = t_df.boxplot(column = intervals, positions =pos)
+
+        # edit colormap here
+        if self.__P.greyscale(self.idx):
+            color = dict(boxes='Gray', whiskers='Black', medians='Black', caps='Black')
+        else:
+            color = dict(boxes='LightGreen', whiskers='Black', medians='Red', caps='Black')
+
+        # plot the boxplots with pandas
+        df = pd.DataFrame(t_df, columns=intervals)
+        ax = df.plot.box(by=pos, color=color, patch_artist=True)
         ax.set_title(le_label)
         ax.set_xlabel(self.__P.x_label(self.idx))
         ax.set_ylabel(self.__P.y_label(self.idx))
+
         return ax
 
     def one_output(self):
@@ -823,6 +835,7 @@ class Boxplot(A):
             y = []
             for i in range(0, len(D), self.__N):
                 y.append(pd.DataFrame(D[i:i+self.__N]))
+
             for r in range(0, len(D)//self.__N):
                 self.plot_boxplot(ax, y[r], self.__data.columns[col])
 
@@ -846,7 +859,6 @@ class Boxplot(A):
             for s in range(0, len(D)//self.__N):
                 fig, ax = plt.subplots()
                 self.plot_boxplot(ax, y[s], self.__data.columns[col])
-
                 plot_name = self.__P.plot_name(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
                 plt.close()

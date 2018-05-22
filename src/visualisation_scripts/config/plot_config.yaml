@@ -52,7 +52,7 @@ plot5:
     xaxis_label: Time
     yaxis_label: Distribution over price
     number_bars: 5
-    greyscale: True
+    greyscale: False
 
 plot6:
     number_plots: one
