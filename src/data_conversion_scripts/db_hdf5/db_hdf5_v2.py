@@ -102,7 +102,7 @@ def gen_hdf(fname, output_folder):
                 a = agent_name.decode('utf-8')
                 # Storing the panels in the HDF Store
                 store[a] = gendp(dfa)
-                verboseprint ('- Successfully wrote: '+str(agent_name)+ ' into HDF5 file. \n')
+                verboseprint ('- Successfully wrote: '+str(agent_name).replace("b'","'")+ ' into HDF5 file. \n')
     except sqlite3.Error as e:
         print("Error ", e.args[0])
         sys.exit(1)
@@ -190,8 +190,8 @@ if __name__ == "__main__":
             gen_hdf(fname, output_folder)
             processed_files.append(fname)
             percent = round((float(len(processed_files))/len(db_file_list))*100,2)
-            statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress:'+ str(percent) +'%'),
+            statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress: '+ str(percent) +'%'),
         statusprint('- Finished processing folder: '+os.path.basename(d)+'\n')
         processed_folders = processed_folders+1
         f_percent = round((float(processed_folders)/F)*100,2)
-        statusprint('- Total progress:'+ str(f_percent) +'%', '\n')
+        statusprint('- Total progress: '+ str(f_percent) +'%', '\n')

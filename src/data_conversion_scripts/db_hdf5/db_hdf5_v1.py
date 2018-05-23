@@ -191,10 +191,10 @@ if __name__ == "__main__":
             gen_hdf(fname)
             processed_files.append(fname)
             percent = round((float(len(processed_files))/len(db_file_list))*100,2)
-            statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress:'+ str(percent) +'%'),
+            statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress: '+ str(percent) +'%'),
         verboseprint ('- Successfully closed HDF5 file for: '+os.path.basename(d))
         store.close()
         statusprint('- Finished processing folder: '+ os.path.basename(d)+'\n')
         processed_folders = processed_folders+1
         f_percent = round((float(processed_folders)/F)*100,2)
-        statusprint('- Total progress:'+ str(f_percent) +'%', '\n')
+        statusprint('- Total progress: '+ str(f_percent) +'%', '\n')
