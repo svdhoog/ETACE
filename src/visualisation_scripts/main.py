@@ -35,7 +35,7 @@ def process_hdf_keys(string_in):  # function to extract set and run values from 
     string_out = find_between(tmp_string, "/set_", "_iters")  # TODO: trailing slash might cause error, so before passing on check if trailing slash present, if yes remove
     return list(map(int, string_out.split(',')))
 
-
+# unnecessary and can be removed
 def process_string(string_in):
     def find_between(s, first, last):
         try:
@@ -44,12 +44,6 @@ def process_string(string_in):
             return s[start:end]
         except ValueError:
             return ""
-
-    print("string_in: ", string_in)
-    operator = string_in.partition("[")[0]
-    print("operator: ", operator)
-    string_out = find_between(string_in, "[", "]")
-    print("string_out: ", string_out)
     return list([operator, float(string_out)])
 
 
@@ -184,10 +178,11 @@ if __name__ == "__main__":
         for i, j in param['variables'].items():
             if len(j) > 1:
                 var_filter_list = []
-                for s in range(1, len(j)):
-                    print("j[s]: ", j[s])
-                    var_filter_list.append(process_string(j[s]))
-                var_dic[j[0]] = var_filter_list
+                #for s in range(1, len(j)):
+                for s in range(0, len(j)):
+                    #var_filter_list.append(process_string(j[s]))
+                    var_dic[j[s]] = None
+                #var_dic[j[0]] = var_filter_list
             else:
                 var_dic[j[0]] = None
             var_list = list(var_dic.keys())
