@@ -1,9 +1,5 @@
-# python script replace_xml_writeout_functions.py
-# Sander vander Hoog, ETACE, Bielefeld University
-# 9 March 2017
-
 REPLACE_XML_WRITEOUT_FUNCTIONS
-~~~~~~~~~~~~~~~~~~~~~~
+====
 - src/replace_xml_functions.py: Python script for replacing XML writeout functions in xml.c (FLAME-models)
 - Usage:
 
@@ -20,7 +16,7 @@ This replacement script is useful for reducing the storage footprint of FLAME si
 
 
 TEST EXAMPLES
-
+====
 These test examples are for testing the functionality of the script replace_xml_writeout_functions.py.
 
 How to run:
