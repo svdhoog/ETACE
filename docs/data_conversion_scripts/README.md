@@ -17,4 +17,4 @@ The repo also includes scripts to convert between different structures within th
 
 Usage
 ====
-The detailed documentation on how to use the module can be found on the */doc* folder in [this](usage_help.rst).
+The detailed documentation on how to use the module can be found on the */doc* folder in the [FAQ](FAQ.md).
