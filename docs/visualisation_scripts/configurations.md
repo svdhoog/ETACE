@@ -1,3 +1,6 @@
+Configuration files
+====
+
 There are three configuration files, through which the necessary conditions can be input. The configuration files have a
 hierarchial format, not just for clarity but also for functionality. Hence, it is very important to abide by the
 indentation for the input to be interpreted correctly.
