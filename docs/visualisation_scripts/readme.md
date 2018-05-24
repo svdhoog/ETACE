@@ -23,7 +23,7 @@ The config files are contained in the folder named ``/src/visualisation_scripts/
 - ``config_transform.yaml``: define variables to transform, type of data transformations, i/o info to store data in a file after transformations
 
 
-Note: Further details on how to use the config (yaml) files can be found on the ``/configuration.rst`` file of the documentation.
+Note: Further details on how to use the config (yaml) files can be found on the [configuration](config.md) file of the documentation.
 
 Testing
 =======
