@@ -23,7 +23,7 @@ The config files are contained in the folder named ``/src/visualisation_scripts/
 - ``config_transform.yaml``: define variables to transform, type of data transformations, i/o info to store data in a file after transformations
 
 
-Note: Further details on how to use the config (yaml) files can be found on the :download:`configuration <config.md>` file of the documentation.
+Note: Further details on how to use the config (yaml) files can be found on the :download: `configuration <config.rst>` file of the documentation.
 
 Testing
 =======
@@ -40,7 +40,7 @@ there is no guarentee of proper execution for such systems.
 Examples
 ========
 
-Once the necessary parameters are set, by following the instructions specified in the :download:`configuration <config.md>` file, the module can be run to get the desired results. To demonstrate some of the functionalities,
+Once the necessary parameters are set, by following the instructions specified in the :ref:`config.rst` file, the module can be run to get the desired results. To demonstrate some of the functionalities,
 the parameters of the configuration files are shown below, along with the plots they yield.
 
 
