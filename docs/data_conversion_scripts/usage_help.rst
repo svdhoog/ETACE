@@ -1,12 +1,14 @@
 Notes on usage of the data conversion python scripts
-------------------------------------
+====
 
-0. XML_DB
+All scripts runs on Python 3.4.3 and above.
+
+XML_DB
 ~~~~~~~~~~
 
-- These scripts convert ``XML`` files to ``SQLite`` database files.
+These scripts convert ``XML`` files to ``SQLite`` database files.
 
-#. The script ``gendb.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion. So, for all xml files present in one input folder, one equivalent DB file is created in the output folder.
+The script ``gendb.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion. So, for all xml files present in one input folder, one equivalent DB file is created in the output folder.
 Example usage::
 
     python3 gendb.py -m path_to_model_xml -x path_xml_files [-o output_path]
@@ -15,7 +17,7 @@ Full usage example::
 
     python3 gendb.py -m /home/user/my_model/model.xml -x /home/user/my_xml_data/ -o /home/user/my_db_data/
 
-#. The script ``gendb_special.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion, and skips missing Agents.
+The script ``gendb_special.py`` creates SQLite db file from corresponding XML files in *many-to-one* fashion, and skips missing Agents.
 Example usage::
 
     python3 gendb_special.py -m path_to_model_xml -x path_xml_files [-o output_path]
@@ -24,13 +26,13 @@ Full usage example::
 
     python3 gendb_special.py -m /home/user/my_model/model.xml -x /home/user/my_xml_data/ -o /home/user/my_db_data/
 
-- The script runs on Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
     python gendb.py -h
     python gendb_special.py -h
 
 
-1. DB_HDF5
+DB_HDF5
 ~~~~~~~~~~
 
 - These scripts convert ``SQLite`` database files to ``HDF5`` files.
@@ -44,7 +46,7 @@ Full usage example::
    So, for each db file present in the input folder, an equivalent HDF5 file is created in the output folder.
    To combine db files into a single HDF5 file , version 1 of script named ``db_hdf5_v1.py`` can be used instead.
 
-- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+- Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
     python db_hdf5_v1.py -h
 
@@ -58,7 +60,7 @@ Full usage example::
         *Therefore, use of db_hdf5_v2.py is recommended for simplicity.*
 
 
-2. XML_HDF5
+XML_HDF5
 ~~~~~~~~~~~
 
 - This script converts ``XML`` files to ``HDF5`` files.
@@ -66,7 +68,7 @@ Full usage example::
 - This script creates HDF5 files from corresponding XML files in *many-to-one* fashion. So, for all xml files present in one input folder, one equivalent HDF5 file is created in the output folder.
   For input folders containing more hierarchies, given that a *-r* flag is passed, one HDF5 file is created for contents of each subfolder.
 
-- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+- Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
         python xml_hdf5.py -h
 
@@ -76,12 +78,12 @@ Full usage example::
   the option that is not preferred. Currently, the default is such that the output is created in the input folder.
 
 
-3. DB_XML
+DB_XML
 ~~~~~~~~~
 
 - This script converts ``SQLite`` Db files to ``XML`` files.
 - This script creates XML files from corresponding DB files in *one-to-many* fashion. For each DB file, a folder is created and multiple corresponding XML files are created inside the folder, based on time samples.
-- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+- The script runs on Python 3.4 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
         python genxml.py -h
 
@@ -91,12 +93,12 @@ Full usage example::
   the option that is not preferred. Currently, the default is such that the output is created in the input folder.
 
 
-4. MERGE_HDF_AGENTWISE
+MERGE_HDF_AGENTWISE
 ~~~~~~~~~~~~~~~~~~~~~~
 
 - This script converts HDF5 files from ``set_*_run_*_iters.h5`` format to ``HDF5`` files per agent (**Eurostat.h5**, **Firm.h5** etc).
 - So, for each HDF5 file present in the input folder, all corresponding agents are filtered and placed on a new agent-based HDF5 file.
-- The script runs on both Python 2.7.10 / Python 3.5.2 and above. Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
+- Any help regarding the execution of the script can be obtained by using the following command in any terminal window::
 
         python merge_hdf_agentwise.py -h
 
