@@ -41,12 +41,28 @@ plot2:
            lower_quantile : 0.20
            upper_quantile : 0.80
 
+#plot3:
+#    timeseries:
+#        agent: Firm
+#        analysis: multiple_batch
+#        variables:
+#            var1: [price]
+#        set: [10,13,16,17]
+#        run: [range,[1,20]]
+#        major: [range,[6020,12500,20]]
+#        minor: [range,[1,80]]
+#        summary: custom_quantile
+#        quantile_values:
+#            lower_quantile : 0.20
+#            upper_quantile : 0.80
+
 plot3:
     timeseries:
         agent: Firm
         analysis: multiple_batch
         variables:
             var1: [price]
+            var2: [total_debt]
         set: [10,13,16,17]
         run: [range,[1,20]]
         major: [range,[6020,12500,20]]
@@ -55,6 +71,7 @@ plot3:
         quantile_values:
             lower_quantile : 0.20
             upper_quantile : 0.80
+
 
 plot4:
    timeseries:

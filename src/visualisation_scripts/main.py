@@ -44,8 +44,12 @@ def process_string(string_in):
             return s[start:end]
         except ValueError:
             return ""
+
+    print("string_in: ", string_in)
     operator = string_in.partition("[")[0]
+    print("operator: ", operator)
     string_out = find_between(string_in, "[", "]")
+    print("string_out: ", string_out)
     return list([operator, float(string_out)])
 
 
@@ -181,13 +185,21 @@ if __name__ == "__main__":
             if len(j) > 1:
                 var_filter_list = []
                 for s in range(1, len(j)):
+                    print("j[s]: ", j[s])
                     var_filter_list.append(process_string(j[s]))
                 var_dic[j[0]] = var_filter_list
             else:
                 var_dic[j[0]] = None
             var_list = list(var_dic.keys())
         d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity
-        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
+
+        # check if table columns contain the given variables from config file
+        for i, entry in enumerate(var_list):
+            if not (entry in list(d)):
+                erf("Table has columns {0} and var{1}='{2}' does not match.".format(list(d), i+1, entry))
+
+        # stage-I filtering, all input vars are sliced with desired set & run values
+        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)
 
         df_main = pd.DataFrame()
         index1 = 0
