@@ -110,13 +110,13 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
     return plot_function[key]()
 
 # function to create a progressbar in verbose mode
-def progress_bar(name, iteration, total, barLength=30):
+def progress_bar(name, iteration, total, barLength=20):
     percent = int(round((iteration / total) * 100))
     nb_bar_fill = int(round((barLength * percent) / 100))
     bar_fill = '#' * nb_bar_fill
     bar_empty = ' ' * (barLength - nb_bar_fill)
     #newline = '\n'
-    sys.stdout.write(str("\r{0}".format(name)).ljust(42) + "[{0}] {1}%".format(str(bar_fill + bar_empty), percent))
+    sys.stdout.write(str("\r{0}".format(name)).ljust(46) + "[{0}] {1}%".format(str(bar_fill + bar_empty), percent))
     sys.stdout.flush()
 
 
@@ -168,7 +168,7 @@ if __name__ == "__main__":
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index += 1
-            progress_bar("Step2: Processing data file " ,index, len(agent_storelist.items()))
+            progress_bar("Step2: Processing data file " , index, len(agent_storelist.items()))
     if not args.verbose:
         sys.stdout.write("\n")
     del agent_storelist
@@ -202,21 +202,12 @@ if __name__ == "__main__":
             # print a progressbar if verbose mode is activated
             if not args.verbose:
                 index1 += 1
-                progress_bar("Step3: Filtering the data for: {0} ".format(idx), index1, len(var_dic.items()))
+                progress_bar("Step3: Filtering/Plotting data for: {0} ".format(idx), index1, len(var_dic.items()))
         if not args.verbose:
             sys.stdout.write("\n")
         summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
-
-        # print a progressbar if verbose mode is activated
-        if not args.verbose:
-            index += 1
-            progress_bar("Step4: Visualisation ", index, len(primary_parameters.items()))
-    if not args.verbose:
-        sys.stdout.write("\n")
-
-
 
 
 ###################################################################################################################################
