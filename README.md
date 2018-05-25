@@ -9,7 +9,7 @@
 -------------------------------------------------------------------------------
         
 The Flexible Large-scale Agent Visualization Library (FLAViz) is a data
-analysis and visualization library developed for multi-agent/agent-based
+analysis and visualization library developed for multi-agent / agent-based
 simulations generated using the FLAME framework.
 
 Agent-based simulation models typically generate data that spans multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, multiple agent instances per type, many variables per agent, and time periods (iterations).
