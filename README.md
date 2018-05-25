@@ -17,9 +17,13 @@ Agent-based simulation models typically generate data that spans multiple dimens
 To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots. 
 
 -------------------------------------------------------------------------------
-Current version
+Features
 --
-v1.0
+v1.0 - First release
+
+ * data conversion from XML to SQLite DB and HDF5
+ * data module using Python pandas
+ * visualization module based on matplotlib
 
 Requirements:
 --
@@ -80,15 +84,14 @@ Alternatively, you can us pip3 directly:
 $ pip3 install matplotlib numpy pandas scipy
 ```
 
-Using the library:
+Getting started
 --
 
-For information on how to use the library, view the README.md file in the root folder.
+For more information on how to use the library, view the [manual](https://github.com/0xfabi/ETACE/blob/master/docs/manual/tex/master.pdf). 
 
-You can also browse the User Manual online at:
+To see what is possible, see the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
 
-https://github.com/svdhoog/FLAViz/blob/master/doc/readme.rst
-
+Or, to get started immediately, you can run the library out-of-the-box on the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing of the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
 
 Running the main module
 --
