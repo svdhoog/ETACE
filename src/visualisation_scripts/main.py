@@ -35,7 +35,7 @@ def process_hdf_keys(string_in):  # function to extract set and run values from 
     string_out = find_between(tmp_string, "/set_", "_iters")  # TODO: trailing slash might cause error, so before passing on check if trailing slash present, if yes remove
     return list(map(int, string_out.split(',')))
 
-
+# unnecessary and can be removed
 def process_string(string_in):
     def find_between(s, first, last):
         try:
@@ -44,8 +44,6 @@ def process_string(string_in):
             return s[start:end]
         except ValueError:
             return ""
-    operator = string_in.partition("[")[0]
-    string_out = find_between(string_in, "[", "]")
     return list([operator, float(string_out)])
 
 
@@ -109,23 +107,41 @@ def summary_and_plot(idx, P, df, par_fpath):  # idx = plot no, P = parameter obj
     plot_function = {'timeseries': plt_timeseries, 'boxplot': plt_boxplot, 'histogram': plt_histogram, 'scatterplot': plt_scatterplot, 'transform': var_transform}
     return plot_function[key]()
 
+# function to create a progressbar in verbose mode
+def progress_bar(name, iteration, total, barLength=20):
+    percent = int(round((iteration / total) * 100))
+    nb_bar_fill = int(round((barLength * percent) / 100))
+    bar_fill = '#' * nb_bar_fill
+    bar_empty = ' ' * (barLength - nb_bar_fill)
+    #newline = '\n'
+    sys.stdout.write(str("\r{0}".format(name)).ljust(46) + "[{0}] {1}%".format(str(bar_fill + bar_empty), percent))
+    sys.stdout.flush()
+
 
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='main.py', description='Visualise and transform various time-series data.')
-    parser.add_argument('parameterpath', help='Path to folder containing the parameter (.yaml) files', nargs=1, type=str)
+    parser.add_argument('--configpath', '-p', help='Path to folder containing the configuration (.yaml) files', nargs=1, type=str, required=True)
+    parser.add_argument('--verbose', '-v', help='Activate the verbose mode which contains tracking steps and progress', required=False, action='store_false')
     args = parser.parse_args()
-
-    P = main_configuration(args.parameterpath[0])  # instantiate main_configuration class to process main yaml files
+    P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
     infiles = P.input_files()
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
+    index = 0
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
         agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+        # print a progressbar if verbose mode is activated
+        if not args.verbose:
+            index+=1
+            progress_bar("Step1: Preparing data structure ", index, len(infiles.items()))
+    if not args.verbose:
+        sys.stdout.write("\n")
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
+    index = 0
     for agentname, agentstore in agent_storelist.items():
         d = pd.DataFrame()  # Main dataframe to hold all the dataframes of each instance (one agenttype)
         df_list = []
@@ -146,24 +162,42 @@ if __name__ == "__main__":
         del df_list
         agent_dframes[agentname] = d  # this dict contains agent-type names as keys, and the corresponding dataframes as values
         agentstore.close()
+
+        # print a progressbar if verbose mode is activated
+        if not args.verbose:
+            index += 1
+            progress_bar("Step2: Processing data file " , index, len(agent_storelist.items()))
+    if not args.verbose:
+        sys.stdout.write("\n")
     del agent_storelist
 
+    index = 0
     for idx, param in primary_parameters.items():  # read filter conditions from yaml
         frames = []  # list to store filtered dfs according to vars
         var_dic = {}
         for i, j in param['variables'].items():
             if len(j) > 1:
                 var_filter_list = []
-                for s in range(1, len(j)):
-                    var_filter_list.append(process_string(j[s]))
-                var_dic[j[0]] = var_filter_list
+                #for s in range(1, len(j)):
+                for s in range(0, len(j)):
+                    #var_filter_list.append(process_string(j[s]))
+                    var_dic[j[s]] = None
+                #var_dic[j[0]] = var_filter_list
             else:
                 var_dic[j[0]] = None
             var_list = list(var_dic.keys())
         d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity
-        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)  # stage-I filtering, all input vars are sliced with desired set & run values
+
+        # check if table columns contain the given variables from config file
+        for i, entry in enumerate(var_list):
+            if not (entry in list(d)):
+                erf("Table has columns {0} and var{1}='{2}' does not match.".format(list(d), i+1, entry))
+
+        # stage-I filtering, all input vars are sliced with desired set & run values
+        filtered = d.iloc[(d.index.get_level_values('set').isin(param['set'])) & (d.index.get_level_values('run').isin(param['run'])) & (d.index.get_level_values('major').isin(param['major'])) & (d.index.get_level_values('minor').isin(param['minor']))][var_list].dropna().astype(float)
 
         df_main = pd.DataFrame()
+        index1 = 0
         for dkey, dval in var_dic.items():
             df = filter_by_value(dkey, dval, filtered)  # stage-II filtering for selecting variables according to their values
             if df_main.empty:
@@ -171,7 +205,14 @@ if __name__ == "__main__":
             else:
                 df_main = pd.concat([df_main, df], axis=1)
             del df
-        summary_and_plot(idx, P, df_main, args.parameterpath[0])  # plot index, parameter object, data, parameter_filepath
+
+            # print a progressbar if verbose mode is activated
+            if not args.verbose:
+                index1 += 1
+                progress_bar("Step3: Filtering/Plotting data for: {0} ".format(idx), index1, len(var_dic.items()))
+        if not args.verbose:
+            sys.stdout.write("\n")
+        summary_and_plot(idx, P, df_main, args.configpath[0])  # plot index, parameter object, data, parameter_filepath
         var_dic.clear()  # clear dict of mapping between plot var and operator (for next cycle)
         del var_list[:]  # clear the list of variables for next cycle
 

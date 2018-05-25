@@ -1,21 +1,29 @@
-There are three parameter files, through which the necessary conditions can be input. The parameter files have a
+Configuration files
+====
+
+There are three configuration files, through which the necessary conditions can be input. The configuration files have a
 hierarchial format, not just for clarity but also for functionality. Hence, it is very important to abide by the
 indentation for the input to be interpreted correctly.
 
 *Note:* Any error in the yaml file might be caught by the exception handler, but indentation errors go unnoticed
-sometimes, therefore resulting in undesired output. Hence, extra care is advised when formulating a parameter file.
+sometimes, therefore resulting in undesired output. Hence, extra care is advised when formulating a configuration file.
 
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the input and output path, in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). ::
+``i/o``: Specify the name of the repository root folder ``repo_name`` and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessesary to set the name of the repository root folder to make use of relative paths
+
+::
 
   i/o:
+    # set up the name of the root folder from repository    
+    repo_name: 'FLAViz'
+
     # for absolute path use:
-    input_path: '/path/to/Etace/data'
+    input_path: '/path/to/FLAViz/data'
 
     # for relative path use:
-    input_path: 'data'
+    input_path: 'data/visualisation'
 
     input_files:
         CentralBank: CentralBank.h5
@@ -25,8 +33,9 @@ config.yaml
 *Note:* The key name to the input files should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
 
 Similarly, the output path::
+
     # for absolute path use:
-    output_path: '/path/to/Etace/results'
+    output_path: '/path/to/FLAViz/results'
 
     # for relative path use:
     output_path: 'results'
@@ -158,8 +167,11 @@ Example::
 Hence, a typical main configuration file may look like::
 
     i/o:
+        # set up the name of the root folder from repository
+        repo_name: 'FLAViz'
+
         # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
-        input_path: 'data'
+        input_path: 'data/visualisation'
 
         # set up your output_path for the resulting plots, it's relative unless it starts with a '/'
         output_path: 'results'
@@ -168,10 +180,7 @@ Hence, a typical main configuration file may look like::
             CentralBank: CentralBank.h5 # please name the key as the agent name
             Eurostat: Eurostat.h5
             Firm: Firm.h5
-
-
-
-
+            
     plot1:
         timeseries:
             agent: Firm
@@ -203,9 +212,9 @@ Hence, a typical main configuration file may look like::
 plot_config.yaml
 ~~~~~~~~~
 
-The *plot_config.yaml* file contains all the necessary configurations for a plot that is output. Whenever a plot is specified on the *config.yaml* file, the *plot_config.yaml* file is read for the necessary
-specifications of the plot.
-As such, some of the parameters from the *plot_config.yaml* file is explained below:
+The *plot_config.yaml* file contains all the necessary configuration options for a plot. Whenever a plot is specified on the *config.yaml* file, the *plot_config.yaml* file is read for the necessary specifications of the plot. As such, some of the parameters from the *plot_config.yaml* file is explained below.
+All options can also be found on the matplotlib website 
+https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 
 **Plot-key( i.e.** ``plot1`` **):** This string should be the same as the Plot-key in the *config.yaml* file, to make sure
 the correct parameters are mapped to the respective plot.
@@ -229,6 +238,7 @@ the correct parameters are mapped to the respective plot.
 
 ``linestyle``: Specify line characteristic. *Possible values:* ``solid``, ``dashed``, ``dashdot``, ``dotted`` etc.
 
+``greyscale``: Specify to plot in greyscale. *Possible values:* ``True``, ``False``.
 
 Therefore, a particular *plot_config.yaml* file might look like::
 
@@ -241,6 +251,7 @@ Therefore, a particular *plot_config.yaml* file might look like::
         yaxis_label: price
         linestyle: solid
         marker: None
+        greyscale: True
 
     plot2:
         number_plots: one
@@ -253,6 +264,35 @@ Therefore, a particular *plot_config.yaml* file might look like::
         marker: None
         fill_between_quartiles: yes
         fillcolor: red
+
+If an option is not specified, then the default settings are::
+
+    plot_legend = 'no'    
+    legend_label = None
+    legend_location = 'best'
+    plot_type = None
+    number_plots = 'one'
+    plot_name = 'default_fig.png'
+    l_lim = None
+    u_lim = None
+    linestyle = 'solid'
+    marker = 4
+    markerfacecolor = None
+    markersize = None
+    facecolors = None
+    plot_title = None
+    xaxis_label = None
+    yaxis_label = None
+    number_bins = 50
+    histtype = 'bar'
+    stacked = False
+    normed = 1
+    fill = False
+    fillcolor = 'black'
+    greyscale = False
+    number_bars = 5
+
+
 
 
 config_transform.yaml

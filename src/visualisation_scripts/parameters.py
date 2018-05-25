@@ -93,11 +93,13 @@ class main_configuration():
     def input_fpath(self):
         if 'i/o' in self.parsed_values.keys():
             path_config = self.parsed_values['i/o']['input_path']
-            if path_config[0] == '/': # check for full path inside config
+            if path_config[:1] == '/': # check for full path inside config
                 input_path = str(Path(path_config))
                 return input_path
             else: # use the path from config as relative path
-                input_path = str(Path("").absolute() / path_config)
+                repo_name = self.parsed_values['i/o']['repo_name']
+                repo_path = str(Path("").absolute()).rsplit(repo_name, 1)[0] + repo_name
+                input_path = repo_path + '/' + path_config # fix to repo root
                 return input_path
         return self.erf("Missing input path!")
 
@@ -105,11 +107,13 @@ class main_configuration():
         if 'i/o' in self.parsed_values.keys():
             #output_path = Path(self.parsed_values['i/o']['output_path'])
             path_config = self.parsed_values['i/o']['output_path']
-            if path_config[0] == '/': # check for full path inside config
+            if path_config[:1] == '/': # check for full path inside config
                 output_path = str(Path(path_config))
                 return output_path
             else: # use the path from config as relative path
-                output_path = str(Path("").absolute() / path_config)
+                repo_name = self.parsed_values['i/o']['repo_name']
+                repo_path = str(Path("").absolute()).rsplit(repo_name, 1)[0] + repo_name
+                output_path = repo_path + '/' + path_config
                 return output_path
         return self.erf("Missing output path!")
 
@@ -300,6 +304,11 @@ class Plot_configuration():
             return self.__param[key]['fillcolor']
         return self.__default_plot_parameters.__dict__['fillcolor']
 
+    def greyscale(self, key):
+        if 'greyscale' in self.__param[key].keys():
+            return self.__param[key]['greyscale']
+        return self.__default_plot_parameters.__dict__['greyscale']
+
     def numboxplotbars(self, key):
         if 'number_bars' in self.__param[key].keys():
             return self.__param[key]['number_bars']
@@ -331,6 +340,7 @@ class Figure_default_parameters(object):
         self.normed = 1
         self.fill = False
         self.fillcolor = 'black'
+        self.greyscale = False
         self.number_bars = 5
 
 
