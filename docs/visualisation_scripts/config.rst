@@ -155,6 +155,13 @@ Example::
 
 Possible values : ``no``, ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``, ``full``.
 
+For the value ``custom_quantile`` the quantiles should be specified as floats between [0,1] as well::
+
+            summary: custom_quantile
+            quantile_values:
+               lower_quantile : 0.20
+               upper_quantile : 0.80
+
 
 Example::
 
@@ -204,11 +211,8 @@ Hence, a typical main configuration file may look like::
             minor: [range,[1,80]]
             summary: custom_quantile
             quantile_values:
-               lower_quartile : 0.20
-               upper_quartile : 0.80
-
-Editor's note: 
-The terms ``lower_quartile`` and ``upper_quartile`` are incorrect and should be read as ``lower_quantile`` and ``upper_quantile``. This is to be updated in the next version of the library.
+               lower_quantile : 0.20
+               upper_quantile : 0.80
 
 plot_config.yaml
 ~~~~~~~~~
