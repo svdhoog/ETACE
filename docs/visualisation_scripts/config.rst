@@ -19,26 +19,25 @@ config.yaml
     # set up the name of the root folder from repository    
     repo_name: 'FLAViz'
 
-    # for absolute path use:
+    # for absolute input paths use:
     input_path: '/path/to/FLAViz/data'
 
-    # for relative path use:
+    # for relative input paths use:
     input_path: 'data/visualisation'
 
+
+    # for absolute output paths use:
+    output_path: '/path/to/FLAViz/results'
+
+    # for relative output paths use:
+    output_path: 'results'
+    
     input_files:
         CentralBank: CentralBank.h5
         Eurostat: Eurostat.h5
         Firm: Firm.h5
 
 *Note:* The key name to the input files should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
-
-Similarly, the output path::
-
-    # for absolute path use:
-    output_path: '/path/to/FLAViz/results'
-
-    # for relative path use:
-    output_path: 'results'
 
 **Plot-key (i.e.** ``plot1`` **) :** Specify a key for the plot (mainly to keep track of the plot-number for other configuration files). Can be any string.
 
