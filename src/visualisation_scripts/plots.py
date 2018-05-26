@@ -397,7 +397,7 @@ class Histogram():
 
                 else:  # for the whole ensemble of data, if analysis is not agent level
                     fig, ax = plt.subplots()
-                    if len(dframe.columns) == 2:   ################TODO: two option not needed because when summary full, no sustom quantile possible
+                    if len(dframe.columns) == 2:   ################TODO: two option not needed because when summary full, no custom quantile possible
                         col_A = dframe[dframe.columns[0]]
                         col_B = dframe[dframe.columns[1]]
                         # edit colormap here
@@ -595,7 +595,7 @@ class Scatterplot(A):
         step = 2
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
-                print(">> Problem with data! Either set delay to True, or specify atleast two variables to plot!")
+                print(">> Problem with data! Either set delay to True, or specify at least two variables to plot!")
                 sys.exit(1)
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
 
@@ -683,7 +683,7 @@ class Scatterplot(A):
         step = 2
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
-                print("Problem with data! Either set delay to True, or specify atleast two variables to plot!")
+                print("Problem with data! Either set delay to True, or specify at least two variables to plot!")
                 sys.exit(1)
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
 

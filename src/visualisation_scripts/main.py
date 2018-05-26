@@ -218,6 +218,6 @@ if __name__ == "__main__":
 
 
 ###################################################################################################################################
-# TODO: add support for multiple agenttypes within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse
+# TODO: add support for multiple agent types within a single plot, new entry in yaml (replace agent with, agent1, agent2), and parse
 # TODO: currently the filtering is done in two steps, find a way to do it in a single step
 # TODO: main data reprocessed for different types of plot (separate the processing and plot from loop to process main data just once
