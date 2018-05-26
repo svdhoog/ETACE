@@ -153,7 +153,7 @@ Example::
 
 ``summary``: Specify the type of statistical summary. This is also nested under Plot-type.
 
-Possible types : ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``.
+Possible values : ``no``, ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``, ``full``.
 
 
 Example::
@@ -204,9 +204,11 @@ Hence, a typical main configuration file may look like::
             minor: [range,[1,80]]
             summary: custom_quantile
             quantile_values:
-               lower_quantile : 0.20
-               upper_quantile : 0.80
+               lower_quartile : 0.20
+               upper_quartile : 0.80
 
+Editor's note: 
+The terms ``lower_quartile`` and ``upper_quartile`` are incorrect and should be read as ``lower_quantile`` and ``upper_quantile``. This is to be updated in the next version of the library.
 
 plot_config.yaml
 ~~~~~~~~~
@@ -231,9 +233,9 @@ the correct parameters are mapped to the respective plot.
 
 ``legend_label``: Specify name for the lines in the plot. Can be any string value.
 
-``x-axis label``: Specify label for the x-axis. Can be any combination of string values.
+``xaxis_label``: Specify label for the x-axis. Can be any combination of string values.
 
-``y-axis label``: Specify label for the y-axis. Can be any combination of string values.
+``yaxis_label``: Specify label for the y-axis. Can be any combination of string values.
 
 ``linestyle``: Specify line characteristic. *Possible values:* ``solid``, ``dashed``, ``dashdot``, ``dotted`` etc.
 
@@ -314,16 +316,17 @@ the input of multiple variables for any agent type.
 
 *Possible functions:*
 
-- Quarterly growth rate (quarter on quarter freq quaterly) ``q_o_q_q``
-- Quarterly growth rate (quarter on quarter freq annual) ``q_o_q_a``
-- Monthly growth rate (month on month freq annual) ``m_o_m_a``
-- Monthly growth rate (month on month freq monthly) ``m_o_m_m``
-- Annual growth (year on year freq annual) ``y_o_y_a``
+- Quarterly growth rate (quarter on quarter, at quarterly frequency) ``q_o_q_q``
+- Quarterly growth rate (quarter on quarter, at annual frequency) ``q_o_q_a``
+- Monthly growth rate (month on month, at monthly frequency) ``m_o_m_m``
+- Monthly growth rate (month on month, at annual frequency) ``m_o_m_a``
+- Annual growth (year on year, at annual frequency) ``y_o_y_a``
 - Other custom functions
 
-*Note:* Other elementary functions such as **sum**, **difference**, **product**, and **division** can also be performed, which has been left for the user (will be added as custom functions).
+*Note:* Other elementary functions such as **sum**, **difference**, **product**, and **division** can also be performed, which will be added as custom functions in a future release.
 
 ``aggregate``: If the transformation is to be performed after calculating the summary stats, then a necessary aggregation method can be specified.
+
 *Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``.
 
 ``write_file``: Specify whether to write the transformation as a file. *Possible values:* ``yes``, ``no``.
@@ -339,14 +342,14 @@ A particular *config_transform.yaml* file may, therefore, look as follows::
         variables:
             var1: total_credit
             var2: equity
-        transform_function: q_o_q
+        transform_function: q_o_q_q
         aggregate: mean
         new_variables:
-            var1: total_credit_q_o_q
-            var2: equity_q_o_q
+            var1: total_credit_q_o_q_q
+            var2: equity_q_o_q_q
         write_file: yes
-        output_file_name: 'sents.h5'
-        hdf_groupname: 'total_credit_ratio'
+        output_file_name: 'transformed.h5'
+        hdf_groupname: 'quarterly_growth_rates'
 
 
 
