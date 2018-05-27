@@ -33,7 +33,6 @@
 This technical report describes the release of FLAViz v1.0, a new visualization library developed at the ETACE group at Bielefeld University (Economic Theory and Computational Economics). 
 
 \subsection{Overview}
-\label{Section:1}
 
 The Flexible Large-scale Agent Visualization Library (FLAViz) is a software library developed specifically for data analysis and data visualization tasks on data that is produced by multi-agent, or agent-based, simulations (ABMs). Agent-based simulation models typically generate data across multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, multiple agent instances per type, many variables per agent, and time periods (iterations). This implies the data is structured as time series panel data sets.
 
@@ -76,21 +75,41 @@ Various plots can be specified, e.g., time series, box plots, scatter plots, his
 
 \paragraph{Version history:}
 \begin{verbatim}
-March 1, 2018: FLAViz 0.1.0 (beta version)
+June 1, 2018: FLAViz v1.0 (beta version)
 \end{verbatim}
 
 
 \paragraph{Disclaimer:} The functionality of this software has only been tested under Unix/Unix-like systems. It has not been tested for Windows and therefore there is no guarantee of proper execution for such systems.
 
 \paragraph{Dependencies:}
+All scripts have been developed to work with Python \url{3.4.2} and above.
+
+\begin{itemize}
+\item FLAViz visualization scripts: ("recommended version", "minimal version")
 
 \begin{verbatim}
-Python (3.6)
-Python pandas (0.21.0)
-matplotlib
-hdf5
-PyTables
+python3 (>= 3.4.2)
+python3-h5py (>= 2.2.1)
+python3-matplotlib (>= 2.2.2)
+python3-numexp (>= 2.6)
+python3-numpy (>= 1.14.3)
+python3-pandas (0.22.0 or >= 0.19.0)
+python3-pyTables (>= 3.4)
+python3-scipy (1.1.0)
+python3-tk (>= 3.4.3)
+python3-yaml (>= 3.12)
+python3-lxml (4.2.1 or >= 3.3.3)
 \end{verbatim}
+
+\item Data conversion scripts: ("recommended version", "minimal version")
+
+\begin{verbatim}
+sqlite3 (>= 3.8.2)
+python3-pandas (0.22.0 or >= 0.19.0)
+python3-lxml (4.2.1 or >= 3.3.3)
+\end{verbatim}
+\end{itemize}
+
 
 \paragraph{File listing:}
 
@@ -165,7 +184,7 @@ The software package consists of several modules, related to the different tasks
 \includegraphics[scale=.5]{data_processing.pdf} 
 \end{boxedminipage}
 \label{Fig: Data processing}
-\caption{\footnotesize Data processing flow. We follow the Extract-Transform-Load (ETL) process from data warehousing. Data extraction is where data is extracted from storage (left-most part, HDF5 files). Data transformation takes place in memory (middle part, using data frames and Python pandas). Data loading is where the trasnformed data is again written to storage (right-most part, different file formats).}
+\caption{\footnotesize Data processing flow. We follow the Extract-Transform-Load (ETL) process from data warehousing. Data extraction is where data is extracted from storage (left-most part, HDF5 files). Data transformation takes place in memory (middle part, using data frames and Python pandas). Data loading is where the transformed data is again written to storage (right-most part, different file formats).}
 \end{figure}
 
 
@@ -205,7 +224,7 @@ The configuration files are contained in a folder named \url{/config}, containin
 \item \url{transform.yaml}: defines variables to transform, type of data transformations, and \url{i/o} info to store data in a file after transformations.
 \end{itemize}
 
-Note: Further details on how to use the configuration (\url{yaml}) files can be found in Section \ref{Section:1.2} of this documentation.
+Note: Further details on how to use the configuration (\url{yaml}) files can be found in Section \ref{Section:configuration} of this documentation.
 
 \subsection{Running the main module}
 
@@ -392,22 +411,6 @@ merge_hdf_agentwise.py - convert h5 (per run) to h5 (per agent type)
 xml_hdf5.py            - convert XML to h5 (per run)
 \end{verbatim}
 
-
-\subsubsection*{Dependencies}
-The scripts have been tested to work with both Python \url{2.7.10} / Python \url{3.5.2} and above.
-
-The required dependencies are:
-\begin{verbatim}
-Pandas >= 0.19.2
-scipy >=0.18.1
-numpy >= 1.11.3
-\end{verbatim}
-
-The data storage format requires the following dependency:
-
-\begin{verbatim}
-pytables
-\end{verbatim}
 
 \subsection{Usage of the conversion scripts}
 
@@ -609,7 +612,8 @@ No. sets  & Time (min.) & RAM (GB) & Time (min.) & RAM (GB) & Time (min.) & RAM 
 
 \clearpage
 \section{FLAViz Configuration files}
-\label{Section:2}
+\label{Section:configuration}
+
 There are three configuration files, which allow the user to input the necessary parameters for the program. The configuration files are specified in the \url{yaml} format that uses a hierarchical format which is not just for clarity but also for specifying functionality. Hence, it is important to abide by the indentation of the yaml files in order for them to be interpreted correctly. 
 
 \paragraph{Note:} Any error in a \url{yaml} file might be caught by the exception handler, but indentation errors go unnoticed sometimes, which may result in undesired output. Hence, extra care is advised when formulating a configuration file.
@@ -618,7 +622,7 @@ There are three configuration files, which allow the user to input the necessary
 
 \subsubsection*{Data input/output section}
 
-\url{i/o}: Specify the input and output path.
+\url{i/o}: Specify the name of the repository root folder \url{repo_name} and input, output paths in the sub-hierarchies \url{input_path} and \url{output_path}. You can choose between an absolute path (\url{/path/to/your/files}) which always starts with a \url{'/'} or a relative path (\url{path/relative/to/project/folder}). It is necessary to set the name of the repository root folder to make use of relative paths.
 
 \begin{itemize}
     \item The input path is specified as a full path in the sub-hierarchy \url{input_path}:
@@ -627,23 +631,30 @@ There are three configuration files, which allow the user to input the necessary
 \lstset{language=C,frame=single, basicstyle=\footnotesize}
 \begin{lstlisting}
   i/o:
-    input_path:   '/home/etace'
+    # set up the name of the root folder from repository    
+    repo_name: 'FLAViz'
 
-    input_files: 
-        Bank:     'Bank.h5' 
-        Eurostat: 'Eurostat.h5'
+    # for absolute input paths use:
+    input_path: '/path/to/FLAViz/data'
+
+    # for relative input paths use:
+    input_path: 'data/visualisation'
+
+
+    # for absolute output paths use:
+    output_path: '/path/to/FLAViz/results'
+
+    # for relative output paths use:
+    output_path: 'results'
+    
+    input_files:
+        CentralBank: CentralBank.h5
+        Eurostat: Eurostat.h5
+        Firm: Firm.h5
 \end{lstlisting}
 \paragraph{Note:} The key name to the input path should correspond to the Agent-type (e.g., Bank, Eurostat, Firm etc.)
 
-\begin{itemize}
-    \item The output path is specified as a full path in the sub-hierarchy \url{output_path}:
-\end{itemize}
-
-\begin{lstlisting}
-    output_path: '/home/etace/timeseries'
-\end{lstlisting}    
-
-
+\clearpage
 \subsubsection*{Plot section}
 
 \begin{lstlisting}
@@ -762,12 +773,13 @@ Example of selecting sets using a range of values (list with values from 1 to 10
 \begin{itemize}
 \item \url{summary}: Specify the type of statistical summary. This is also nested under Plot-type.
 	\begin{itemize}
-		\item Possible values: \url{mean,median,custom_quantile,upper_quartile,lower_quartile,maximum,minimum}.
-	\end{itemize}
-\item \url{[quantile_values]}: Specify an interquantile range
-	\begin{itemize}
-		\item \url{lower_quantile}: \url{[0-100]}
-		\item \url{upper_quantile}: \url{[0-100]}
+		\item Possible values: \url{full,mean,median,custom_quantile,upper_quartile,lower_quartile,maximum,minimum}.
+		\item full: the full data ensemble
+		\item \url{quantile_values}: Specify a quantile range
+		\begin{itemize}
+			\item \url{lower_quantile}: \url{[0-1.0]}
+			\item \url{upper_quantile}: \url{[0-1.0]}
+		\end{itemize}
 	\end{itemize}
 \end{itemize}
 
@@ -784,7 +796,7 @@ To show an an interquantile range, use:
 \begin{lstlisting}
     plot1:
         timeseries:
-            summary: custom_quntile
+            summary: custom_quantile
             quantile_values:
             	lower_quantile: 0.20
             	upper_quantile: 0.80
@@ -829,14 +841,14 @@ A complete example \url{config.yaml} file may look like this:
             minor: [1,8] 
             summary: custom_quantile
             quantile_values:
-            	lower_quantile: 0.25
-            	upper_quantile: 0.75            
+            	lower_quantile: 0.20
+            	upper_quantile: 0.80            
 \end{lstlisting} 
 
 
-\subsection{File: plot.yaml}
+\subsection{File: plot config.yaml}
 
-For every plot that is specified in the main configuration file \url{config.yaml}, the file \url{plot.yaml} provides further specifications for the plot (i.e., the line style, axes labels, legend placement, etc.). The \url{plot.yaml} file contains all the necessary configurations for each plot to be generated, and is linked by the \textbf{Plot-key} as specified in the \url{config.yaml} file. Below we explain the parameters from the \url{plot.yaml} file.\footnote{The plotting options follow the specifications in the \url{matplotlib} library, which is the default library to plot data with Python pandas.}
+For every plot that is specified in the main configuration file \url{config.yaml}, the file \url{plot_config.yaml} provides further specifications for the plot (i.e., the line style, axes labels, legend placement, etc.). The \url{plot_config.yaml} file contains all the necessary configurations for each plot to be generated, and is linked by the \textbf{Plot-key} as specified in the \url{config.yaml} file. Below we explain all settings in the \url{plot_config.yaml} file.\footnote{The plotting options follow the specifications of the \url{matplotlib} library, which is the default library to plot data with Python pandas.}
 
 \begin{itemize}
 \item \textbf{Plot-key} (e.g., \url{plot1}): This string should be the same as the \textbf{Plot-key} in the \url{config.yaml} file, to make sure the correct parameters are mapped to the respective plotting modules.
@@ -862,56 +874,88 @@ For every plot that is specified in the main configuration file \url{config.yaml
 
 \item \url{plot_legend}: Specify whether a legend for the plot should be displayed.
 
-\item \url{legend_loc}: Specify the location of the legend, either inside or outside of the graph box.
+\item \url{legend_location}: Specify the location of the legend, either inside or outside of the graph box.
 \begin{itemize}
 \item Possible values: \url{in,out}.
 \end{itemize}
 
 \item \url{legend_label}: Specify a name for the lines in the plot. Can be any string value.
 
-\item \url{x-axis} \url{label}: Specify a label for the x-axis. Can be any combination of string values.
+\item \url{xaxis_label}: Specify a label for the x-axis. Can be any combination of string values.
 
-\item \url{y-axis} \url{label}: Specify a label for the y-axis. Can be any combination of string values.
+\item \url{yaxis-label}: Specify a label for the y-axis. Can be any combination of string values.
 
 \item \url{linestyle}: Specify line characteristics. 
+
 \begin{itemize}
 \item Possible values: \url{solid,dashed,dashdot,dotted} etc.
 \end{itemize}
 
+\item \url{greyscale}: Specify to plot in greyscale.
+
+\begin{itemize}
+\item Possible values: \url{True, False} (First letter has to be capitalized).
+\end{itemize}
 \end{itemize}
 
 \bigskip
 \textbf{Complete example plot.yaml file}
 
 \begin{lstlisting}
-    plot1:
-        number_plots: one
-        plot_name: timeseries_equity.png
-        l_lim: no
-        u_lim: no
-        tmin: no
-        tmax: no
-        plot_legend: yes
-        legend_loc: out
-        legend_label: equity
-        x-axis label: months
-        y-axis label: equity value
-        linestyle: solid
-        
-    
-    plot2:
-        number_plots: many
-        plot_name: boxplot_monthly_output.png
-        l_lim: no
-        u_lim: no
-        tmin: no
-        tmax: no
-        plot_legend: no
-        legend_loc: in
-        legend_label: monthly_output
-        x-axis label: months
-        y-axis label: monthly_output
-        linestyle: dashed
+plot1:
+    number_plots: one
+    plot_name: p1_one_set_multiple_runs_timeseries.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+    greyscale: True
+
+plot2:
+    number_plots: one
+    plot_name: p2_one_set_multiple_runs_ts_quantile.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: red
+\end{lstlisting}
+
+
+\bigskip
+\textbf{Default settings}
+If an option is not specified, then the default settings are:
+
+\begin{lstlisting}
+plot_legend = 'no'
+legend_label = None
+legend_location = 'best'
+plot_type = None
+number_plots = 'one'
+plot_name = 'default_fig.png'
+l_lim = None
+u_lim = None
+linestyle = 'solid'
+marker = 4
+markerfacecolor = None
+markersize = None
+facecolors = None
+plot_title = None
+xaxis_label = None
+yaxis_label = None
+number_bins = 50
+histtype = 'bar'
+stacked = False
+normed = 1
+fill = False
+fillcolor = 'black'
+greyscale = False
+number_bars = 5
 \end{lstlisting}
 
 \subsection{File: transform.yaml}
@@ -930,7 +974,7 @@ the input of multiple variables for any agent type.
 
 \item \url{transform_function}: The transformation function to apply for the given variables.
 
-\paragraph{Note:} Other elementary functions such as \textbf{sum}, \textbf{difference}, \textbf{product}, and \textbf{division} can also be performed, which has been left for the user (will be added as custom functions).
+\paragraph{Note:} Other elementary functions such as \textbf{sum}, \textbf{difference}, \textbf{product}, and \textbf{division} can also be performed, which will be added as custom functions in a future release.
 
 \item \url{aggregate}: If the transformation is to be performed after calculating the summary stats, then a necessary aggregation method can be specified.
 \begin{itemize}
@@ -957,15 +1001,15 @@ Possible transform functions are listed in Table \ref{Table: Transformation}.
 \hline \hline 
 Function & Formula & Description\\
 \hline 
-\url{q_o_q} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=3}^5 x_{t-s}$ & \parbox{7cm}{Quarter-on-quarter growth rate (this quarter wrt. previous quarter, monthly data)} \\ 
+\url{q_o_q_q} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=3}^5 x_{t-s}$ & \parbox{7cm}{Quarter-on-quarter growth rate at quarterly frequency (this quarter wrt. previous quarter, monthly data)} \\ 
 \hline 
-\url{q_o_q_ONE_CYCLE} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=12}^{14} x_{t-s}$ & \parbox{7cm}{Quarterly growth rate (annual window, wrt. same quarter in previous year, monthly data)} \\ 
+\url{q_o_q_a} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=12}^{14} x_{t-s}$ & \parbox{7cm}{Quarterly growth rate at annual frequency (annual window, wrt. same quarter in previous year, monthly data)} \\ 
 \hline 
-\url{m_o_m} & $x_{t}/x_{t-1}$ &  \parbox{7cm}{Month-on-month growth rate (this month wrt. previous month, monthly data)} \\ 
+\url{m_o_m_m} & $x_{t}/x_{t-1}$ &  \parbox{7cm}{Month-on-month growth rate at monthly frequency (this month wrt. previous month, monthly data)} \\ 
 \hline 
-\url{m_o_m_ONE_CYCLE} & $x_{t}/x_{t-12}$ & \parbox{7cm}{Monthly growth rate (annual window,  wrt. same month in previous year, monthly data)} \\ 
+\url{m_o_m_a} & $x_{t}/x_{t-12}$ & \parbox{7cm}{Monthly growth rate at annual frequency (annual window,  wrt. same month in previous year, monthly data)} \\ 
 \hline 
-\url{annual_P_I_T} & $\sum_{s=0}^{11} x_{t-s}/\sum_{s=12}^{23} x_{t-s}$ & \parbox{7cm}{Annual growth rate} \\ 
+\url{y_o_y_a} & $\sum_{s=0}^{11} x_{t-s}/\sum_{s=12}^{23} x_{t-s}$ & \parbox{7cm}{Annual growth rate} \\ 
 \hline 
 \end{tabular} 
 \caption{Transformation functions for commonly used growth rates.}
@@ -981,23 +1025,27 @@ A particular complete \url{transform.yaml} file may look as follows:
         variables: 
             var1: [total_credit]
             var2: [equity]       
-        transform_function: m_o_m_ONE_CYCLE
+        transform_function: m_o_m_a
         aggregate: mean    
      
         write_file: yes
-        output_path: '/home/etaceguest/transformed.h5'
+        output_path: '/home/etace/transformed.h5'
         hdf_groupname: 'growth_rates'
 \end{lstlisting}
 
 
 \clearpage
 \section{Walkthrough and Tutorial examples}
-\label{Section:2}
+
 
 In this section we give examples of input configuration files and their respective output plots.
-Once the necessary parameters are set, by following the instructions specified in Section \ref{Section:1.2}, the module can be run to get the desired results. To demonstrate some of the functionalities, the parameters of the configuration files are shown below, along with the plots they yield.
+Once the necessary parameters are set, by following the instructions specified in Section \ref{Section:configuration}, the module can be run to get the desired results. To demonstrate some of the functionalities, the parameters of the configuration files are shown below, along with the plots they yield.
 
-Using the dataset \url{<INSERT DATA SET URL>}, and the following parameter settings, the following plots can be produced.
+Using the dataset
+
+ \url{https://github.com/svdhoog/FLAViz/tree/master/data/visualisation},
+ 
+ and the following parameter settings, the following plots can be produced.
 
 \clearpage
 \subsubsection{Example 1}
