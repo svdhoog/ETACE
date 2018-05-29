@@ -89,9 +89,9 @@ Getting started
 
 For more information on how to use the library, view the [manual](https://github.com/svdhoog/FLAViz/blob/master/docs/manual/tex/FLAViz_Manual.pdf). 
 
-To get a flavour of what the library can do, see the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
+To get a flavour of what the library can do, see the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
 
-Or, to get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing of the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
+Or, to get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing of the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
 
 Running the main module
 --
