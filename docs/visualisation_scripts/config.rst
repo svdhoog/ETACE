@@ -155,22 +155,24 @@ Example::
 
 Possible values : ``no``, ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``, ``full``.
 
-For the value ``custom_quantile`` the quantiles should be specified as floats between [0,1] as well::
-
-            summary: custom_quantile
-            quantile_values:
-               lower_quantile : 0.20
-               upper_quantile : 0.80
-
-
 Example::
 
     plot1:
         timeseries:
             summary: mean
 
+For the value ``custom_quantile`` the quantiles should be specified as floats between [0,1].
 
-Hence, a typical main configuration file may look like::
+Example::
+
+    plot2:
+        timeseries:
+            summary: custom_quantile
+            quantile_values:
+               lower_quantile : 0.20
+               upper_quantile : 0.80
+
+A typical main configuration file may look as follows::
 
     i/o:
         # set up the name of the root folder from repository
@@ -245,7 +247,7 @@ the correct parameters are mapped to the respective plot.
 
 ``greyscale``: Specify to plot in greyscale. *Possible values:* ``True``, ``False``.
 
-Therefore, a particular *plot_config.yaml* file might look like::
+A typical *plot_config.yaml* file might look like this::
 
     plot1:
         number_plots: one
