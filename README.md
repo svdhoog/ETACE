@@ -33,7 +33,7 @@ For more information on how to use the library, view the [manual](https://github
 
 Many example plots are [here](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
  
-To get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing of the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
+To get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing in the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
 
 
 Requirements:
