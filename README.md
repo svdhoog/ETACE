@@ -30,8 +30,7 @@ Requirements:
 
 You will need to satisfy the following dependencies.
 
-1. FLAViz visualization scripts:
-("recommended version", "minimal version")
+For the FLAViz visualization scripts:
 
 * python3 (>= 3.4) Python3 core libraries
 * python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
@@ -45,8 +44,7 @@ You will need to satisfy the following dependencies.
 * python3-yaml (>= 3.12)
 * python3-lxml (4.2.1 or >= 3.3.3)
 
-2. Data conversion scripts:
-("recommended version", "minimal version")
+For the data conversion scripts:
 
 * sqlite3 (>= 3.8.2)
 * python3-pandas (0.22.0 or >= 0.19.0)
@@ -61,7 +59,7 @@ To see which versions of the Python3 packages you have installed, run:
 $ ls /usr/local/lib/python3.4/dist-packages -lh
 ```
 
-NOTE:
+Notes:
 --
 On some platforms the package manager will install older versions of the above packages.
 For example, in Linux Mint 17 (Quiana), the version of matplotlib that is installed using apt-get is 1.19 instead of the newer version 2.2.2 (which is required).
@@ -98,6 +96,7 @@ Running the main module
 
 The main Python script has a single argument, which is the path to the folder containing configuration files:
 To start the library, you should run it from the root FLAViz folder:
+
 ```
 $ python3 /src/visualisation_scripts/main.py -p /src/visualisation_scripts/config
 ```
