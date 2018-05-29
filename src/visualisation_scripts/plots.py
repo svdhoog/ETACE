@@ -208,11 +208,23 @@ class Timeseries(A):
                         sys.exit(1)
                     else:
                         count = 0
+
+                        # set plot colors for output files
+                        size = len(D)//self.__N
+                        a = np.empty(shape=size,)
+                        for s in range(size):
+                            a[s] = s/size
+                        if self.__P.greyscale(self.idx):
+                            colors = iter(cm.gray(a))
+                        else:
+                            colors = iter(cm.rainbow(a))
+
                         for i in range(0,len(D),self.__N):
                             fig, ax = plt.subplots()
                             y = np.array(D[i:i+self.__N])
                             x = np.arange(1, self.__N+1)
-                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m))
+                            clr = next(colors)
+                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr)
                             plot_name = self.__P.plot_name(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
                             plt.close()
@@ -228,10 +240,22 @@ class Timeseries(A):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
                     x = np.arange(1, self.__N+1)
+
+                    # set plot colors for output files
+                    size = len(dframe)//self.__N
+                    a = np.empty(shape=size,)
+                    for s in range(size):
+                        a[s] = s/size
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
+
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r))
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r))
+                        clr = next(colors)
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r), clr)
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r), clr)
                         plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
                         plot_name = self.__P.plot_name(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
@@ -241,10 +265,22 @@ class Timeseries(A):
                     y =[]
                     for i in range(0,len(dframe),self.__N):
                         y.append(np.array(dframe[i:i+self.__N]))
+
+                    # set plot colors for output files
+                    size = len(dframe)//self.__N
+                    a = np.empty(shape=size,)
+                    for s in range(size):
+                        a[s] = s/size
+                    if self.__P.greyscale(self.idx):
+                        colors = iter(cm.gray(a))
+                    else:
+                        colors = iter(cm.rainbow(a))
+
                     for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         x = np.arange(1, self.__N+1)
-                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s))
+                        clr = next(colors)
+                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr)
                         plot_name = self.__P.plot_name(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
                         plt.close()

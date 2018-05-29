@@ -321,7 +321,7 @@ class Figure_default_parameters(object):
         self.legend_label = None
         self.legend_location = 'best'
         self.plot_type = None
-        self.number_plots = 'one'
+        self.number_plots = 'many'
         self.plot_name = 'default_fig.png'
         self.l_lim = None
         self.u_lim = None
