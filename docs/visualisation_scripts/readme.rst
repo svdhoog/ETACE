@@ -1,14 +1,7 @@
-Possible Uses
-=============
+Folder structure
+====
 
-The module can be used to filter, transform, and visualize time series data, in multiple hierarchial levels.
-
-The different kinds of plots that are possible are: time series, box plot, scatter plot, histogram, and delay plot.
-
-Structure
-=========
-
-There are several scripts, located in folder ``/src/visualisation_scripts`` that deal with different steps during the data visualisation/transformation processes:
+There are several scripts, located in folder ``src/visualisation_scripts`` that deal with different steps during the data visualisation/transformation processes:
 
 - ``main.py`` : Contains code to read in the input data and primary config files, filter the data based on necessary conditions, and link the different Summary, Plot, and Transformation modules.
 - ``summarystats.py`` : Takes in a Pandas dataframe, and computes the necessary summary as needed, and outputs the result as a Pandas dataframe.
@@ -16,7 +9,7 @@ There are several scripts, located in folder ``/src/visualisation_scripts`` that
 - ``transform.py`` : Takes in a Pandas dataframe, and returns/ writes to a file the necessary transformations.
 - ``parameters.py`` : Contains code for main configuration and reads in config files.
 
-The config files are contained in the folder named ``/src/visualisation_scripts/config``. It contains three configuration files:
+The config files are contained in the folder named ``src/visualisation_scripts/config``. It contains three configuration files:
 
 - ``config.yaml`` : define i/o path, plot-types, agents and appropriate variables, filter options, desired summary
 - ``plot_config.yaml`` : define plot properties i.e. name, legends, line style, fill etc.
@@ -32,7 +25,7 @@ To run the module, simply use:
 
    $ python /src/visualisation_scripts/main.py config-path
 
-where, config-path is the path to the folder containing the yaml files (in this git structure it is ``/FLAViz/src/visualisation_scripts/config/``)
+where, config-path is the path to the folder containing the yaml files (in this git repository's folder structure it is ``FLAViz/src/visualisation_scripts/config/``)
 
 Note: The module has only been tested under Unix/ Unix-like systems. It has not been tested for Windows and therefore
 there is no guarentee of proper execution for such systems.
@@ -44,7 +37,7 @@ Once the necessary parameters are set, by following the instructions specified i
 the parameters of the configuration files are shown below, along with the plots they yield.
 
 
-Using the dataset <insert dataset url>, and the following config settings, the following plots can be produced.
+Using the example [dataset](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation), and the following config settings, the following plots can be produced.
 
 Timeseries
 ==========
