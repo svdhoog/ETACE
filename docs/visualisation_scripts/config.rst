@@ -48,16 +48,37 @@ config.yaml
 *Note [Exception]*: For the case of transform, simply specify ``transform`` in the Plot-type, and it will perform the transform (no plots will be produced).
 
 
+* ``agent``: Name of the agent-type, nested under **Plot-type**.
 
-``agent``: Name of the agent-type, nested under **Plot-type**.
+* ``analysis``: Type of analysis. *Possible types:*  ``agent``, ``multiple_run``, ``multiple_batch``, ``multiple_set``.
 
-``analysis``: Type of analysis. *Possible types:*  ``agent``, ``multiple_run``, ``multiple_batch``, ``multiple_set``.
+The type of analysis determines how the data set is being grouped using the ``groupby`` function:
 
-``variables``: Variables from the particular agent-type that is to be processed/ visualized. The sub-hierarchy ``var1``, ``var2`` etc. allows
-the input of multiple variables for any agent type. The variable names can be inside a set of square braces *[]* or simply inside a set of single-quotation marks *''*.
+``agent``: ``data.groupby(level=['set', 'run', 'major', 'minor'])``, the full data set
+
+``multiple_run``: ``data.groupby(level=['set', 'run', 'major'])``, sets, runs, and iterations
+
+``multiple_batch``: ``data.groupby(level=['set', 'major'])``, sets and iterations
+
+``multiple_set``: ``data.groupby(level=['major'])``, only iterations
+
+As an example, the relevant code for taking the mean is (see ``summarystats.py``):
+
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).mean()
+        
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).mean()
+        
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).mean()
+        
+        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).mean()
+
+*NOTE:* the major axis are the iterations, the minor axis are the agent instances.
 
 
-Example::
+* ``variables``: Variables from the particular agent-type that is to be processed/ visualized. The sub-hierarchy ``var1``, ``var2`` etc. allows the input of multiple variables for any agent type. The variable names can be inside a set of square braces *[]* or simply inside a set of single-quotation marks *''*. Example 2 shows that it is also allowed to pass a list of variable names inside the entry ``var1``.
+
+
+Example 1::
 
     plot1:
         timeseries:
@@ -66,6 +87,15 @@ Example::
             variables:
               var1: [total_credit]
               var2: [equity]
+
+Example 2::
+
+    plot1:
+        timeseries:
+            agent: Bank
+            analysis: multiple_set
+            variables:
+              var1: [total_credit,equity]
 
 
 Example (*only for Transform*)::
@@ -150,10 +180,27 @@ Example::
             major: [range,[6020,26000,20]]
             minor: [1,5,7]
 
-
 ``summary``: Specify the type of statistical summary. This is also nested under Plot-type.
 
-Possible values : ``no``, ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``, ``full``.
+**Possible values**
+
+* ``mean``: returns the mean
+
+* ``median``: returns the median
+
+* ``custom_quantile``: this allows to select an upper and a lower quantile, see below.
+
+* ``upper_quartile``: returns the 75th percentile of the data set
+
+* ``lower_quartile``: returns the 25th percentile of the data set
+
+* ``maximum``: returns maximum value of the data set
+
+* ``minimum``: returns minimum value of the data set
+
+* ``full``: returns the full data set as an ensemble distribution.
+
+* ``no``, ``none``: any non-existent keyword can be used if no summary of the data set is needed; these will be ignored by the code.
 
 Example::
 
@@ -161,7 +208,7 @@ Example::
         timeseries:
             summary: mean
 
-For the value ``custom_quantile`` the quantiles should be specified as floats between [0,1].
+For the value ``custom_quantile`` the lower and upper quantiles should be specified as floats in [0,1].
 
 Example::
 
