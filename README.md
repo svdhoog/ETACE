@@ -8,13 +8,13 @@
 
 -------------------------------------------------------------------------------
 
-The Flexible Large-scale Agent Visualization Library (FLAViz) is a data
-analysis and visualization library developed for multi-agent / agent-based
-simulations generated using the FLAME framework.
+The Flexible Large-scale Agent Visualization Library (FLAViz) is a data analysis and agent visualization library developed for agent-based simulation models created using the FLAME simulation environment.
 
-Agent-based simulation models typically generate data that spans multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, multiple agent instances per type, many variables per agent, and time periods (iterations).
+Agent-based simulations typically generate data spanning multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, many agent instances per type, many variables per agent, and the time dimension.
 
-To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots.
+To deal with such a large heterogeneity and variety of data, it should be stored as an organized, high-dimensional data set, to allow for proper data aggregation, filtering, selection, slicing etc.
+
+FLAViz builds on Python pandas and matplotlib, and can be used to filter, transform, and visualize time series data that is stored using hierarchical levels in the HDF5 file format. Various plotting styles can be specified, e.g., time series, box plots, scatter plots, histograms, and delay- or phase plots.
 
 -------------------------------------------------------------------------------
 Features
@@ -110,4 +110,4 @@ where `config` is the path to the config folder containing the configuration fil
 For more information please use the `docs/` folder.
 
 ------------------------------------
-2018-05-25 11:00 svdh
+2018-05-29 11:00 svdh
