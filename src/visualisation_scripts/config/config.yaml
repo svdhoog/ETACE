@@ -6,8 +6,26 @@ i/o:
     # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
     input_path: 'data/visualisation'
 
+    #from main folder
+    #input_path: '../../data/visualisation'
+
+    #from config folder:
+    #input_path: '../../../data/visualisation'
+
+    #hard-coded:
+    #input_path: '/media/sander/DataStorage1/GIT/GitHub/FLAViz@svdhoog/FLAViz/data/visualisation'
+
     # set up your output_path for the resulting plots, it's relative unless it starts with a '/'
     output_path: 'results'
+    
+    #from main folder
+    #output_path: '../../results_test'
+
+    #from config folder:
+    #output_path: '../../../results_test2'
+
+    #hard-coded:
+    #output_path: '/media/sander/DataStorage1/GIT/GitHub/FLAViz@svdhoog/FLAViz/results_test3'
 
     input_files:
         CentralBank: CentralBank.h5 # please name the key as the agent name

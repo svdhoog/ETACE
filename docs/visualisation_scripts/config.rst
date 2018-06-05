@@ -11,7 +11,7 @@ sometimes, therefore resulting in undesired output. Hence, extra care is advised
 config.yaml
 ~~~~~~~~~
 
-``i/o``: Specify the name of the repository root folder ``repo_name`` and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessesary to set the name of the repository root folder to make use of relative paths
+``i/o``: Specify the name of the repository root folder ``repo_name`` and input, output path in the subhierarchies ``input_path`` and ``output_path``. You can choose between an absolute path (/path/to/your/files) which always starts with a '/' or a relative path (path/relative/to/project/folder). It is necessary to set the name of the repository root folder to make use of relative paths.
 
 ::
 
@@ -19,26 +19,25 @@ config.yaml
     # set up the name of the root folder from repository    
     repo_name: 'FLAViz'
 
-    # for absolute path use:
+    # for absolute input paths use:
     input_path: '/path/to/FLAViz/data'
 
-    # for relative path use:
+    # for relative input paths use:
     input_path: 'data/visualisation'
 
+
+    # for absolute output paths use:
+    output_path: '/path/to/FLAViz/results'
+
+    # for relative output paths use:
+    output_path: 'results'
+    
     input_files:
         CentralBank: CentralBank.h5
         Eurostat: Eurostat.h5
         Firm: Firm.h5
 
 *Note:* The key name to the input files should correspond to the Agent-type (i.e. Bank, Eurostat, Firm etc.)
-
-Similarly, the output path::
-
-    # for absolute path use:
-    output_path: '/path/to/FLAViz/results'
-
-    # for relative path use:
-    output_path: 'results'
 
 **Plot-key (i.e.** ``plot1`` **) :** Specify a key for the plot (mainly to keep track of the plot-number for other configuration files). Can be any string.
 
@@ -49,16 +48,37 @@ Similarly, the output path::
 *Note [Exception]*: For the case of transform, simply specify ``transform`` in the Plot-type, and it will perform the transform (no plots will be produced).
 
 
+* ``agent``: Name of the agent-type, nested under **Plot-type**.
 
-``agent``: Name of the agent-type, nested under **Plot-type**.
+* ``analysis``: Type of analysis. *Possible types:*  ``agent``, ``multiple_run``, ``multiple_batch``, ``multiple_set``.
 
-``analysis``: Type of analysis. *Possible types:*  ``agent``, ``multiple_run``, ``multiple_batch``, ``multiple_set``.
+The type of analysis determines how the data set is being grouped using the ``groupby`` function:
 
-``variables``: Variables from the particular agent-type that is to be processed/ visualized. The sub-hierarchy ``var1``, ``var2`` etc. allows
-the input of multiple variables for any agent type. The variable names can be inside a set of square braces *[]* or simply inside a set of single-quotation marks *''*.
+``agent``: ``data.groupby(level=['set', 'run', 'major', 'minor'])``, the full data set
+
+``multiple_run``: ``data.groupby(level=['set', 'run', 'major'])``, sets, runs, and iterations
+
+``multiple_batch``: ``data.groupby(level=['set', 'major'])``, sets and iterations
+
+``multiple_set``: ``data.groupby(level=['major'])``, only iterations
+
+As an example, the relevant code for taking the mean is (see ``summarystats.py``):
+
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).mean()
+        
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).mean()
+        
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).mean()
+        
+        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).mean()
+
+*NOTE:* the major axis are the iterations, the minor axis are the agent instances.
 
 
-Example::
+* ``variables``: Variables from the particular agent-type that is to be processed/ visualized. The sub-hierarchy ``var1``, ``var2`` etc. allows the input of multiple variables for any agent type. The variable names can be inside a set of square braces *[]* or simply inside a set of single-quotation marks *''*. Example 2 shows that it is also allowed to pass a list of variable names inside the entry ``var1``.
+
+
+Example 1::
 
     plot1:
         timeseries:
@@ -67,6 +87,15 @@ Example::
             variables:
               var1: [total_credit]
               var2: [equity]
+
+Example 2::
+
+    plot1:
+        timeseries:
+            agent: Bank
+            analysis: multiple_set
+            variables:
+              var1: [total_credit,equity]
 
 
 Example (*only for Transform*)::
@@ -151,11 +180,27 @@ Example::
             major: [range,[6020,26000,20]]
             minor: [1,5,7]
 
-
 ``summary``: Specify the type of statistical summary. This is also nested under Plot-type.
 
-Possible types : ``mean``, ``median``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``, ``maximum``, ``minimum``.
+**Possible values**
 
+* ``mean``: returns the mean
+
+* ``median``: returns the median
+
+* ``custom_quantile``: this allows to select an upper and a lower quantile, see below.
+
+* ``upper_quartile``: returns the 75th percentile of the data set
+
+* ``lower_quartile``: returns the 25th percentile of the data set
+
+* ``maximum``: returns maximum value of the data set
+
+* ``minimum``: returns minimum value of the data set
+
+* ``full``: returns the full data set as an ensemble distribution.
+
+* ``no``, ``none``: any non-existent keyword can be used if no summary of the data set is needed; these will be ignored by the code.
 
 Example::
 
@@ -163,8 +208,18 @@ Example::
         timeseries:
             summary: mean
 
+For the value ``custom_quantile`` the lower and upper quantiles should be specified as floats in [0,1].
 
-Hence, a typical main configuration file may look like::
+Example::
+
+    plot2:
+        timeseries:
+            summary: custom_quantile
+            quantile_values:
+               lower_quantile : 0.20
+               upper_quantile : 0.80
+
+A typical main configuration file may look as follows::
 
     i/o:
         # set up the name of the root folder from repository
@@ -208,7 +263,6 @@ Hence, a typical main configuration file may look like::
                lower_quantile : 0.20
                upper_quantile : 0.80
 
-
 plot_config.yaml
 ~~~~~~~~~
 
@@ -232,15 +286,15 @@ the correct parameters are mapped to the respective plot.
 
 ``legend_label``: Specify name for the lines in the plot. Can be any string value.
 
-``x-axis label``: Specify label for the x-axis. Can be any combination of string values.
+``xaxis_label``: Specify label for the x-axis. Can be any combination of string values.
 
-``y-axis label``: Specify label for the y-axis. Can be any combination of string values.
+``yaxis_label``: Specify label for the y-axis. Can be any combination of string values.
 
 ``linestyle``: Specify line characteristic. *Possible values:* ``solid``, ``dashed``, ``dashdot``, ``dotted`` etc.
 
 ``greyscale``: Specify to plot in greyscale. *Possible values:* ``True``, ``False``.
 
-Therefore, a particular *plot_config.yaml* file might look like::
+A typical *plot_config.yaml* file might look like this::
 
     plot1:
         number_plots: one
@@ -315,16 +369,17 @@ the input of multiple variables for any agent type.
 
 *Possible functions:*
 
-- Quarterly growth rate (quarter on quarter freq quaterly) ``q_o_q_q``
-- Quarterly growth rate (quarter on quarter freq annual) ``q_o_q_a``
-- Monthly growth rate (month on month freq annual) ``m_o_m_a``
-- Monthly growth rate (month on month freq monthly) ``m_o_m_m``
-- Annual growth (year on year freq annual) ``y_o_y_a``
+- Quarterly growth rate (quarter on quarter, at quarterly frequency) ``q_o_q_q``
+- Quarterly growth rate (quarter on quarter, at annual frequency) ``q_o_q_a``
+- Monthly growth rate (month on month, at monthly frequency) ``m_o_m_m``
+- Monthly growth rate (month on month, at annual frequency) ``m_o_m_a``
+- Annual growth (year on year, at annual frequency) ``y_o_y_a``
 - Other custom functions
 
-*Note:* Other elementary functions such as **sum**, **difference**, **product**, and **division** can also be performed, which has been left for the user (will be added as custom functions).
+*Note:* Other elementary functions such as **sum**, **difference**, **product**, and **division** can also be performed, which will be added as custom functions in a future release.
 
 ``aggregate``: If the transformation is to be performed after calculating the summary stats, then a necessary aggregation method can be specified.
+
 *Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``.
 
 ``write_file``: Specify whether to write the transformation as a file. *Possible values:* ``yes``, ``no``.
@@ -340,14 +395,14 @@ A particular *config_transform.yaml* file may, therefore, look as follows::
         variables:
             var1: total_credit
             var2: equity
-        transform_function: q_o_q
+        transform_function: q_o_q_q
         aggregate: mean
         new_variables:
-            var1: total_credit_q_o_q
-            var2: equity_q_o_q
+            var1: total_credit_q_o_q_q
+            var2: equity_q_o_q_q
         write_file: yes
-        output_file_name: 'sents.h5'
-        hdf_groupname: 'total_credit_ratio'
+        output_file_name: 'transformed.h5'
+        hdf_groupname: 'quarterly_growth_rates'
 
 
 
