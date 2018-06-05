@@ -12,7 +12,7 @@ class A:
 
 class M:
     # Types of statistical summary
-    mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum, full = range(8)
+    mean, median, upper_percentile, lower_percentile, custom_quantile, minimum, maximum, full = range(8)
     # 0, 1, 2, 3, 4, 5
 
 
@@ -294,10 +294,10 @@ class Plot_configuration():
             return self.__param[key]['normed']
         return self.__default_plot_parameters.__dict__['normed']
 
-    def fill(self, key):
-        if 'fill' in self.__param[key].keys():
-            return self.__param[key]['fill']
-        return self.__default_plot_parameters.__dict__['fill']
+    def fill_between(self, key):
+        if 'fill_between' in self.__param[key].keys():
+            return self.__param[key]['fill_between']
+        return self.__default_plot_parameters.__dict__['fill_between']
 
     def fillcolor(self, key):
         if 'fillcolor' in self.__param[key].keys():
@@ -338,7 +338,7 @@ class Figure_default_parameters(object):
         self.histtype = 'bar'
         self.stacked = False
         self.normed = 1
-        self.fill = False
+        self.fill_between = False
         self.fillcolor = 'black'
         self.greyscale = False
         self.number_bars = 5

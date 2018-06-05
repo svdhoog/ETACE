@@ -17,7 +17,7 @@ plot2:
     yaxis_label: price
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: no
     fillcolor: red
 
 plot3:
@@ -29,7 +29,7 @@ plot3:
     y-axis label: price
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: darkgreen
 
 plot4:
@@ -87,7 +87,8 @@ plot9:
      number_bins: 50
      histtype: bar
      plot_legend: yes
-     fill: yes
+     fill_between: yes
+     #fill: yes
      stacked: False
      legend_location: best
      xaxis_label: xlabel
@@ -100,7 +101,8 @@ plot10:
      number_bins: 50
      histtype: bar
      plot_legend: yes
-     fill: yes
+     #fill: yes
+     fill_between: yes
      stacked: False
      legend_location: best
      xaxis_label: xlabel
@@ -113,7 +115,8 @@ plot11:
      number_bins: 50
      histtype: bar
      plot_legend: yes
-     fill: yes
+     #fill: yes
+     fill_between: yes
      stacked: False
      legend_location: best
      xaxis_label: xlabel
@@ -126,7 +129,8 @@ plot12:
      number_bins: 50
      histtype: step
      plot_legend: yes
-     fill: no
+     #fill: no
+     fill_between: no
      stacked: False
      legend_location: best
      xaxis_label: xlabel

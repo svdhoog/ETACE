@@ -153,7 +153,9 @@ class Timeseries(A):
                         clr = next(colors)
                         self.plot_line(ax, x, y1[r], legend_label[0]+'-'+str(r), clr)
                         self.plot_line(ax, x, y2[r], legend_label[1]+'-'+str(r), clr)
-                        plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
+
+                        if self.__P.fill_between(self.idx):
+                            plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
 
 
                     plot_name = self.__P.plot_name(self.idx)
@@ -256,7 +258,8 @@ class Timeseries(A):
                         clr = next(colors)
                         self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r), clr)
                         self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r), clr)
-                        plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
+                        if self.__P.fill_between(self.idx):
+                            plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
                         plot_name = self.__P.plot_name(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                         file_count = file_count + 1
@@ -319,7 +322,7 @@ class Histogram():
             le_label = label
         else:
             le_label = self.__P.legend_label(self.idx)
-        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.norm(self.idx), fill=self.__P.fill(self.idx), color=colors, label=le_label)
+        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.norm(self.idx), fill=self.__P.fill_between(self.idx), color=colors, label=le_label)
         if self.__P.legend(self.idx) is True:
             plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
         if self.__P.plot_title(self.idx) is not None:
@@ -816,8 +819,8 @@ class Boxplot(A):
         #print s.mean().values
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
-        box_df['upper_quartile'] = s.upper_quartile()
-        box_df['lower_quartile'] = s.lower_quartile()
+        box_df['upper_percentile'] = s.upper_percentile()
+        box_df['lower_percentile'] = s.lower_percentile()
         box_df['max'] = s.maximum()
         box_df['min'] = s.minimum()
         return box_df

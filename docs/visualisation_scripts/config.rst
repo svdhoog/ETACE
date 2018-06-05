@@ -16,7 +16,7 @@ config.yaml
 ::
 
   i/o:
-    # set up the name of the root folder from repository    
+    # set up the name of the root folder from repository
     repo_name: 'FLAViz'
 
     # for absolute input paths use:
@@ -31,7 +31,7 @@ config.yaml
 
     # for relative output paths use:
     output_path: 'results'
-    
+
     input_files:
         CentralBank: CentralBank.h5
         Eurostat: Eurostat.h5
@@ -65,11 +65,11 @@ The type of analysis determines how the data set is being grouped using the ``gr
 As an example, the relevant code for taking the mean is (see ``summarystats.py``):
 
         agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).mean()
-        
+
         multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).mean()
-        
+
         multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).mean()
-        
+
         multiple_set_analysis = lambda: self.__data.groupby(level=['major']).mean()
 
 *NOTE:* the major axis are the iterations, the minor axis are the agent instances.
@@ -190,9 +190,9 @@ Example::
 
 * ``custom_quantile``: this allows to select an upper and a lower quantile, see below.
 
-* ``upper_quartile``: returns the 75th percentile of the data set
+* ``upper_percentile``: returns the 75th percentile of the data set
 
-* ``lower_quartile``: returns the 25th percentile of the data set
+* ``lower_percentile``: returns the 25th percentile of the data set
 
 * ``maximum``: returns maximum value of the data set
 
@@ -200,6 +200,7 @@ Example::
 
 * ``full``: returns the full data set as an ensemble distribution.
 
+..
 * ``no``, ``none``: any non-existent keyword can be used if no summary of the data set is needed; these will be ignored by the code.
 
 Example::
@@ -216,8 +217,8 @@ Example::
         timeseries:
             summary: custom_quantile
             quantile_values:
-               lower_quantile : 0.20
-               upper_quantile : 0.80
+               lower_percentile : 0.20
+               upper_percentile : 0.80
 
 A typical main configuration file may look as follows::
 
@@ -235,7 +236,7 @@ A typical main configuration file may look as follows::
             CentralBank: CentralBank.h5 # please name the key as the agent name
             Eurostat: Eurostat.h5
             Firm: Firm.h5
-            
+
     plot1:
         timeseries:
             agent: Firm
@@ -260,14 +261,14 @@ A typical main configuration file may look as follows::
             minor: [range,[1,80]]
             summary: custom_quantile
             quantile_values:
-               lower_quantile : 0.20
-               upper_quantile : 0.80
+               lower_percentile : 0.20
+               upper_percentile : 0.80
 
 plot_config.yaml
 ~~~~~~~~~
 
 The *plot_config.yaml* file contains all the necessary configuration options for a plot. Whenever a plot is specified on the *config.yaml* file, the *plot_config.yaml* file is read for the necessary specifications of the plot. As such, some of the parameters from the *plot_config.yaml* file is explained below.
-All options can also be found on the matplotlib website 
+All options can also be found on the matplotlib website
 https://matplotlib.org/api/_as_gen/matplotlib.pyplot.plot.html
 
 **Plot-key( i.e.** ``plot1`` **):** This string should be the same as the Plot-key in the *config.yaml* file, to make sure
@@ -316,12 +317,12 @@ A typical *plot_config.yaml* file might look like this::
         yaxis_label: price
         linestyle: solid
         marker: None
-        fill_between_quartiles: yes
+        fill_between: yes
         fillcolor: red
 
 If an option is not specified, then the default settings are::
 
-    plot_legend = 'no'    
+    plot_legend = 'no'
     legend_label = None
     legend_location = 'best'
     plot_type = None
@@ -341,7 +342,7 @@ If an option is not specified, then the default settings are::
     histtype = 'bar'
     stacked = False
     normed = 1
-    fill = False
+    fill_between = False
     fillcolor = 'black'
     greyscale = False
     number_bars = 5
@@ -380,7 +381,7 @@ the input of multiple variables for any agent type.
 
 ``aggregate``: If the transformation is to be performed after calculating the summary stats, then a necessary aggregation method can be specified.
 
-*Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``.
+*Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_percentile``, ``lower_percentile``.
 
 ``write_file``: Specify whether to write the transformation as a file. *Possible values:* ``yes``, ``no``.
 
