@@ -200,8 +200,8 @@ Example::
 
 * ``full``: returns the full data set as an ensemble distribution.
 
-..
-* ``no``, ``none``: any non-existent keyword can be used if no summary of the data set is needed; these will be ignored by the code.
+
+.. * ``no``, ``none``: any non-existent keyword can be used if no summary of the data set is needed; these will be ignored by the code.
 
 Example::
 
