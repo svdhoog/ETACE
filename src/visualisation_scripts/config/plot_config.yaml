@@ -1,6 +1,6 @@
-plot1:
+plot0:
     number_plots: one
-    plot_name: p1_one_set_multiple_runs_timeseries.png
+    plot_name: p0_one_set_one_run_timeseries.png
     plot_legend: yes
     legend_location: best
     xaxis_label: Time
@@ -8,25 +8,137 @@ plot1:
     linestyle: solid
     marker: None
 
-plot2:
+plot01:
     number_plots: one
-    plot_name: p2_one_set_multiple_runs_ts_quantile.png
+    plot_name: p01_one_set_multiple_runs_timeseries.png
     plot_legend: yes
     legend_location: best
     xaxis_label: Time
     yaxis_label: price
+    linestyle: solid
+    marker: None
+
+plot02:
+    number_plots: one
+    plot_name: p02_multi_set_multiple_runs_timeseries.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+
+plot1:
+    number_plots: one
+    plot_name: p1_one_set_one_run_timeseries.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+
+plot11:
+    number_plots: one
+    plot_name: p11_one_set_multiple_runs_timeseries.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+
+plot12:
+    number_plots: one
+    plot_name: p12_multi_set_multiple_runs_timeseries.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: price
+    linestyle: solid
+    marker: None
+
+plot20:
+    number_plots: one
+    plot_name: p2_one_set_one_runs_2_vars_ts_quantile.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
     linestyle: solid
     marker: None
     fill_between_quartiles: yes
     fillcolor: red
 
-plot3:
+    
+plot21:
     number_plots: one
-    plot_name: p3_ts_multibatch_analysis.png
+    plot_name: p21_one_set_one_runs_1_var_ts_quantile.png
     plot_legend: yes
     legend_location: best
-    x-axis label: Time
-    y-axis label: price
+    xaxis_label: Time
+    yaxis_label: y(t)
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: red
+
+plot22:
+    number_plots: one
+    plot_name: p22_one_set_multiple_runs_ts_quantile.png
+    plot_legend: no
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: red
+
+plot23:
+    number_plots: one
+    plot_name: p23_multi_set_multiple_runs_ts_quantile.png
+    plot_legend: no
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: red
+    
+    
+plot3:
+    number_plots: one
+    plot_name: p3_ts_multibatch_analysis_one_plot.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: darkgreen
+
+plot30:
+    number_plots: many
+    plot_name: p30_ts_multibatch_analysis_many_plots.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
+    linestyle: solid
+    marker: None
+    fill_between_quartiles: yes
+    fillcolor: darkgreen
+
+plot31:
+    number_plots: one
+    plot_name: p31_ts_multiset_analysis.png
+    plot_legend: yes
+    legend_location: best
+    xaxis_label: Time
+    yaxis_label: y(t)
     linestyle: solid
     marker: None
     fill_between_quartiles: yes
@@ -34,15 +146,26 @@ plot3:
 
 plot4:
    number_plots: one
-   plot_name: p4_one_set_one_run_agentanalysis_timeseries.png
+   plot_name: p4_ts_agent_analysis_one_set_one_run.png
+   plot_legend: yes
+   legend_location: best
+   xaxis_label: Time
+   yaxis_label: price
+   linestyle: solid
+   marker: None
+   greyscale: False
+
+plot41:
+   number_plots: one
+   plot_name: p41_ts_agent_analysis_multi_set_multi_run.png
    plot_legend: no
    legend_location: best
    xaxis_label: Time
    yaxis_label: price
    linestyle: solid
    marker: None
-   greyscale: True
-
+   greyscale: False
+   
 plot5:
     number_plots: one
     plot_name: p5_one_set_one_run_bp_price.png
@@ -52,7 +175,7 @@ plot5:
     xaxis_label: Time
     yaxis_label: Distribution over price
     number_bars: 5
-    greyscale: False
+    greyscale: True
 
 plot6:
     number_plots: one
