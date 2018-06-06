@@ -819,8 +819,8 @@ class Boxplot(A):
         #print s.mean().values
         box_df['mean'] = s.mean()
         box_df['median'] = s.median()
-        box_df['upper_percentile'] = s.upper_percentile()
-        box_df['lower_percentile'] = s.lower_percentile()
+        box_df['third_quartile'] = s.third_quartile()
+        box_df['first_quartile'] = s.first_quartile()
         box_df['max'] = s.maximum()
         box_df['min'] = s.minimum()
         return box_df

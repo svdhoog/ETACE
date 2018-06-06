@@ -190,9 +190,9 @@ Example::
 
 * ``custom_quantile``: this allows to select an upper and a lower quantile, see below.
 
-* ``upper_percentile``: returns the 75th percentile of the data set
+* ``third_quartile``: returns the 75th percentile of the data set
 
-* ``lower_percentile``: returns the 25th percentile of the data set
+* ``first_quartile``: returns the 25th percentile of the data set
 
 * ``maximum``: returns maximum value of the data set
 
@@ -381,7 +381,7 @@ the input of multiple variables for any agent type.
 
 ``aggregate``: If the transformation is to be performed after calculating the summary stats, then a necessary aggregation method can be specified.
 
-*Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_percentile``, ``lower_percentile``.
+*Possible values:* ``mean``, ``median``, ``maximum``, ``minimum``, ``custom_quantile``, ``upper_quartile``, ``lower_quartile``.
 
 ``write_file``: Specify whether to write the transformation as a file. *Possible values:* ``yes``, ``no``.
 

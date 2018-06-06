@@ -12,7 +12,7 @@ class A:
 
 class M:
     # Types of statistical summary
-    mean, median, upper_percentile, lower_percentile, custom_quantile, minimum, maximum, full = range(8)
+    mean, median, upper_quartile, lower_quartile, custom_quantile, minimum, maximum, full = range(8)
     # 0, 1, 2, 3, 4, 5
 
 
