@@ -8,13 +8,13 @@
 
 -------------------------------------------------------------------------------
 
-The Flexible Large-scale Agent Visualization Library (FLAViz) is a data
-analysis and visualization library developed for multi-agent / agent-based
-simulations generated using the FLAME framework.
+The Flexible Large-scale Agent Visualization Library (FLAViz) is a data analysis and agent visualization library developed for agent-based simulation models created using the FLAME simulation environment.
 
-Agent-based simulation models typically generate data that spans multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, multiple agent instances per type, many variables per agent, and time periods (iterations).
+Agent-based simulations typically generate data spanning multiple dimensions, e.g. parameter sets, Monte Carlo replication runs, different agent types, many agent instances per type, many variables per agent, and the time dimension.
 
-To deal with such a large heterogeneity in the data dimensions, the data has to be stored as organized data sets, to allow for proper data aggregation, data filtering, selection, slicing etc. The software package FLAViz can be used to filter, transform, and visualize time series data that has been stored using multiple hierarchical levels in the HDF5 file format. Various kinds of plots can be specified, e.g., time series, box plots, scatter plots, histograms, and delay plots.
+To deal with such a large heterogeneity and variety of data, it should be stored as an organized, high-dimensional data set, to allow for proper data aggregation, filtering, selection, slicing etc.
+
+FLAViz builds on Python pandas and matplotlib, and can be used to filter, transform, and visualize time series data that is stored using hierarchical levels in the HDF5 file format. Various plotting styles can be specified, e.g., time series, box plots, scatter plots, histograms, and delay- or phase plots.
 
 -------------------------------------------------------------------------------
 Features
@@ -25,13 +25,23 @@ v1.0 - First release
  * data module using Python pandas
  * visualization module based on matplotlib
 
+
+Getting started
+--
+
+For more information on how to use the library, view the [manual](https://github.com/svdhoog/FLAViz/blob/master/docs/manual/tex/FLAViz_Manual.pdf). 
+
+Many example plots are [here](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
+ 
+To get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing in the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
+
+
 Requirements:
 --
 
 You will need to satisfy the following dependencies.
 
-1. FLAViz visualization scripts:
-("recommended version", "minimal version")
+For the FLAViz visualization scripts:
 
 * python3 (>= 3.4) Python3 core libraries
 * python3-h5py (>= 2.2.1) -- needed for HDF5 files to be re-writable, appendable
@@ -45,8 +55,7 @@ You will need to satisfy the following dependencies.
 * python3-yaml (>= 3.12)
 * python3-lxml (4.2.1 or >= 3.3.3)
 
-2. Data conversion scripts:
-("recommended version", "minimal version")
+For the data conversion scripts:
 
 * sqlite3 (>= 3.8.2)
 * python3-pandas (0.22.0 or >= 0.19.0)
@@ -61,7 +70,7 @@ To see which versions of the Python3 packages you have installed, run:
 $ ls /usr/local/lib/python3.4/dist-packages -lh
 ```
 
-NOTE:
+Notes:
 --
 On some platforms the package manager will install older versions of the above packages.
 For example, in Linux Mint 17 (Quiana), the version of matplotlib that is installed using apt-get is 1.19 instead of the newer version 2.2.2 (which is required).
@@ -84,20 +93,12 @@ Alternatively, you can us pip3 directly:
 $ pip3 install matplotlib numpy pandas scipy
 ```
 
-Getting started
---
-
-For more information on how to use the library, view the [manual](https://github.com/svdhoog/FLAViz/blob/master/docs/manual/tex/FLAViz_Manual.pdf). 
-
-To get a flavour of what the library can do, see the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
-
-Or, to get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing of the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/tutorial.rst).
-
 Running the main module
 --
 
 The main Python script has a single argument, which is the path to the folder containing configuration files:
 To start the library, you should run it from the root FLAViz folder:
+
 ```
 $ python3 /src/visualisation_scripts/main.py -p /src/visualisation_scripts/config
 ```
@@ -110,4 +111,4 @@ where `config` is the path to the config folder containing the configuration fil
 For more information please use the `docs/` folder.
 
 ------------------------------------
-2018-05-25 11:00 svdh
+2018-05-29 11:00 svdh
