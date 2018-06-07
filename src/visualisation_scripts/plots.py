@@ -311,6 +311,8 @@ class Histogram():
 
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
+        self.agent = main_param['agent']
+        self.variables = [item for sublist in (list(main_param['variables'].values())) for item in sublist]
         self.__data = data
         self.outpath = outpath + '/histogram'
         self.dir_check(self.outpath)
@@ -393,8 +395,11 @@ class Histogram():
                         for r in range(0, len(y)):
                             clr = next(colors)
                             self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx))
-                plot_name = self.__P.plot_name(self.idx)
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+                #plot_name = self.__P.plot_name(self.idx)
+                #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                plot_format = self.__P.plot_format(self.idx)
+                plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
 
             else:
@@ -425,8 +430,11 @@ class Histogram():
                             self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
                             clr = next(colors)
                             self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx))
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
                     else:
                         y1 = []
@@ -448,8 +456,11 @@ class Histogram():
                             clr = next(colors)
                             self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
 
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
                 else:  # for the whole ensemble of data, if analysis is not agent level
@@ -472,8 +483,11 @@ class Histogram():
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
                         clr = next(colors)
                         self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx))
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
                     else:
                         col_A = dframe[dframe.columns[0]]
@@ -487,8 +501,11 @@ class Histogram():
 
                         clr = next(colors)
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
             file_count = file_count + 1
 
