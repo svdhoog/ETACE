@@ -554,8 +554,11 @@ class Histogram():
                             y = np.array(D[r:r+self.__N])
                             clr = next(colors)
                             self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx))
-                            plot_name = self.__P.plot_name(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            #plot_name = self.__P.plot_name(self.idx)
+                            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                            plot_format = self.__P.plot_format(self.idx)
+                            plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
                             count = count + 1
             else:
@@ -585,8 +588,13 @@ class Histogram():
                         self.plot_histogram(ax, y1[r], legend_label[0] + "_run_" + str(r), clr, self.__P.bins(self.idx))
                         clr = next(colors)
                         self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx))
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+
+
                         file_count = file_count + 1
                         plt.close()
                 else:
@@ -618,6 +626,8 @@ class Scatterplot(A):
 
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
+        self.agent = main_param['agent']
+        self.variables = [item for sublist in (list(main_param['variables'].values())) for item in sublist]
         self.__data = data
         self.__P = plt_config
         self.outpath = outpath + '/scatterplot'

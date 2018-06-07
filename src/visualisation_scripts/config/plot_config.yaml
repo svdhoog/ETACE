@@ -44,16 +44,16 @@
 #     marker: None
 #     greyscale: True
 
-plot5:
-     number_plots: one
-     plot_name: p5_one_set_one_run_bp_price.png
-     plot_legend: yes
-     legend_label: (Agent = Firm, var = Price)
-     legend_location: best
-     xaxis_label: Time
-     yaxis_label: Distribution over price
-     number_bars: 5
-     greyscale: False
+# plot5:
+#      number_plots: one
+#      plot_name: p5_one_set_one_run_bp_price.png
+#      plot_legend: yes
+#      legend_label: (Agent = Firm, var = Price)
+#      legend_location: best
+#      xaxis_label: Time
+#      yaxis_label: Distribution over price
+#      number_bars: 5
+#      greyscale: False
 
 # plot6:
 #      number_plots: one
@@ -81,58 +81,58 @@ plot5:
 #      linestyle: solid
 #      marker: o
 #
-# plot9:
-#      number_plots: one
-#      plot_name: p9_one_set_one_run_hg_price.png
-#      plot_title: (Agent = Firm, var = Price)
-#      number_bins: 50
-#      histtype: bar
-#      plot_legend: yes
-#      fill_between: yes
-#      #fill: yes
-#      stacked: False
-#      legend_location: best
-#      xaxis_label: xlabel
-#      yaxis_label: ylabel
-#
-# plot10:
-#      number_plots: one
-#      plot_name: p10_one_set_multiple_runs_hg_price.png
-#      plot_title: (Agent = Firm, var = Price)
-#      number_bins: 50
-#      histtype: bar
-#      plot_legend: yes
-#      #fill: yes
-#      fill_between: yes
-#      stacked: False
-#      legend_location: best
-#      xaxis_label: xlabel
-#      yaxis_label: ylabel
-#
-# plot11:
-#      number_plots: one
-#      plot_name: p11_one_set_multiple_runs_hg_price.png
-#      plot_title: (Agent = Firm, var = Price)
-#      number_bins: 50
-#      histtype: bar
-#      plot_legend: yes
-#      #fill: yes
-#      fill_between: yes
-#      stacked: False
-#      legend_location: best
-#      xaxis_label: xlabel
-#      yaxis_label: ylabel
-#
-# plot12:
-#      number_plots: one
-#      plot_name: p12_two_sets_multiple_runs_hg_price.png
-#      plot_title: (Agent = Firm, var = Price)
-#      number_bins: 50
-#      histtype: step
-#      plot_legend: yes
-#      #fill: no
-#      fill_between: no
-#      stacked: False
-#      legend_location: best
-#      xaxis_label: xlabel
-#      yaxis_label: ylabel
+plot9:
+     number_plots: one
+     plot_name: p9_one_set_one_run_hg_price.png
+     plot_title: (Agent = Firm, var = Price)
+     number_bins: 50
+     histtype: bar
+     plot_legend: yes
+     fill_between: yes
+     #fill: yes
+     stacked: False
+     legend_location: best
+     xaxis_label: xlabel
+     yaxis_label: ylabel
+
+plot10:
+     number_plots: one
+     plot_name: p10_one_set_multiple_runs_hg_price.png
+     plot_title: (Agent = Firm, var = Price)
+     number_bins: 50
+     histtype: bar
+     plot_legend: yes
+     #fill: yes
+     fill_between: yes
+     stacked: False
+     legend_location: best
+     xaxis_label: xlabel
+     yaxis_label: ylabel
+
+plot11:
+     number_plots: one
+     plot_name: p11_one_set_multiple_runs_hg_price.png
+     plot_title: (Agent = Firm, var = Price)
+     number_bins: 50
+     histtype: bar
+     plot_legend: yes
+     #fill: yes
+     fill_between: yes
+     stacked: False
+     legend_location: best
+     xaxis_label: xlabel
+     yaxis_label: ylabel
+
+plot12:
+     number_plots: one
+     plot_name: p12_two_sets_multiple_runs_hg_price.png
+     plot_title: (Agent = Firm, var = Price)
+     number_bins: 50
+     histtype: step
+     plot_legend: yes
+     #fill: no
+     fill_between: no
+     stacked: False
+     legend_location: best
+     xaxis_label: xlabel
+     yaxis_label: ylabel
