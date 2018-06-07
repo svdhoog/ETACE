@@ -234,11 +234,6 @@ class Plot_configuration():
             return self.__param[key]['plot_title']
         return self.__default_plot_parameters.__dict__['plot_title']
 
-    def plot_name(self, key):
-        if 'plot_name' in self.__param[key].keys():
-            return self.__param[key]['plot_name']
-        return self.__default_plot_parameters.__dict__['plot_name']
-
     def plot_format(self, key):
         if 'plot_format' in self.__param[key].keys():
             return self.__param[key]['plot_format']
@@ -327,7 +322,6 @@ class Figure_default_parameters(object):
         self.legend_location = 'best'
         self.plot_type = None
         self.number_plots = 'many'
-        self.plot_name = 'default_fig.png'
         self.plot_format = 'png'
         self.l_lim = None
         self.u_lim = None
