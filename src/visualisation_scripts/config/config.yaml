@@ -1,7 +1,7 @@
 i/o:
     # set up the name of the root folder from repository
     #repo_name: 'FLAViz'
-    repo_name: 'FLAViz'
+    repo_name: 'ETACE'
 
     # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
     input_path: 'data/visualisation'
@@ -85,95 +85,96 @@ plot4:
         major: [range,[6020,12500,20]]
         minor: [range,[1,20]]
         summary: mean
-plot5:
-    boxplot:
-        agent: Firm
-        analysis: multiple_set
-        variables:
-            var1: [price]
-        set: [13]
-        run: [1]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: full
-plot6:
-  scatterplot:
-        agent: Firm
-        analysis: multiple_batch
-        variables:
-            var1: [price]
-            var2: [output]
-        delay: no
-        set: [13]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: mean
-plot7:
-    scatterplot:
-        agent: Firm
-        analysis: agent
-        variables:
-            var1: [price]
-        delay: yes
-        set: [13]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: full
-plot8:
-    scatterplot:
-        agent: Firm
-        analysis: multiple_batch
-        variables:
-            var1: [price]
-        delay: yes
-        set: [13]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: mean
-plot9:
-    histogram:
-        agent: Firm
-        analysis: multiple_run
-        variables:
-            var1: [price]
-        set: [10]
-        run: [1]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: mean
-plot10:
-    histogram:
-        agent: Firm
-        analysis: multiple_batch
-        variables:
-            var1: [price]
-        set: [10]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: mean    # Note: the summary is mean value, over each level, gives hist of distribution of means
-plot11:
-    histogram:
-        agent: Firm
-        analysis: multiple_batch
-        variables:
-            var1: [price]
-        set: [10]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: full  # Note: here the histogram is over the entire distribution
-plot12:
-    histogram:
-        agent: Firm
-        analysis: multiple_batch
-        variables:
-            var1: [price]
-        set: [10, 13]
-        run: [range,[1,20]]
-        major: [range,[6020,12500,20]]
-        minor: [range,[1,80]]
-        summary: mean
+
+# plot5:
+#     boxplot:
+#         agent: Firm
+#         analysis: multiple_set
+#         variables:
+#             var1: [price]
+#         set: [13]
+#         run: [1]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: full
+# plot6:
+#   scatterplot:
+#         agent: Firm
+#         analysis: multiple_batch
+#         variables:
+#             var1: [price]
+#             var2: [output]
+#         delay: no
+#         set: [13]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: mean
+# plot7:
+#     scatterplot:
+#         agent: Firm
+#         analysis: agent
+#         variables:
+#             var1: [price]
+#         delay: yes
+#         set: [13]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: full
+# plot8:
+#     scatterplot:
+#         agent: Firm
+#         analysis: multiple_batch
+#         variables:
+#             var1: [price]
+#         delay: yes
+#         set: [13]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: mean
+# plot9:
+#     histogram:
+#         agent: Firm
+#         analysis: multiple_run
+#         variables:
+#             var1: [price]
+#         set: [10]
+#         run: [1]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: mean
+# plot10:
+#     histogram:
+#         agent: Firm
+#         analysis: multiple_batch
+#         variables:
+#             var1: [price]
+#         set: [10]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: mean    # Note: the summary is mean value, over each level, gives hist of distribution of means
+# plot11:
+#     histogram:
+#         agent: Firm
+#         analysis: multiple_batch
+#         variables:
+#             var1: [price]
+#         set: [10]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: full  # Note: here the histogram is over the entire distribution
+# plot12:
+#     histogram:
+#         agent: Firm
+#         analysis: multiple_batch
+#         variables:
+#             var1: [price]
+#         set: [10, 13]
+#         run: [range,[1,20]]
+#         major: [range,[6020,12500,20]]
+#         minor: [range,[1,80]]
+#         summary: mean

@@ -42,6 +42,8 @@ class Timeseries(A):
 
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
+        self.agent = main_param['agent']
+        self.variables = [item for sublist in (list(main_param['variables'].values())) for item in sublist]
         self.__data = data
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
@@ -49,7 +51,6 @@ class Timeseries(A):
         self.summary = main_param['summary']
         self.outpath = outpath + '/timeseries'
         self.dir_check(self.outpath)
-        # self.ticklabels = main_param['major']  # only needed for tick label, which is temp atm
 
     def map_analysis(self, val):
         analysis_values = {'agent': A.agent, 'multiple_run': A.multiple_run, 'multiple_batch': A.multiple_batch, 'multiple_set': A.multiple_set}
@@ -120,8 +121,11 @@ class Timeseries(A):
                         for r in range(0, len(y)):
                             clr = next(colors)
                             self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)
-                plot_name = self.__P.plot_name(self.idx)
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+
+                #plot_name = self.__P.plot_name(self.idx)
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                plot_format = self.__P.plot_format(self.idx)
+                plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
 
             else:
@@ -142,8 +146,7 @@ class Timeseries(A):
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    #print("Second a: ", a)
-                    #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
+
                     if self.__P.greyscale(self.idx):
                         colors = iter(cm.gray(a))
                     else:
@@ -158,8 +161,11 @@ class Timeseries(A):
                             plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
 
 
-                    plot_name = self.__P.plot_name(self.idx)
-                    plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    #plot_name = self.__P.plot_name(self.idx)
+                    #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    plot_format = self.__P.plot_format(self.idx)
+                    plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
                 else:
                     y1 = []
@@ -172,8 +178,7 @@ class Timeseries(A):
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
-                    #print("Third a: ", a)
-                    #print(np.random.uniform(0, 1, size = len(dframe)//self.__N))
+
                     if self.__P.greyscale(self.idx):
                         colors = iter(cm.gray(a))
                     else:
@@ -183,8 +188,12 @@ class Timeseries(A):
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
                         self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr)
-                    plot_name = self.__P.plot_name(self.idx)
-                    plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
+                    #plot_name = self.__P.plot_name(self.idx)
+                    #plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    plot_format = self.__P.plot_format(self.idx)
+                    plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
+
                     plt.close()
             file_count = file_count + 1
 
@@ -227,8 +236,11 @@ class Timeseries(A):
                             x = np.arange(1, self.__N+1)
                             clr = next(colors)
                             self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr)
-                            plot_name = self.__P.plot_name(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            #plot_name = self.__P.plot_name(self.idx)
+                            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                            plot_format = self.__P.plot_format(self.idx)
+                            plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
                             count = count + 1
             else:
@@ -260,10 +272,13 @@ class Timeseries(A):
                         self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r), clr)
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        file_count = file_count + 1
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
+                        file_count = file_count + 1
                 else:
                     y =[]
                     for i in range(0,len(dframe),self.__N):
@@ -284,8 +299,11 @@ class Timeseries(A):
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
                         self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr)
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
+                        #plot_name = self.__P.plot_name(self.idx)
+                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' +  str(self.variables[file_count])
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(s) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
 
