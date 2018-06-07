@@ -56,7 +56,7 @@
 #      greyscale: False
 
 plot6:
-     number_plots: one
+     number_plots: many
      plot_name: p6_one_set_multiple_runs_sp_price_output.png
      plot_legend: yes
      legend_location: best
@@ -65,7 +65,7 @@ plot6:
      marker: +
 
 plot7:
-     number_plots: one
+     number_plots: many
      plot_name: p7_one_set_agent_sp_price_delay.png
      plot_legend: no
      legend_location: best
@@ -73,7 +73,7 @@ plot7:
      marker: +
 
 plot8:
-     number_plots: one
+     number_plots: many
      plot_name: p8_one_set_multiple_runs_sp_price_delay.png
      plot_legend: yes
      legend_location: best
