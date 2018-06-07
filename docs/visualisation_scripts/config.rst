@@ -277,7 +277,7 @@ the correct parameters are mapped to the respective plot.
 ``number_plots``: Specifies how many plots will be output per variable for a particular agent type.
 *Possible values:* ``one``, ``many``.
 
-``plot_name``: Specify filename for the plot.
+``plot_format``: Specify filetype for the plot [png|pdf].
 
 *Note:* In case of multiple plots, a numerical suffix (*in increasing order*) is added after the specified file name.
 
@@ -299,7 +299,7 @@ A typical *plot_config.yaml* file might look like this::
 
     plot1:
         number_plots: one
-        plot_name: p1_one_set_multiple_runs_timeseries.png
+        plot_format: png
         plot_legend: yes
         legend_location: best
         xaxis_label: Time
@@ -310,7 +310,7 @@ A typical *plot_config.yaml* file might look like this::
 
     plot2:
         number_plots: one
-        plot_name: p2_one_set_multiple_runs_ts_quantile.png
+        plot_format: pdf
         plot_legend: yes
         legend_location: best
         xaxis_label: Time
@@ -327,7 +327,7 @@ If an option is not specified, then the default settings are::
     legend_location = 'best'
     plot_type = None
     number_plots = 'one'
-    plot_name = 'default_fig.png'
+    plot_format = 'png'
     l_lim = None
     u_lim = None
     linestyle = 'solid'

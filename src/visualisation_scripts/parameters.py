@@ -329,7 +329,6 @@ class Figure_default_parameters(object):
         self.marker = 4
         self.markerfacecolor = None
         self.markersize = None
-        # self.label = None
         self.facecolors = None
         self.plot_title = None
         self.xaxis_label = None
@@ -342,7 +341,6 @@ class Figure_default_parameters(object):
         self.fillcolor = 'black'
         self.greyscale = False
         self.number_bars = 5
-
 
 
 if __name__ == "__main__":

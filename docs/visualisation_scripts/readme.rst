@@ -64,7 +64,7 @@ plot_config.yaml::
 
     plot1:
         number_plots: one
-        plot_name: p1_one_set_multiple_runs_timeseries.png
+        plot_format: png
         plot_legend: yes
         legend_location: best
         xaxis_label: Time
@@ -104,7 +104,7 @@ plot_config.yaml::
 
     plot2:
         number_plots: one
-        plot_name: p2_one_set_multiple_runs_ts_quantile.png
+        plot_format: png
         plot_legend: yes
         legend_location: best
         xaxis_label: Time
@@ -146,7 +146,6 @@ plot_config.yaml::
 
     plot3:
         number_plots: one
-        plot_name: p3_ts_multibatch_analysis.png
         plot_legend: yes
         legend_location: best
         x-axis label: Time
@@ -187,7 +186,6 @@ plot_config.yaml::
 
     plot4:
        number_plots: one
-       plot_name: p4_one_set_one_run_agentanalysis_timeseries.png
        plot_legend: no
        legend_location: best
        xaxis_label: Time
@@ -228,7 +226,6 @@ plot_config.yaml::
 
     plot5:
         number_plots: one
-        plot_name: p5_one_set_one_run_bp_price.png
         plot_legend: yes
         legend_label: (Agent = Firm, var = Price)
         legend_location: best
@@ -270,7 +267,6 @@ plot_config.yaml::
 
     plot6:
         number_plots: one
-        plot_name: p6_one_set_multiple_runs_sp_price_output.png
         plot_legend: yes
         legend_location: best
         legend_label: price vs. output
@@ -307,7 +303,6 @@ plot_config.yaml::
 
     plot7:
         number_plots: one
-        plot_name: p7_one_set_agent_sp_price_delay.png
         plot_legend: no
         legend_location: best
         legend_label: price delay vs. price
@@ -346,7 +341,6 @@ plot_config.yaml::
 
     plot8:
         number_plots: one
-        plot_name: p8_one_set_multiple_runs_sp_price_delay.png
         plot_legend: yes
         legend_location: best
         legend_label: price delay vs. price
@@ -385,7 +379,6 @@ plot_config.yaml::
 
     plot9:
         number_plots: one
-        plot_name: p9_one_set_one_run_hg_price.png
         plot_title: (Agent = Firm, var = Price)
         number_bins: 50
         histtype: bar
@@ -424,7 +417,6 @@ plot_config.yaml::
 
     plot10:
         number_plots: one
-        plot_name: p10_one_set_multiple_runs_hg_price.png
         plot_title: (Agent = Firm, var = Price)
         number_bins: 50
         histtype: bar
@@ -464,7 +456,6 @@ plot_config.yaml::
 
     plot11:
         number_plots: one
-        plot_name: p11_one_set_multiple_runs_hg_price.png
         plot_title: (Agent = Firm, var = Price)
         number_bins: 50
         histtype: bar
@@ -507,7 +498,6 @@ plot_config.yaml::
 
     plot12:
         number_plots: one
-        plot_name: p12_two_sets_multiple_runs_hg_price.png
         plot_title: (Agent = Firm, var = Price)
         number_bins: 50
         histtype: step
