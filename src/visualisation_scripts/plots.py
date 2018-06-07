@@ -312,7 +312,6 @@ class Histogram():
     def __init__(self, idx, data, plt_config, main_param, outpath):
         self.idx = idx
         self.agent = main_param['agent']
-        self.variables = [item for sublist in (list(main_param['variables'].values())) for item in sublist]
         self.__data = data
         self.outpath = outpath + '/histogram'
         self.dir_check(self.outpath)
@@ -397,7 +396,7 @@ class Histogram():
                             self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx))
                 #plot_name = self.__P.plot_name(self.idx)
                 #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -432,7 +431,7 @@ class Histogram():
                             self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -458,7 +457,7 @@ class Histogram():
 
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -485,7 +484,7 @@ class Histogram():
                         self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -503,7 +502,7 @@ class Histogram():
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -711,7 +710,7 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [inst'+str(m) + ' run' + str(r) + ']', legend_label[0], legend_label[1], clr )
                 #plot_name = self.__P.plot_name(self.idx)
                 #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -765,7 +764,7 @@ class Scatterplot(A):
                     self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -808,7 +807,7 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -837,7 +836,7 @@ class Scatterplot(A):
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_'+ str(r) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -846,8 +845,8 @@ class Scatterplot(A):
 
 class Boxplot(A):
     def __init__(self, idx, data, plt_config, main_param, outpath):
-
         self.idx = idx
+        self.agent = main_param['agent']
         self.__data = data
         self.__P = plt_config
         self.__main_param = main_param
@@ -938,8 +937,11 @@ class Boxplot(A):
             for r in range(0, len(D)//self.__N):
                 self.plot_boxplot(ax, y[r], self.__data.columns[col])
 
-            plot_name = self.__P.plot_name(self.idx)
-            plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
+            #plot_name = self.__P.plot_name(self.idx)
+            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
+            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+            plot_format = self.__P.plot_format(self.idx)
+            plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
             plt.close()
 
     def many_output(self):
@@ -958,6 +960,9 @@ class Boxplot(A):
             for s in range(0, len(D)//self.__N):
                 fig, ax = plt.subplots()
                 self.plot_boxplot(ax, y[s], self.__data.columns[col])
-                plot_name = self.__P.plot_name(self.idx)
-                plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
+                #plot_name = self.__P.plot_name(self.idx)
+                #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                plot_format = self.__P.plot_format(self.idx)
+                plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
