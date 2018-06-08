@@ -1,7 +1,6 @@
 i/o:
     # set up the name of the root folder from repository
-    #repo_name: 'FLAViz'
-    repo_name: 'ETACE'
+    repo_name: 'FLAViz'
 
     # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
     input_path: 'data/visualisation'
