@@ -112,7 +112,8 @@ if __name__ == "__main__":
     statusprint('\n- Total number of folders: '+ str(F)+'\n')
     for agentname in agentlist: # looping through each agent (memory conserving option)
         for i in range(N,len(dir_list)):
-            n = len(os.path.normpath(input_dbfolder)) + 2
+            # length of path until /last_folder
+            n = len(os.path.normpath(input_dbfolder))
             statusprint('- Processing files for agent-type: '+str(agentname)+'\n')
             statusprint('- Started processing folder: '+os.path.basename(os.path.abspath(dir_list[i])))
             if N == 1:
