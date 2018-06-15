@@ -149,7 +149,6 @@ if __name__ == "__main__":
             sets_runs = process_hdf_keys(key)  # get set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
             s = sets_runs[0]
             r = sets_runs[1]
-
             pnl = agentstore.select(key)  # open datapanel for particular set and run
             df = pnl.to_frame()  # convert panel to Dataframe
             # Add two columns for set and run into the dataframe for two added level of indexing

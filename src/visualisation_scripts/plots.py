@@ -123,7 +123,13 @@ class Timeseries(A):
                             self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)
 
                 #plot_name = self.__P.plot_name(self.idx)
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                if self.__P.plot_name(self.idx):
+                    if file_count == 0:
+                        plot_name = str(self.__P.plot_name(self.idx))
+                    else:
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                else:
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -160,10 +166,15 @@ class Timeseries(A):
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
 
-
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    if self.__P.plot_name(self.idx):
+                        if file_count == 0:
+                            plot_name = str(self.__P.plot_name(self.idx))
+                        else:
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                    else:
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -190,10 +201,15 @@ class Timeseries(A):
                         self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    if self.__P.plot_name(self.idx):
+                        if file_count == 0:
+                            plot_name = str(self.__P.plot_name(self.idx))
+                        else:
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                    else:
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
-
                     plt.close()
             file_count = file_count + 1
 
@@ -238,7 +254,13 @@ class Timeseries(A):
                             self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr)
                             #plot_name = self.__P.plot_name(self.idx)
                             #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                            if self.__P.plot_name(self.idx):
+                                if count == 0:
+                                    plot_name = str(self.__P.plot_name(self.idx))
+                                else:
+                                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count)
+                            else:
+                                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
@@ -274,7 +296,13 @@ class Timeseries(A):
                             plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                        if self.__P.plot_name(self.idx):
+                            if file_count == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -301,7 +329,13 @@ class Timeseries(A):
                         self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr)
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' +  str(self.variables[file_count])
+                        if self.__P.plot_name(self.idx):
+                            if s == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' +  str(self.variables[file_count])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(s) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -396,7 +430,13 @@ class Histogram():
                             self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx))
                 #plot_name = self.__P.plot_name(self.idx)
                 #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                if self.__P.plot_name(self.idx):
+                    if self.__data.columns[col] == 0:
+                        plot_name = str(self.__P.plot_name(self.idx))
+                    else:
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                else:
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -431,7 +471,13 @@ class Histogram():
                             self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        if self.__P.plot_name(self.idx):
+                            if self.__data.columns[col] == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -457,7 +503,13 @@ class Histogram():
 
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        if self.__P.plot_name(self.idx):
+                            if self.__data.columns[col] == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -484,7 +536,13 @@ class Histogram():
                         self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        if self.__P.plot_name(self.idx):
+                            if self.__data.columns[col] == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -502,7 +560,13 @@ class Histogram():
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        if self.__P.plot_name(self.idx):
+                            if self.__data.columns[col] == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -555,7 +619,13 @@ class Histogram():
                             self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx))
                             #plot_name = self.__P.plot_name(self.idx)
                             #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                            if self.__P.plot_name(self.idx):
+                                if count == 0:
+                                    plot_name = str(self.__P.plot_name(self.idx))
+                                else:
+                                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count)
+                            else:
+                                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
@@ -589,13 +659,18 @@ class Histogram():
                         self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx))
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        if self.__P.plot_name(self.idx):
+                            if file_count == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
-
+                        plt.close()
 
                         file_count = file_count + 1
-                        plt.close()
                 else:
                     y =[]
                     for i in range(0,len(dframe),self.__N):
@@ -616,8 +691,16 @@ class Histogram():
                         fig, ax = plt.subplots()
                         clr = next(colors)
                         self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx))
-                        plot_name = self.__P.plot_name(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
+
+                        if self.__P.plot_name(self.idx):
+                            if s == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count]) + str(s)
+                        plot_format = self.__P.plot_format(self.idx)
+                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
 
@@ -710,7 +793,13 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [inst'+str(m) + ' run' + str(r) + ']', legend_label[0], legend_label[1], clr )
                 #plot_name = self.__P.plot_name(self.idx)
                 #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                if self.__P.plot_name(self.idx):
+                    if file_count == 0:
+                        plot_name = str(self.__P.plot_name(self.idx))
+                    else:
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                else:
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -741,7 +830,13 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str("_".join(self.variables))
+                    if self.__P.plot_name(self.idx):
+                        if file_count == 0:
+                            plot_name = str(self.__P.plot_name(self.idx))
+                        else:
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                    else:
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str("_".join(self.variables))
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -764,7 +859,13 @@ class Scatterplot(A):
                     self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                    if self.__P.plot_name(self.idx):
+                        if self.__data.columns[col] == 0:
+                            plot_name = str(self.__P.plot_name(self.idx))
+                        else:
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                    else:
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -807,7 +908,13 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
                         #plot_name = self.__P.plot_name(self.idx)
                         #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + ".png", bbox_inches='tight')
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        if self.__P.plot_name(self.idx):
+                            if file_count == 0:
+                                plot_name = str(self.__P.plot_name(self.idx))
+                            else:
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        else:
+                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -836,7 +943,13 @@ class Scatterplot(A):
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)
                     #plot_name = self.__P.plot_name(self.idx)
                     #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_'+ str(r) + ".png", bbox_inches='tight')
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                    if self.__P.plot_name(self.idx):
+                        if self.__data.columns[col] == 0:
+                            plot_name = str(self.__P.plot_name(self.idx))
+                        else:
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                    else:
+                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -939,7 +1052,13 @@ class Boxplot(A):
 
             #plot_name = self.__P.plot_name(self.idx)
             #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
-            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+            if self.__P.plot_name(self.idx):
+                if self.__data.columns[col] == 0:
+                    plot_name = str(self.__P.plot_name(self.idx))
+                else:
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+            else:
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
             plot_format = self.__P.plot_format(self.idx)
             plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
             plt.close()
@@ -962,7 +1081,13 @@ class Boxplot(A):
                 self.plot_boxplot(ax, y[s], self.__data.columns[col])
                 #plot_name = self.__P.plot_name(self.idx)
                 #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                if self.__P.plot_name(self.idx):
+                    if self.__data.columns[col] == 0:
+                        plot_name = str(self.__P.plot_name(self.idx))
+                    else:
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                else:
+                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
