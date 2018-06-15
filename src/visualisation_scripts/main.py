@@ -11,7 +11,7 @@ from transform import Transform
 
 
 def erf(msg):  # function to output the error message and exit
-    print(" >> Error: %s" % msg)
+    print(" >> Error: {0}".format(msg))
     sys.exit()
 
 def dir_check(d):
