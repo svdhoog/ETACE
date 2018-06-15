@@ -42,7 +42,6 @@ plot1:
         major: [range,[6020,12500,20]]
         minor: [range,[1,80]]
         summary: mean
-
 plot2:
     timeseries:
         agent: Firm
