@@ -97,8 +97,8 @@ config.yaml::
             minor: [range,[1,80]]
             summary: custom_quantile
             quantile_values:
-               lower_quantile : 0.20
-               upper_quantile : 0.80
+               lower_percentile : 0.20
+               upper_percentile : 0.80
 
 plot_config.yaml::
 
@@ -111,7 +111,7 @@ plot_config.yaml::
         yaxis_label: price
         linestyle: solid
         marker: None
-        fill_between_quartiles: yes
+        fill_between: yes
         fillcolor: red
 
 
@@ -138,8 +138,8 @@ config.yaml::
             minor: [range,[1,80]]
             summary: custom_quantile
             quantile_values:
-                lower_quantile : 0.20
-                upper_quantile : 0.80
+                lower_percentile : 0.20
+                upper_percentile : 0.80
 
 
 plot_config.yaml::
@@ -153,7 +153,7 @@ plot_config.yaml::
         y-axis label: price
         linestyle: solid
         marker: None
-        fill_between_quartiles: yes
+        fill_between: yes
         fillcolor: darkgreen
 
 

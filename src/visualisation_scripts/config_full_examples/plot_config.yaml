@@ -67,7 +67,7 @@ plot20:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: red
 
     
@@ -80,7 +80,7 @@ plot21:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: red
 
 plot22:
@@ -92,7 +92,7 @@ plot22:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: red
 
 plot23:
@@ -104,7 +104,7 @@ plot23:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: red
     
     
@@ -117,7 +117,7 @@ plot3:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: darkgreen
 
 plot30:
@@ -129,7 +129,7 @@ plot30:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: darkgreen
 
 plot31:
@@ -141,7 +141,7 @@ plot31:
     yaxis_label: y(t)
     linestyle: solid
     marker: None
-    fill_between_quartiles: yes
+    fill_between: yes
     fillcolor: darkgreen
 
 plot4:
