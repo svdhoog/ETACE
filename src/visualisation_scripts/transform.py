@@ -13,7 +13,7 @@ class Transform():
         self.__data = data
         self.P = transform_configuration(par_fpath)
         self.df_out = pd.DataFrame(data=None, columns=self.__data.columns,index=self.__data.index)
-        print("lau laus")
+        print("- Transformation")
 
 
     def main_method(self, outpath):

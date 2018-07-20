@@ -1001,15 +1001,15 @@ Possible transform functions are listed in Table \ref{Table: Transformation}.
 \hline \hline 
 Function & Formula & Description\\
 \hline 
-\url{q_o_q_q} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=3}^5 x_{t-s}$ & \parbox{7cm}{Quarter-on-quarter growth rate at quarterly frequency (this quarter wrt. previous quarter, monthly data)} \\ 
+\url{mom} & $x_{t}/x_{t-1}$ &  \parbox{7cm}{Month-on-month growth rate at monthly frequency. This month wrt. previous month, monthly data.} \\ 
 \hline 
-\url{q_o_q_a} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=12}^{14} x_{t-s}$ & \parbox{7cm}{Quarterly growth rate at annual frequency (annual window, wrt. same quarter in previous year, monthly data)} \\ 
+\url{mom_annual} & $x_{t}/x_{t-12}$ & \parbox{7cm}{Monthly growth rate at annual frequency. 12-month trailing sums of monthly observations, growth in month m wrt. same month in previous year.} \\ 
 \hline 
-\url{m_o_m_m} & $x_{t}/x_{t-1}$ &  \parbox{7cm}{Month-on-month growth rate at monthly frequency (this month wrt. previous month, monthly data)} \\ 
+\url{qoq_annual} & $\sum_{s=0}^2 x_{t-s}/\sum_{s=12}^{14} x_{t-s}$ & \parbox{7cm}{Quarterly growth rate at annual frequency. 3-month trailing sums of monthly observations, growth rate in quarter q wrt. same quarter in previous year.} \\ 
 \hline 
-\url{m_o_m_a} & $x_{t}/x_{t-12}$ & \parbox{7cm}{Monthly growth rate at annual frequency (annual window,  wrt. same month in previous year, monthly data)} \\ 
+\url{pct_change_qoq} & $\sum_{s=1}^{4} x_{t-s}/\sum_{s=4}^{6} x_{t-s}$ & \parbox{7cm}{Quarterly growth rate (quarter-on-quarter). Ratio of two successive 3-month trailing sums of monthly observations.} \\ 
 \hline 
-\url{y_o_y_a} & $\sum_{s=0}^{11} x_{t-s}/\sum_{s=12}^{23} x_{t-s}$ & \parbox{7cm}{Annual growth rate} \\ 
+\url{pct_change_yoy} & $\sum_{s=0}^{11} x_{t-s}/\sum_{s=12}^{23} x_{t-s}$ & \parbox{7cm}{Annual growth rate (year-on-year). Ratio of two successive 12-month trailing sums of monthly observations.} \\ 
 \hline 
 \end{tabular} 
 \caption{Transformation functions for commonly used growth rates.}
