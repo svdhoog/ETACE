@@ -27,8 +27,7 @@ Data conversion Scripts
 
 All scripts runs on Python 3.4.3 and above.
 
-XML_DB
-~~~~~~~~~~
+**XML_DB**
 
 These scripts convert ``XML`` files to ``SQLite`` database files.
 
@@ -56,8 +55,7 @@ Any help regarding the execution of the script can be obtained by using the foll
     python gendb_special.py -h
 
 
-DB_HDF5
-~~~~~~~~~~
+**DB_HDF5**
 
 - These scripts convert ``SQLite`` database files to ``HDF5`` files.
 - There are two versions of the script currently, each having a slightly different functionality:
@@ -84,8 +82,7 @@ DB_HDF5
         *Therefore, use of db_hdf5_v2.py is recommended for simplicity.*
 
 
-XML_HDF5
-~~~~~~~~~~~
+**XML_HDF5**
 
 - This script converts ``XML`` files to ``HDF5`` files.
 
@@ -102,8 +99,7 @@ XML_HDF5
   the option that is not preferred. Currently, the default is such that the output is created in the input folder.
 
 
-DB_XML
-~~~~~~~~~
+**DB_XML**
 
 - This script converts ``SQLite`` Db files to ``XML`` files.
 - This script creates XML files from corresponding DB files in *one-to-many* fashion. For each DB file, a folder is created and multiple corresponding XML files are created inside the folder, based on time samples.
@@ -117,8 +113,7 @@ DB_XML
   the option that is not preferred. Currently, the default is such that the output is created in the input folder.
 
 
-MERGE_HDF_AGENTWISE
-~~~~~~~~~~~~~~~~~~~~~~
+**MERGE_HDF_AGENTWISE**
 
 - This script converts HDF5 files from ``set_*_run_*_iters.h5`` format to ``HDF5`` files per agent (**Eurostat.h5**, **Firm.h5** etc).
 - So, for each HDF5 file present in the input folder, all corresponding agents are filtered and placed on a new agent-based HDF5 file.
