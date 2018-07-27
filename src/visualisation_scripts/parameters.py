@@ -346,7 +346,7 @@ class Figure_default_parameters(object):
         self.fill_between = False
         self.fillcolor = 'black'
         self.greyscale = False
-        self.number_bars = 5
+        self.number_bars = 50
 
 
 if __name__ == "__main__":
