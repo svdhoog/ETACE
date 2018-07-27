@@ -239,6 +239,11 @@ class Plot_configuration():
             return self.__param[key]['plot_name']
         return self.__default_plot_parameters.__dict__['plot_name']
 
+    def plot_format(self, key):
+        if 'plot_format' in self.__param[key].keys():
+            return self.__param[key]['plot_format']
+        return self.__default_plot_parameters.__dict__['plot_format']
+
     def llim(self, key):
         if 'l_lim' in self.__param[key].keys():
             return self.__param[key]['l_lim']
@@ -294,10 +299,10 @@ class Plot_configuration():
             return self.__param[key]['normed']
         return self.__default_plot_parameters.__dict__['normed']
 
-    def fill(self, key):
-        if 'fill' in self.__param[key].keys():
-            return self.__param[key]['fill']
-        return self.__default_plot_parameters.__dict__['fill']
+    def fill_between(self, key):
+        if 'fill_between' in self.__param[key].keys():
+            return self.__param[key]['fill_between']
+        return self.__default_plot_parameters.__dict__['fill_between']
 
     def fillcolor(self, key):
         if 'fillcolor' in self.__param[key].keys():
@@ -321,15 +326,15 @@ class Figure_default_parameters(object):
         self.legend_label = None
         self.legend_location = 'best'
         self.plot_type = None
-        self.number_plots = 'one'
-        self.plot_name = 'default_fig.png'
+        self.number_plots = 'many'
+        self.plot_name = None
+        self.plot_format = 'png'
         self.l_lim = None
         self.u_lim = None
         self.linestyle = 'solid'
         self.marker = 4
         self.markerfacecolor = None
         self.markersize = None
-        # self.label = None
         self.facecolors = None
         self.plot_title = None
         self.xaxis_label = None
@@ -338,11 +343,10 @@ class Figure_default_parameters(object):
         self.histtype = 'bar'
         self.stacked = False
         self.normed = 1
-        self.fill = False
+        self.fill_between = False
         self.fillcolor = 'black'
         self.greyscale = False
         self.number_bars = 5
-
 
 
 if __name__ == "__main__":

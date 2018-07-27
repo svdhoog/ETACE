@@ -25,7 +25,7 @@ class SummaryStats(A):
         #print self.__data.head(5)
 
     def compute_summary(self):
-        summary_type = {'mean': self.mean, 'median': self.median, 'upper_quartile': self.upper_quartile, 'lower_quartile': self.lower_quartile, 'custom_quantile': self.custom_quantile, 'minimum': self.minimum, 'maximum': self.maximum, 'full':self.full}
+        summary_type = {'mean': self.mean, 'median': self.median, 'third_quartile': self.third_quartile, 'first_quartile': self.first_quartile, 'custom_quantile': self.custom_quantile, 'minimum': self.minimum, 'maximum': self.maximum, 'full':self.full}
         return summary_type[self.__param['summary']]()
 
     def map_analysis(self):
@@ -101,8 +101,8 @@ class SummaryStats(A):
     def median(self):
         return self.quantile(0.50)
 
-    def upper_quartile(self):
+    def third_quartile(self):
         return self.quantile(0.75)
 
-    def lower_quartile(self):
+    def first_quartile(self):
         return self.quantile(0.25)
