@@ -108,7 +108,25 @@ where `config` is the path to the config folder containing the configuration fil
 * plot_config.yaml
 * config_transform.yaml [optional]
 
-For more information please use the `docs/` folder.
+For more information please see the `docs/` folder.
 
-------------------------------------
-2018-05-29 11:00 svdh
+
+Contributors
+------------
+  - [Sander van der Hoog](https://github.com/svdhoog)
+  - [Krishna Raj Devkota](https://github.com/krdevkota)
+  - [Fabian Herrmann](https://github.com/0xfabi)
+
+Contributing
+------------
+
+1. Fork it
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Commit your changes (`git commit -am 'Added some feature'`)
+4. Push to the branch (`git push origin my-new-feature`)
+5. Create new Pull Request
+
+Copyright
+---------
+
+Copyright (c) 2018 Sander van der Hoog. See LICENSE for further details.
