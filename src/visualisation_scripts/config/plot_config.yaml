@@ -1,65 +1,89 @@
 plot1:
     number_plots: one
+    plot_name: p1_one_set_multiple_runs_timeseries
     plot_legend: yes
     legend_location: best
-    xaxis_label: Time
-    yaxis_label: price
+    ymin: 2.0
+    ymax: 2.1
+    xmin: 100
+    xmax: 200    
+    xlabel: Time
+    ylabel: price
     linestyle: solid
     marker: None
 
 plot2:
-    number_plots: one
+    number_plots: many
+    plot_name: p2_one_set_multiple_runs_ts_quantile
     plot_legend: yes
     legend_location: best
-    xaxis_label: Time
-    yaxis_label: price
+    xlabel: Time
+    ylabel: price
     linestyle: solid
     marker: None
-    fill_between: no
-    fillcolor: red
+    fill_between: yes
+    fillcolor: green
+    plot_format: pdf
 
 plot3:
     number_plots: one
+    plot_name: p3_ts_multibatch_analysis
     plot_legend: yes
     legend_location: best
-    xaxis_label: Time
-    yaxis_label: price
+    xlabel: Time
+    ylabel: price
     linestyle: solid
     marker: None
     fill_between: yes
     fillcolor: darkgreen
 
 plot4:
-    number_plots: one
-    plot_format: png
-    plot_legend: no
-    legend_location: best
-    xaxis_label: Time
-    yaxis_label: price
-    linestyle: solid
-    marker: None
-    greyscale: True
+   number_plots: one
+   plot_name: p4_one_set_one_run_agentanalysis_timeseries
+   plot_legend: no
+   legend_location: best
+   xlabel: Time
+   ylabel: price
+   linestyle: solid
+   marker: None
+   greyscale: True
 
 plot5:
     number_plots: one
+    plot_name: p5_one_set_one_run_bp_price
     plot_legend: yes
     legend_label: (Agent = Firm, var = Price)
     legend_location: best
-    xaxis_label: Time
-    yaxis_label: Distribution over price
+    xlabel: Time
+    ylabel: Distribution over price
     number_bars: 5
     greyscale: False
 
 plot6:
     number_plots: one
+    plot_name: p6_one_set_multiple_runs_sp_price_output
     plot_legend: yes
     legend_location: best
     legend_label: price vs. output
     linestyle: solid
     marker: +
 
+plot61:
+    number_plots: one
+    plot_name: p61_one_set_multiple_runs_sp_price_output
+    plot_legend: yes
+    ymin: 2.0
+    ymax: 2.1
+    xmin: 31
+    xmax: 34        
+    legend_location: best
+    legend_label: price vs. output
+    linestyle: solid
+    marker: +
+    
 plot7:
     number_plots: one
+    plot_name: p7_one_set_agent_sp_price_delay
     plot_legend: no
     legend_location: best
     legend_label: price delay vs. price
@@ -67,6 +91,7 @@ plot7:
 
 plot8:
     number_plots: one
+    plot_name: p8_one_set_multiple_runs_sp_price_delay
     plot_legend: yes
     legend_location: best
     legend_label: price delay vs. price
@@ -75,48 +100,53 @@ plot8:
 
 plot9:
     number_plots: one
+    plot_name: p9_one_set_one_run_hg_price
     plot_title: (Agent = Firm, var = Price)
-    number_bins: 50
+    bins: 50
+    normed: 0
     histtype: bar
     plot_legend: yes
     fill_between: yes
     stacked: False
     legend_location: best
-    xaxis_label: xlabel
-    yaxis_label: ylabel
+    xlabel: xlabel
+    ylabel: ylabel
 
 plot10:
     number_plots: one
+    plot_name: p10_one_set_multiple_runs_hg_price
     plot_title: (Agent = Firm, var = Price)
-    number_bins: 50
+    bins: 50
     histtype: bar
     plot_legend: yes
     fill_between: yes
     stacked: False
     legend_location: best
-    xaxis_label: xlabel
-    yaxis_label: ylabel
+    xlabel: xlabel
+    ylabel: ylabel
 
 plot11:
     number_plots: one
+    plot_name: p11_one_set_multiple_runs_hg_price
     plot_title: (Agent = Firm, var = Price)
-    number_bins: 50
+    bins: 50
     histtype: bar
     plot_legend: yes
     fill_between: yes
     stacked: False
     legend_location: best
-    xaxis_label: xlabel
-    yaxis_label: ylabel
+    xlabel: xlabel
+    ylabel: ylabel
 
 plot12:
     number_plots: one
+    plot_name: p12_two_sets_multiple_runs_hg_price
     plot_title: (Agent = Firm, var = Price)
-    number_bins: 50
+    bins: 50
     histtype: step
     plot_legend: yes
     fill_between: no
     stacked: False
     legend_location: best
-    xaxis_label: xlabel
-    yaxis_label: ylabel
+    xlabel: xlabel
+    ylabel: ylabel
