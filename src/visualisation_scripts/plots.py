@@ -70,9 +70,10 @@ class Timeseries(A):
         else:
             le_label = self.__P.legend_label(self.idx)
         out = ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx),
-        markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label, color = clr)
-        plt.xlabel(self.__P.x_label(self.idx))
-        plt.ylabel(self.__P.y_label(self.idx))
+                      markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label, color = clr)
+        plt.xlabel(self.__P.xlabel(self.idx))
+        plt.ylabel(self.__P.ylabel(self.idx))
+        plt.axis([self.__P.xmin(self.idx),self.__P.xmax(self.idx),self.__P.ymin(self.idx),self.__P.ymax(self.idx)])
 
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
@@ -375,15 +376,15 @@ class Histogram():
             le_label = label
         else:
             le_label = self.__P.legend_label(self.idx)
-        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.norm(self.idx), fill=self.__P.fill_between(self.idx), color=colors, label=le_label)
+        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.normed(self.idx), fill=self.__P.fill_between(self.idx), color=colors, label=le_label)
         if self.__P.legend(self.idx) is True:
             plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
         if self.__P.plot_title(self.idx) is not None:
             ax.set_title(self.__P.plot_title(self.idx))
-        if self.__P.x_label(self.idx) is not None:
-            plt.xlabel(self.__P.x_label(self.idx))
-        if self.__P.y_label(self.idx) is not None:
-            plt.ylabel(self.__P.y_label(self.idx))
+        if self.__P.xlabel(self.idx) is not None:
+            plt.xlabel(self.__P.xlabel(self.idx))
+        if self.__P.ylabel(self.idx) is not None:
+            plt.ylabel(self.__P.ylabel(self.idx))
         return out
 
 
@@ -741,7 +742,7 @@ class Scatterplot(A):
             os.makedirs(d)
             print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
-    def plot_scatterplot(self, ax, x, y, l_label, x_label, y_label, clr):
+    def plot_scatterplot(self, ax, x, y, l_label, xlabel, ylabel, clr):
         if self.__P.legend_label(self.idx) is None:
             le_label = l_label
         else:
@@ -752,8 +753,10 @@ class Scatterplot(A):
 
         if self.__P.legend(self.idx) is True:
             ax.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
-        plt.xlabel(x_label)
-        plt.ylabel(y_label)
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
+        plt.axis([self.__P.xmin(self.idx),self.__P.xmax(self.idx),self.__P.ymin(self.idx),self.__P.ymax(self.idx)])
+        
         return out
 
     def one_output(self):
@@ -1008,9 +1011,9 @@ class Boxplot(A):
         t_df = data.T
         intervals = []
         pos = []
-        N_bars = self.__P.numboxplotbars(self.idx)
+        N_bins = self.__P.bins(self.idx)
         count = 1
-        for i in range(0,len(self.__main_param['major']), int(np.floor(len(self.__main_param['major'])//N_bars))):
+        for i in range(0,len(self.__main_param['major']), int(np.floor(len(self.__main_param['major'])//N_bins))):
             intervals.append(self.__main_param['major'][i])
             pos.append(count)
             count = count + 1
@@ -1027,8 +1030,8 @@ class Boxplot(A):
         df = pd.DataFrame(t_df, columns=intervals)
         ax = df.plot.box(by=pos, color=color, patch_artist=True)
         ax.set_title(le_label)
-        ax.set_xlabel(self.__P.x_label(self.idx))
-        ax.set_ylabel(self.__P.y_label(self.idx))
+        ax.set_xlabel(self.__P.xlabel(self.idx))
+        ax.set_ylabel(self.__P.ylabel(self.idx))
 
         return ax
 
