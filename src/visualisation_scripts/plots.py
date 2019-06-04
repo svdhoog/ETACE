@@ -64,15 +64,22 @@ class Timeseries(A):
             os.makedirs(d)
             print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
-    def plot_line(self, ax, x, y, l_label, clr):
+    def plot_line(self, ax, x, y, l_label, clr, forced_ylabel):
         if self.__P.legend_label(self.idx) is None:
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
         out = ax.plot(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx),
                       markerfacecolor=self.__P.markerfacecolor(self.idx), markersize=self.__P.markersize(self.idx), label=le_label, color = clr)
-        plt.xlabel(self.__P.xlabel(self.idx))
-        plt.ylabel(self.__P.ylabel(self.idx))
+        if self.__P.xlabel(self.idx) == 'None':
+            plt.xlabel("Time")
+        else:
+            plt.xlabel(self.__P.xlabel(self.idx))
+        if self.__P.ylabel(self.idx) == 'None':
+            plt.ylabel(str(self.agent) + ' : ' + forced_ylabel)
+        else:
+            plt.ylabel(self.__P.ylabel(self.idx))
+            
         plt.axis([self.__P.xmin(self.idx),self.__P.xmax(self.idx),self.__P.ymin(self.idx),self.__P.ymax(self.idx)])
 
         if self.__P.legend(self.idx) is True:
@@ -121,16 +128,19 @@ class Timeseries(A):
                             colors = iter(cm.rainbow(a))
                         for r in range(0, len(y)):
                             clr = next(colors)
-                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr)
+                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+str(m),clr, str(self.variables[file_count]))  # Legend entries for runs
 
-                #plot_name = self.__P.plot_name(self.idx)
+                #plot_name
+                #Example: PlotLabel+PlotName+AgentName+VariableName
+                #         Plot2_ts-multibatch_Firm_Price
+                #PlotLabel: str(self.idx)
+                #PlotName: str(self.__P.plot_name(self.idx))
+                #AgentName: str(self.agent)
+                #VariableName: str(self.variables[file_count])
                 if self.__P.plot_name(self.idx):
-                    if file_count == 0:
-                        plot_name = str(self.__P.plot_name(self.idx))
-                    else:
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                 else:
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                    plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -161,21 +171,14 @@ class Timeseries(A):
 
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'-'+str(r), clr)
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'-'+str(r), clr)
-
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'-set-'+str(r), clr, str(self.variables[file_count]))  # Legend entries for quantiles per set
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'-set-'+str(r), clr, str(self.variables[file_count]))
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
-
-                    #plot_name = self.__P.plot_name(self.idx)
-                    #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                     if self.__P.plot_name(self.idx):
-                        if file_count == 0:
-                            plot_name = str(self.__P.plot_name(self.idx))
-                        else:
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                     else:
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -199,16 +202,11 @@ class Timeseries(A):
                     for r in range(0, len(dframe)//self.__N):
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
-                        self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr)
-                    #plot_name = self.__P.plot_name(self.idx)
-                    #plt.savefig(str(self.outpath) + '/' + str(plot_name[:-4]) + '_' + str(legend_label[0]) + '.png', bbox_inches='tight')
+                        self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr, str(self.variables[file_count]))
                     if self.__P.plot_name(self.idx):
-                        if file_count == 0:
-                            plot_name = str(self.__P.plot_name(self.idx))
-                        else:
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                     else:
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                        plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -252,16 +250,11 @@ class Timeseries(A):
                             y = np.array(D[i:i+self.__N])
                             x = np.arange(1, self.__N+1)
                             clr = next(colors)
-                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr)
-                            #plot_name = self.__P.plot_name(self.idx)
-                            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, str(self.variables[file_count]))
                             if self.__P.plot_name(self.idx):
-                                if count == 0:
-                                    plot_name = str(self.__P.plot_name(self.idx))
-                                else:
-                                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count)
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                             else:
-                                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                                plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
@@ -291,19 +284,14 @@ class Timeseries(A):
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'_run_'+str(r), clr)
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'_run_'+str(r), clr)
+                        self.plot_line(ax, x, y1[r], legend_label[0]+'-set-'+str(r), clr, str(self.variables[file_count]))  # Legend entries for quantiles per set
+                        self.plot_line(ax, x, y2[r], legend_label[1]+'-set-'+str(r), clr, str(self.variables[file_count]))
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
                         if self.__P.plot_name(self.idx):
-                            if file_count == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[0])
+                            plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -327,16 +315,11 @@ class Timeseries(A):
                         fig, ax = plt.subplots()
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
-                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr)
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_" + str(s) + ".png", bbox_inches='tight')
+                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr, str(""))
                         if self.__P.plot_name(self.idx):
-                            if s == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' +  str(self.variables[file_count])
+                            plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(s) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -370,21 +353,30 @@ class Histogram():
             os.makedirs(d)
             print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
-    def plot_histogram(self, ax, data, label, colors, n_bins):
+    def plot_histogram(self, ax, data, label, colors, n_bins, forced_xlabel):
 
         if self.__P.legend_label(self.idx) is None:
             le_label = label
         else:
             le_label = self.__P.legend_label(self.idx)
-        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), normed=self.__P.normed(self.idx), fill=self.__P.fill_between(self.idx), color=colors, label=le_label)
-        if self.__P.legend(self.idx) is True:
-            plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        out = ax.hist(data, n_bins, histtype=self.__P.histtype(self.idx), stacked=self.__P.stacked(self.idx), density=self.__P.normed(self.idx), fill=self.__P.fill_between(self.idx), color=colors, alpha=.5, label=le_label)
+        
+        #For histogram, no legend possible?
+        #if self.__P.legend(self.idx) is True:
+        #    ax.set_legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        
         if self.__P.plot_title(self.idx) is not None:
             ax.set_title(self.__P.plot_title(self.idx))
-        if self.__P.xlabel(self.idx) is not None:
-            plt.xlabel(self.__P.xlabel(self.idx))
-        if self.__P.ylabel(self.idx) is not None:
-            plt.ylabel(self.__P.ylabel(self.idx))
+            
+        if self.__P.xlabel(self.idx) is None:
+            ax.set_ylabel(str(self.agent) + ' : ' + forced_xlabel)
+        else:
+            ax.set_xlabel(self.__P.xlabel(self.idx))
+        if self.__P.ylabel(self.idx) is None:
+            ax.set_ylabel(str("count"))
+        else:
+            ax.set_ylabel(self.__P.ylabel(self.idx))
+
         return out
 
 
@@ -428,16 +420,13 @@ class Histogram():
 
                         for r in range(0, len(y)):
                             clr = next(colors)
-                            self.plot_histogram(ax, y[r], legend_label[0]+'_run_'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx))
-                #plot_name = self.__P.plot_name(self.idx)
-                #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0])+".png", bbox_inches='tight')
+                            self.plot_histogram(ax, y[r], legend_label[0]+'-set-'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                
+                #plot_name
                 if self.__P.plot_name(self.idx):
-                    if self.__data.columns[col] == 0:
-                        plot_name = str(self.__P.plot_name(self.idx))
-                    else:
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
                 else:
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                    plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -467,18 +456,16 @@ class Histogram():
 
                         for r in range(0, len(y1)): # TODO: y1 and y2 length must not be different, add a check
                             clr = next(colors)
-                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
+                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                             clr = next(colors)
-                            self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx))
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                            self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                        
+                        #plot_name
+                        #Example: DataColsName: price
                         if self.__P.plot_name(self.idx):
-                            if self.__data.columns[col] == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -500,17 +487,14 @@ class Histogram():
 
                         for r in range(0, len(dframe)//self.__N):
                             clr = next(colors)
-                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx))
+                            self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
 
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        #plot_name
+                        #Example: DataColsName: 
                         if self.__P.plot_name(self.idx):
-                            if self.__data.columns[col] == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -532,18 +516,16 @@ class Histogram():
                             colors = iter(cm.rainbow(a))
 
                         clr = next(colors)
-                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
+                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         clr = next(colors)
-                        self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx))
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+
+                        #plot_name
+                        #Example: DataColsName: 
                         if self.__P.plot_name(self.idx):
-                            if self.__data.columns[col] == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -558,16 +540,14 @@ class Histogram():
                             colors = iter(cm.rainbow(np.array([0.0]))) #0.0:blue 1.0:red
 
                         clr = next(colors)
-                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx))
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + ".png", bbox_inches='tight')
+                        self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                        
+                        #plot_name
+                        #Example: DataColsName: 
                         if self.__P.plot_name(self.idx):
-                            if self.__data.columns[col] == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -617,16 +597,15 @@ class Histogram():
                             fig, ax = plt.subplots()
                             y = np.array(D[r:r+self.__N])
                             clr = next(colors)
-                            self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx))
-                            #plot_name = self.__P.plot_name(self.idx)
-                            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(legend_label[0]) + "_run_" + str(count) + "_" + str(m) + ".png", bbox_inches='tight')
+                            self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                            
+                            #plot_name
+                            #Example: Count: 
                             if self.__P.plot_name(self.idx):
-                                if count == 0:
-                                    plot_name = str(self.__P.plot_name(self.idx))
-                                else:
-                                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count)
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count) #PlotName_Count
                             else:
-                                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                                #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+                                plot_name = str(self.agent) + '_' + str(self.__data.columns[col])    #PlotLabel_AgentName_DataColsName
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
@@ -655,18 +634,17 @@ class Histogram():
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
-                        self.plot_histogram(ax, y1[r], legend_label[0] + "_run_" + str(r), clr, self.__P.bins(self.idx))
+                        self.plot_histogram(ax, y1[r], legend_label[0] + "_run_" + str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         clr = next(colors)
-                        self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx))
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                        self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                        
+                        #plot_name
                         if self.__P.plot_name(self.idx):
-                            if file_count == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count) #PlotName_Count
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count])
+                            #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #AgentName_VariableName
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])   #AgentName_DataColsName
+
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -691,15 +669,14 @@ class Histogram():
                     for s in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
-                        self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx))
-
+                        self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
+                        
+                        #plot_name
                         if self.__P.plot_name(self.idx):
-                            if s == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.variables[file_count]) + str(s)
+                            #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) + str(s)   #AgentName_VariableName_
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])               #AgentName_DataColsName
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -794,15 +771,12 @@ class Scatterplot(A):
                     for r in range(0, len(D)//self.__N):
                         clr = next(colors)
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [inst'+str(m) + ' run' + str(r) + ']', legend_label[0], legend_label[1], clr )
-                #plot_name = self.__P.plot_name(self.idx)
-                #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                #plot_name
                 if self.__P.plot_name(self.idx):
-                    if file_count == 0:
-                        plot_name = str(self.__P.plot_name(self.idx))
-                    else:
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
                 else:
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                    plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
+                    
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -831,15 +805,13 @@ class Scatterplot(A):
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)
-                    #plot_name = self.__P.plot_name(self.idx)
-                    #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    
+                    #plot_name
                     if self.__P.plot_name(self.idx):
-                        if file_count == 0:
-                            plot_name = str(self.__P.plot_name(self.idx))
-                        else:
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
                     else:
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str("_".join(self.variables))
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables))
+                        
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -860,15 +832,13 @@ class Scatterplot(A):
 
                     clr = next(colors)
                     self.plot_scatterplot(ax, col_A, col_B, legend_label[0]+' vs '+legend_label[1], legend_label[0], legend_label[1], clr)
-                    #plot_name = self.__P.plot_name(self.idx)
-                    #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(file_count) + ".png", bbox_inches='tight')
+                    
+                    #plot_name
                     if self.__P.plot_name(self.idx):
-                        if self.__data.columns[col] == 0:
-                            plot_name = str(self.__P.plot_name(self.idx))
-                        else:
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
                     else:
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
+                        
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -909,15 +879,13 @@ class Scatterplot(A):
                         fig, ax = plt.subplots()
                         clr = next(colors)
                         self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+ ' vs '+legend_label[1]+' [run'+str(r) + ' inst' + str(m) + ']', legend_label[0], legend_label[1], clr )
-                        #plot_name = self.__P.plot_name(self.idx)
-                        #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + ".png", bbox_inches='tight')
+                        
+                        #plot_name 
                         if self.__P.plot_name(self.idx):
-                            if file_count == 0:
-                                plot_name = str(self.__P.plot_name(self.idx))
-                            else:
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count)
                         else:
-                            plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
+                            
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + '_run_' + str(r) + '_inst_' + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -944,15 +912,12 @@ class Scatterplot(A):
                     fig, ax = plt.subplots()
                     clr = next(colors)
                     self.plot_scatterplot(ax, y1[r], y2[r], legend_label[0]+' vs '+legend_label[1]+' [inst '+str(r) +']', legend_label[0], legend_label[1], clr)
-                    #plot_name = self.__P.plot_name(self.idx)
-                    #plt.savefig(self.outpath + '/' + plot_name[:-4]+ '_'+ str(file_count) + '_'+ str(r) + ".png", bbox_inches='tight')
+                    
+                    #plot_name
                     if self.__P.plot_name(self.idx):
-                        if self.__data.columns[col] == 0:
-                            plot_name = str(self.__P.plot_name(self.idx))
-                        else:
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
                     else:
-                        plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
@@ -1001,7 +966,7 @@ class Boxplot(A):
         return box_df
 
     #def plot_boxplot(self, ax, data, l_label):
-    def plot_boxplot(self, ax, data, l_label):
+    def plot_boxplot(self, ax, data, l_label, forced_ylabel):
 
         if self.__P.legend_label(self.idx) is None:
             le_label = l_label
@@ -1029,9 +994,17 @@ class Boxplot(A):
         # plot the boxplots with pandas
         df = pd.DataFrame(t_df, columns=intervals)
         ax = df.plot.box(by=pos, color=color, patch_artist=True)
-        ax.set_title(le_label)
-        ax.set_xlabel(self.__P.xlabel(self.idx))
-        ax.set_ylabel(self.__P.ylabel(self.idx))
+
+        #Legend: problem for boxplots due to use of plt (matplotlib) instead of ax (pandas)? ax.set_legend does not exist
+        #if self.__P.legend(self.idx) is True:
+        #    plt.legend(loc=self.__P.legend_location(self.idx), fancybox=True, shadow=True)
+        
+        if self.__P.plot_title(self.idx) is not None:
+            ax.set_title(self.__P.plot_title(self.idx))
+        if self.__P.xlabel(self.idx) is not None:
+            ax.set_xlabel(self.__P.xlabel(self.idx))
+        if self.__P.ylabel(self.idx) is not None:
+            ax.set_ylabel(self.__P.ylabel(self.idx))
 
         return ax
 
@@ -1051,17 +1024,13 @@ class Boxplot(A):
                 y.append(pd.DataFrame(D[i:i+self.__N]))
 
             for r in range(0, len(D)//self.__N):
-                self.plot_boxplot(ax, y[r], self.__data.columns[col])
+                self.plot_boxplot(ax, y[r], self.__data.columns[col], str(self.__data.columns[col]))
 
-            #plot_name = self.__P.plot_name(self.idx)
-            #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + ".png", bbox_inches='tight')
+            #plot_name
             if self.__P.plot_name(self.idx):
-                if self.__data.columns[col] == 0:
-                    plot_name = str(self.__P.plot_name(self.idx))
-                else:
-                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
             else:
-                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
             plot_format = self.__P.plot_format(self.idx)
             plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
             plt.close()
@@ -1081,14 +1050,11 @@ class Boxplot(A):
                 y.append(pd.DataFrame(D[i:i+self.__N]))
             for s in range(0, len(D)//self.__N):
                 fig, ax = plt.subplots()
-                self.plot_boxplot(ax, y[s], self.__data.columns[col])
-                #plot_name = self.__P.plot_name(self.idx)
-                #plt.savefig(self.outpath + '/' + plot_name[:-4] + "_" + str(self.__data.columns[col]) + "_" + str(s) + ".png", bbox_inches='tight')
+                self.plot_boxplot(ax, y[s], self.__data.columns[col], str(self.__data.columns[col]))
+                
+                #plot_name
                 if self.__P.plot_name(self.idx):
-                    if self.__data.columns[col] == 0:
-                        plot_name = str(self.__P.plot_name(self.idx))
-                    else:
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
                 else:
                     plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 plot_format = self.__P.plot_format(self.idx)
