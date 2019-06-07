@@ -19,16 +19,17 @@ DB_SUFFIX = '.db'
 def dir_check(d):
     if os.path.exists(d):
         outpath = os.path.abspath(d)
-        print("- Directory ["+outpath+ "] is used for output files")
+        print('- Directory [' + outpath + '] is used for output files')
 
     else:
         os.makedirs(d)
-        print("- Directory ["+outpath+ "] was created and is used for output files")
+        outpath = os.path.abspath(d)
+        print('- Directory [' + outpath + '] was created and is used for output files')
 
 
 # Function to print out the error messages,if any, and exit
 def error(mesg):
-    print(">>>>> (Error): {0}" .format(mesg), file = sys.stderr)
+    print('>>>>> (Error): {0}' .format(mesg), file = sys.stderr)
     sys.exit(1)
 
 
@@ -129,7 +130,7 @@ if __name__ == "__main__":
     input_dbfolder = args.dbpath[0]
 
     if os.getcwd() == os.path.abspath(input_dbfolder):
-        error("- Python script and data files not allowed in a single folder. Expects atleast a level of folder hierarchy. Fix issue and retry! ")
+        error("- Python script and data files not allowed in a single folder. Expects at least one level of folder hierarchy. Fix issue and retry! ")
 
     dir_list =[]
     if args.recursive:
