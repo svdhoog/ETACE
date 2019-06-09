@@ -1,0 +1,72 @@
+ <xmodel version="2">
+ <name>Test Model - Xparser 0.17.1 Circle (x,y)-coordinates</name>
+ <version>Version 1.0, 06.06.2019</version>
+ <description>Author: Sander van der Hoog (svdhoog@gmail.com)</description>
+ <models/>
+  <environment>
+  <functionFiles>
+   <file>agent_functions.c</file>
+  </functionFiles>
+  <constants>
+   <variable>
+    <type>int</type>
+    <name>set_no</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_radius</name>
+    <description></description>
+   </variable>
+   <variable>
+    <type>double</type>
+    <name>const_b</name>
+    <description></description>
+   </variable>
+   </constants>
+  </environment>
+  <agents>
+  <xagent>
+   <name>Agent</name>
+   <description></description>
+   <memory>
+    <variable>
+     <type>int</type>
+     <name>id</name>
+     <description>Agent ID.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>x</name>
+     <description>Agent x coordinate.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>y</name>
+     <description>Agent y coordinate.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>a</name>
+     <description>Agent x-axis offset.</description>
+    </variable>
+    <variable>
+     <type>double</type>
+     <name>b</name>
+     <description>Agent y-axis offset.</description>
+    </variable>
+   </memory>
+    <functions>
+    <function>
+     <name>set_xy</name>
+     <description></description>
+     <currentState>start_Agent</currentState>
+     <nextState>end_Agent</nextState>
+     <inputs/>
+     <outputs/>
+    </function>
+    </functions>
+  </xagent>
+ </agents>
+ <messages/>
+</xmodel>

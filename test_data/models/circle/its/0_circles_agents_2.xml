@@ -1,0 +1,24 @@
+<states>
+<itno>0</itno>
+<environment>
+<set_no>0</set_no>	
+<const_radius>1.0</const_radius>
+<const_b>0.0</const_b>
+</environment>
+<xagent>
+<name>Agent</name>
+  <id>1</id>
+  <x>0.0</x>
+  <y>0.0</y>
+  <a>1.0</a>
+  <b>0.0</b>
+</xagent>
+<xagent>
+<name>Agent</name>
+  <id>2</id>
+  <x>0.0</x>
+  <y>0.0</y>
+  <a>2.0</a>
+  <b>0.0</b>
+</xagent>
+</states>
