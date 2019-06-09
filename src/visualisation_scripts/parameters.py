@@ -41,7 +41,7 @@ class main_configuration():
             self.erf("unable to read file: %s" % fname)
         with f as stream:
             try:
-                p = yaml.load(stream)
+                p = yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
@@ -141,7 +141,7 @@ class transform_configuration():
             self.erf("unable to read file: %s" % fname)
         with f as stream:
             try:
-                p = yaml.load(stream)
+                p = yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
@@ -184,7 +184,7 @@ class Plot_configuration():
             self.erf("unable to read file: %s" % fname)
         with f as stream:
             try:
-                p = yaml.load(stream)
+                p = yaml.load(stream, Loader=yaml.FullLoader)
             except yaml.YAMLError as exc:  # error-check for incorrect yaml syntax
                 if hasattr(exc, 'problem_mark'):
                     mark = exc.problem_mark
