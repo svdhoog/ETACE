@@ -1,5 +1,11 @@
-Test data
-=========
+# Test data: Circles model
+
+## Purpose
+
+To test the proper functionality of the library, this model creates test data that is both simple to understand, and predictable.
+
+The output plots should be clear in both the time series ``x(t)`` and scatter plot ``(x(t),y(t))`` dimensions.
+
 
 Files:
 
@@ -16,21 +22,12 @@ Dataset_2_
 .. _Dataset_2: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/dataset_2_agents_6/h5_agentwise
 
 
-Purpose
-=======
-
-To test the proper functionality of the library, this model creates test data.
-
-The output plots should be clear in both time series x(t) and scatter plots ``(x(t),y(t))`` dimensions.
-
-To this end, the data is very simple and predictable, and not random.
-
 Setup
 =====
 
 This model produces test data with the following specifications:
 
-- Scatter plots in ``(x,y)``-space show circles with a radius equal to the set number.
+- Scatter plots in ``(x,y)``-space showing circles with a radius equal to the set number.
 - The centre point of the circle is at ``(a,b)``.
 - The x-axis horizontal shift ``a`` is equal to the agent ID.
 - The y-axis vertical shift ``b`` is equal to the set number.
@@ -41,7 +38,7 @@ The parametric equations for a circle with centre point ``(a,b)`` and radius ``r
 
 	y(s) = b + r*sin(s), with s in [0,2*PI]
 
-For the time index ``s`` we use a transformation of the iteration counter ``t``, such that ``s`` remains in the interval ``[0,2 \PI]``:
+For the time index ``s`` we use a transformation of the iteration counter ``t``, such that ``s`` remains in the interval ``[0,2 PI]``:
  
 	s = (t.dx)mod(2*PI)
 	dx = 1e-2
