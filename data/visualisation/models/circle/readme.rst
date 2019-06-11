@@ -4,23 +4,28 @@ Test data
 Files:
 
 circle_model_
+
 .. _circle_model: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle
 
 Dataset_1_
+
 .. _Dataset_1: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/dataset_1_agents_2/h5_agentwise
 
 Dataset_2_
+
 .. _Dataset_2: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/dataset_2_agents_6/h5_agentwise
 
 
 Purpose
 ==
+
 This model creates test data for the visualization library FLAViz.
 To this end, the data is very simple and predictable, and not random.
 To test the library properly, it should be clear in both time series x(t) and scatter plots (x(t),y(t))
 
 Setup
 ==
+
 This model produces test data with the following specifications:
 
 - Scatter plots in `(x,y)`-space, showing circles with a radius equal to the set number
