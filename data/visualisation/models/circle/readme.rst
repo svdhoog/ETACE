@@ -11,8 +11,6 @@ The output plots should be clear in both the time series ``x(t)`` and scatter pl
 
 Files:
 
-[circle_model folder](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle)
-
 circle_model_
 
 .. _circle_model: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle
@@ -38,18 +36,15 @@ This model produces test data with the following specifications:
 
 The parametric equations for a circle with centre point ``(a,b)`` and radius ``r`` are given by:
 
-```
 	x(s) = a + r*cos(s)
 
 	y(s) = b + r*sin(s), with s in [0,2*PI]
-```
 
 For the time index ``s`` we use a transformation of the iteration counter ``t``, such that ``s`` remains in the interval ``[0,2 PI]``:
-
-``` 
+ 
 	s = (t.dx)mod(2*PI)
+
 	dx = 1e-2
-```
 
 We let iterations ``t = 1...628`` such that ``100t=6.28`` which equals ``2 \PI``, approximately.
 
@@ -58,7 +53,6 @@ Code
 
 The C code for this model is:
 
-```
 	A = ID;
 
 	X = A + CONST_RADIUS*cos(s);
@@ -66,27 +60,24 @@ The C code for this model is:
 	B = CONST_B;
 
 	Y = B + CONST_RADIUS*sin(s);
-```
 
 with
 
-```
 	CONST_RADIUS = set_no
+
 	CONST_B = set_no
-```
 
 Output Data Sets
 -------
 
 **Data set 1:**
 
-```
 	Sets: 2
 
 	Runs: 1
 	
 	Agents: 2
-```
+
 
 | set | run | agent | radius | centre point (a,b) |
 | --- | --- | --- | --- | --- |
@@ -98,13 +89,11 @@ Output Data Sets
 
 **Data set 2:**
 
-```
 	Sets: 4
 
 	Runs: 2
 	
 	Agents: 6
-```
 
 |set|run|agent|radius|centre point (a,b)|
 |---|---|---|---|---|
