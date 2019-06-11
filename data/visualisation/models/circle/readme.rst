@@ -91,4 +91,4 @@ Example plots
 
 plot60: scatterplot:
 
-![plot60: scatterplot](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/dataset_2_agents_6/Plots/scatterplot/p60_scatter_mean_agent_Agent_x_y.png)
+![plot60 scatterplot](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/dataset_2_agents_6/Plots/scatterplot/p60_scatter_mean_agent_Agent_x_y.png "plot60")
