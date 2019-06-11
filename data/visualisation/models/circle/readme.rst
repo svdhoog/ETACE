@@ -78,15 +78,6 @@ Output Data Sets
 	
 	Agents: 2
 
-
-| set | run | agent | radius | centre point (a,b) |
-| --- | --- | --- | --- | --- |
-| 1 | 1 | 1 | 1 | (1,1) |
-|   |   | 2 | 1 | (2,1) |
-| 2 | 1 | 1 | 2 | (1,2) |
-|   |   | 2 | 2 | (2,2) |
-
-
 **Data set 2:**
 
 	Sets: 4
@@ -95,30 +86,13 @@ Output Data Sets
 	
 	Agents: 6
 
-|set|run|agent|radius|centre point (a,b)|
-|---|---|---|---|---|
-| 1 | 1 | 1 | 1 | (1,1) |
-|   |   | 2 | 1 | (2,1) |
-|   |   | 3 | 1 | (3,1) |
-|   |   | 4 | 1 | (4,1) |
-|   |   | 5 | 1 | (5,1) |
-|   |   | 6 | 1 | (6,1) |
-| 2 | 1 | 1 | 2 | (1,2) |
-|   |   | 2 | 2 | (2,2) |
-|   |   | 3 | 2 | (3,2) |
-|   |   | 4 | 2 | (4,2) |
-|   |   | 5 | 2 | (5,2) |
-|   |   | 6 | 2 | (6,2) |
-| 3 | 1 | 1 | 3 | (1,3) |
-|   |   | ... | ... |... |
-| 4 | 1 | 1 | 4 | (1,4) |
-|   |   | ... | ... |... |
-| 5 | 1 | 1 | 5 | (1,5) |
-|   |   | ... | ... |... |
-| 6 | 1 | 1 | 6 | (1,6) |
-|   |   | ... | ... |... |
-
-
 Example plots
 -------
 
+Relative path:
+
+![plot60: scatterplot](./dataset_2_agents_6/Plots/scatterplot/p60_scatter_mean_agent_Agent_x_y.png)
+
+Path from repo root:
+
+![plot60: scatterplot](data/visualisation/models/circle/dataset_2_agents_6/Plots/scatterplot/p60_scatter_mean_agent_Agent_x_y.png)
