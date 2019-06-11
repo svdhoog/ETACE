@@ -4,10 +4,10 @@ i/o:
     repo_name: 'FLAViz'
 
     # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
-    input_path: 'data/visualisation/models/circle/dataset_2_agents_6/h5_agentwise/'
+    input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/h5_agentwise/'
     
     # set up your y_path for the resulting plots, it's relative unless it starts with a '/'
-    output_path: 'data/visualisation/models/circle/dataset_2_agents_6/Plots'
+    output_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/Plots'
     
     input_files:
         Agent: Agent.h5
@@ -28,27 +28,28 @@ i/o:
 ##             lower_percentile : 0.20
 ##             upper_percentile : 0.80
 
-# plot11:
-#     timeseries:
-#         agent: Agent
-#         analysis: multiple_run
-#         variables:
-#             var1: [x,y]
-#         set: [range,[1,4]]
-#         run: [range,[1,2]]
-#         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
-#         summary: custom_quantile
-#         quantile_values:
-#             lower_percentile : 0.20
-#             upper_percentile : 0.80
+plot11:
+    timeseries:
+        agent: Agent
+        analysis: multiple_run
+        variables:
+            var1: [x,y]
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[1,6]]
+        summary: custom_quantile
+        quantile_values:
+            lower_percentile : 0.20
+            upper_percentile : 0.80
 
 plot12:
     timeseries:
         agent: Agent
         analysis: multiple_batch
         variables:
-            var1: [x,y]
+            var1: [x]
+            var2: [y]
         set: [range,[1,4]]
         run: [range,[1,2]]
         major: [range,[1,628,1]]

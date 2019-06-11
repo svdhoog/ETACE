@@ -89,11 +89,99 @@ Output Data Sets
 Example plots
 -------
 
-plot60: scatterplot:
+**Scatter plots**
+
+p60_scatter_mean_agent_Agent_x_y.png:
 
 .. image:: ./dataset_2_agents_6/Plots/scatterplot/p60_scatter_mean_agent_Agent_x_y.png
    :height: 100px
    :width: 200 px
    :scale: 50 %
-   :alt: plot60 scatterplot
+   :alt: 
+   :align: right
+
+p61_scatter_mean_multi_run_Agent_x_y.png:
+
+.. image:: ./dataset_2_agents_6/Plots/scatterplot/p61_scatter_mean_multi_run_Agent_x_y.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+p62_scatter_mean_multi_batch_Agent_x_y.png:
+
+.. image:: ./dataset_2_agents_6/Plots/scatterplot/p62_scatter_mean_multi_batch_Agent_x_y.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+**Time series**
+
+p12_ts_quantile_multi_batch_x.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p12_ts_quantile_multi_batch_x.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+p12_ts_quantile_multi_batch_y.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p12_ts_quantile_multi_batch_y.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+p20_ts_mean_agent_x.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p20_ts_mean_agent_x.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+p24_ts_mean_agent_many_x_run_0_1.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p24_ts_mean_agent_many_x_run_0_1.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+
+p25_ts_mean_multi_run_many_x_0.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p25_ts_mean_multi_run_many_x_0.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+
+p26_ts_mean_multi_batch_many_x_0.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p26_ts_mean_multi_batch_many_x_0.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
+   :align: right
+
+
+p27_ts_mean_multi_set_many_x_0.png:
+
+.. image:: ./dataset_2_agents_6/Plots/timeseries/p27_ts_mean_multi_set_many_x_0.png
+   :height: 100px
+   :width: 200 px
+   :scale: 50 %
+   :alt: 
    :align: right
