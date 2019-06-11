@@ -37,7 +37,7 @@ Once the necessary parameters are set, by following the instructions specified i
 the parameters of the configuration files are shown below, along with the plots they yield.
 
 
-Using the test_data_., and the following config settings, the following plots can be produced.
+Using the test_data_, and the following config settings, the following plots can be produced.
 
 .. _test_data: https://github.com/svdhoog/FLAViz/tree/master/data/visualisation
 
