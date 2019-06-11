@@ -35,6 +35,11 @@ Many example plots are [here](https://github.com/svdhoog/FLAViz/tree/master/docs
  
 To get started immediately, you can run the library out-of-the-box using the [test data](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation). Instructions on how to do this can be found in the section on Testing in the [tutorial](https://github.com/svdhoog/FLAViz/tree/master/docs/visualisation_scripts/readme.rst).
 
+Test data
+--
+
+A simple model with test data is provided in the folder [circles model](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle). A description is in the [readme file](https://github.com/svdhoog/FLAViz/tree/master/data/visualisation/models/circle/readme.rst).
+
 
 Requirements:
 --
