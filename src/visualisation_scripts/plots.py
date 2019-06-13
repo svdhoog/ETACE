@@ -879,6 +879,7 @@ class Scatterplot(A):
         self.__S = len(main_param['set']) #length of sets list
         self.__R = len(main_param['run']) #length of runs list
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.analysistype = main_param['analysis']
         self.delay = main_param['delay']
         self.summary = main_param['summary']
 
@@ -904,13 +905,13 @@ class Scatterplot(A):
             os.makedirs(d)
             print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
 
-    def plot_scatterplot(self, ax, y, x, l_label, ylabel, xlabel, clr):
+    def plot_scatterplot(self, ax, x, y, l_label, xlabel, ylabel, clr):
         if self.__P.legend_label(self.idx) is None:
             le_label = l_label
         else:
             le_label = self.__P.legend_label(self.idx)
 
-        out = ax.scatter(y, x, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx),
+        out = ax.scatter(x, y, linestyle=self.__P.linestyle(self.idx), marker=self.__P.marker(self.idx),
         facecolor=self.__P.facecolors(self.idx), label=le_label, color=clr)
 
         if self.__P.legend(self.idx) is True:
@@ -955,10 +956,10 @@ class Scatterplot(A):
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
             
             #test
-            # print('\nPrint (main.py): self.__data')
+            # print('\nPrint (plot.py): self.__data')
             # print(self.__data)
-            print('\nPrint (main.py): dframe')
-            print(dframe)
+            # print('\nPrint (plot.py): dframe')
+            # print(dframe)
 
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
@@ -994,7 +995,7 @@ class Scatterplot(A):
                     #D = dframe.xs(int(m), level='minor') #agent-specific dframe containing: set,run,iter,vars
                     
                     #test
-                    # print('\nPrint (main.py): D')
+                    # print('\nPrint (plot.py): D')
                     # print(D)
 
                     legend_label = D.columns    #legend_label: list of variable names
@@ -1009,9 +1010,9 @@ class Scatterplot(A):
                     col_B = D[D.columns[1]]     #col_B: values of variable 1
                     
                     ##Test
-                    # print('\nPrint (main.py): col_A')
+                    # print('\nPrint (plot.py): col_A')
                     # print(col_A)
-                    # print('\nPrint (main.py): col_B')
+                    # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
                     #Refactor: Series of Array for all set+run data
@@ -1023,9 +1024,9 @@ class Scatterplot(A):
                         y2.append(np.array(col_B[i:i+self.__N]))
 
                     ##Test
-                    # print('\nPrint (main.py): y1')
+                    # print('\nPrint (plot.py): y1')
                     # print(y1)
-                    # print('\nPrint (main.py): y2')
+                    # print('\nPrint (plot.py): y2')
                     # print(y2)
 
                     # Index values:
@@ -1057,13 +1058,13 @@ class Scatterplot(A):
                     print(range(0, len(D)//self.__N) )
 
                     for ind, r in enumerate(range(0, len(D)//self.__N)):
-                        print("ind:", ind)
+                        print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
 
                         clr = next(colors)                    
 
                         # Index values:
-                        run_idx = r // nsets # r DIV blocks, ex: r MOD 4
-                        set_idx = r - run_idx*nsets
+                        run_idx = r % nruns     # r MOD blocks, ex: r MOD 4
+                        set_idx = r // nruns    # r DIV blocks, ex: r DIV 4
                         
                         #TEST
                         # print("set:")
@@ -1108,7 +1109,7 @@ class Scatterplot(A):
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
 
-            else: #multiple_run,multiple_batch,multiple_set, one plot, summary != 'full'
+            else: #one plot, summary != 'full', multiple_run,multiple_batch,multiple_set
                 if self.summary != 'full':
                     fig, ax = plt.subplots() # initialize figure
                     legend_label = dframe.columns
@@ -1120,10 +1121,11 @@ class Scatterplot(A):
 
                     col_A = dframe[dframe.columns[0]]
                     col_B = dframe[dframe.columns[1]]
-                                        ##Test
-                    # print('\nPrint (main.py): col_A')
+                    
+                    ##Test
+                    # print('\nPrint (plot.py): col_A')
                     # print(col_A)
-                    # print('\nPrint (main.py): col_B')
+                    # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
                     #Refactor: Series of Array for all set+run data
@@ -1137,57 +1139,66 @@ class Scatterplot(A):
                     else:
                         colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
                     
-                    ##Test
-                    #if args.trace:
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
 
-                    # Index values:
-                    print("dframe.index.levels:")
-                    #print(dframe.index.levels)
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
 
-                    print("sets:")
-                    print('dframe.index.levels[0].values')
-                    print(dframe.index.levels[0].values) #set values
-
-                    print("runs:")
-                    print('dframe.index.levels[1].values')
-                    print(dframe.index.levels[1].values) #run values
-                    # print("iters:")
-                    # print('dframe.index.levels[2].values')
-                    # print(dframe.index.levels[2].values) #iter values
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
                     
-                    nsets = len(dframe.index.levels[0])
-                    nruns = len(dframe.index.levels[1])
-                    
-                    print("Length set list:")                        
-                    print(nsets)
-
-                    print("Length run list:")                        
-                    print(nruns)
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)                        
 
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        print("ind:", ind)
+                        print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
 
                         clr = next(colors)                        
 
-                        # Index values:
-                        run_idx = r // nsets # r DIV blocks, ex: r MOD 4
-                        set_idx = r - run_idx*nsets
-                        
-                        #TEST
-                        # print("set:")
-                        # print(dframe.index.levels[0].values[set_idx])
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                      
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns    #irrelevant?
+                            set_idx = r
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = 0
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' ' + self.summary + ']', legend_label[0], legend_label[1], clr)
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            set_no = self.summary
+                            run_no = 0
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
+                            #print("iters:", dframe.index.values) #iter values
 
-                        # print("run:")
-                        # print(dframe.index.levels[1].values[run_idx])
-
-                        ##print("iters:")
-                        ##print(dframe.index.levels[2].values)
-                        
-                        #Use run and set labels derived from row index r
-                        set_no = dframe.index.levels[0].values[set_idx]
-                        run_no = dframe.index.levels[1].values[run_idx]                      
-
-                        self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)                        
+                        # self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ' batch ' + str(batch_no) + ']', legend_label[0], legend_label[1], clr)
                         
                     #Scatter plot_name one_output not-agent not-full case 1
                     if self.__P.plot_name(self.idx):
@@ -1199,14 +1210,12 @@ class Scatterplot(A):
                     #if args.trace:
                     print("\n Scatterplot [case 1 one_output, analysis != Agent, summary != 'full']: ") #multiple_batch
                     print(plot_name)
-                    print("r in: range(0, len(dframe)//self.__N="+str(range(0, len(dframe)//self.__N)))
-                    print("range(0, len(dframe)="+str(range(0, len(dframe))))
                     #End of Test code
 
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
-                else: #multiple_run,multiple_batch,multiple_set, one plot, summary=='full'
+                else: #one plot, summary=='full', multiple_run,multiple_batch,multiple_set
                 #Case: summary=='full'
                     fig, ax = plt.subplots() # initialize figure
                     legend_label = dframe.columns
@@ -1224,34 +1233,49 @@ class Scatterplot(A):
 
                     clr = next(colors)
                     
-                    ##Test
-                    #if args.trace:
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
 
-                    # Index values:
-                    print("dframe.index.levels:")
-                    #print(dframe.index.levels)
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, full runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        # print("iters:", dframe.index.levels[1].values) #iter values
 
-                    print("sets:")
-                    print('dframe.index.levels[0].values')
-                    print(dframe.index.levels[0].values) #set values
-
-                    print("runs:")
-                    print('dframe.index.levels[1].values')
-                    print(dframe.index.levels[1].values) #run values
-                    # print("iters:")
-                    # print('dframe.index.levels[2].values')
-                    # print(dframe.index.levels[2].values) #iter values
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, full batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values) #iter values
                     
-                    nsets = len(dframe.index.levels[0])
-                    nruns = len(dframe.index.levels[1])
-                    
-                    print("Length set list:")                        
-                    print(nsets)
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)                        
 
-                    print("Length run list:")                        
-                    print(nruns)
-
-                    self.plot_scatterplot(ax, col_A, col_B, '[sets: ' + str(nsets) + ' runs: ' + str(nruns) + ']', legend_label[0], legend_label[1], clr)
+                    if(self.analysistype == 'multiple_run'):
+                        set_no = dframe.index.levels[0].values #names
+                        run_no = dframe.index.levels[1].values #names
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                    if(self.analysistype == 'multiple_batch'):
+                        set_no = dframe.index.levels[0].values #names
+                        run_no = dframe.index.levels[1].values #names
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                    if(self.analysistype == 'multiple_set'):
+                        set_no = self.summary
+                        run_no = 0
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
                     
                     #Scatter plot_name one_output not-agent full case 2
                     if self.__P.plot_name(self.idx):
@@ -1308,13 +1332,13 @@ class Scatterplot(A):
                     nruns = len(D.index.levels[1])
 
                     for ind, r in enumerate(range(0, len(D)//self.__N)):        # loop all rows/no.iters
-                        print("ind:", ind)
+                        print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
                         fig, ax = plt.subplots() #open new figure for many plot option
                         clr = next(colors)
                         
                         # Index values:
-                        run_idx = r // nsets # r DIV blocks, ex: r MOD 4
-                        set_idx = r - run_idx*nsets
+                        run_idx = r % nruns     # r MOD blocks, ex: r MOD 4
+                        set_idx = r // nruns    # r DIV blocks, ex: r DIV 4
 
                         #Use run and set labels derived from row index r
                         set_no = D.index.levels[0].values[set_idx]
@@ -1338,7 +1362,7 @@ class Scatterplot(A):
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
-            else: #many plot, multiple_run,multiple_batch,multiple_set
+            else: #many plot, summary != 'full', multiple_run,multiple_batch,multiple_set
                 if self.summary != 'full':
                     legend_label = dframe.columns
                     if len(dframe.columns) != 2:
@@ -1350,9 +1374,9 @@ class Scatterplot(A):
                     col_B = dframe[dframe.columns[1]]
 
                     ##Test
-                    # print('\nPrint (main.py): col_A')
+                    # print('\nPrint (plot.py): col_A')
                     # print(col_A)
-                    # print('\nPrint (main.py): col_B')
+                    # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
                     #Refactor: Series of Array for all set+run data
@@ -1367,46 +1391,82 @@ class Scatterplot(A):
                     else:
                         colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
-                    ##Test
-                    #if args.trace:
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:")
+                        print('dframe.index.levels[0].values')
+                        print(dframe.index.levels[0].values) #set values
+                        print("runs:")
+                        print('dframe.index.levels[1].values')
+                        print(dframe.index.levels[1].values) #run values
+                        # print("iters:")
+                        # print('dframe.index.levels[2].values')
+                        # print(dframe.index.levels[2].values) #iter values
 
-                    # Index values:
-                    print("dframe.index.levels:")
-                    #print(dframe.index.levels)
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
 
-                    print("sets:")
-                    print('dframe.index.levels[0].values')
-                    print(dframe.index.levels[0].values) #set values
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
 
-                    print("runs:")
-                    print('dframe.index.levels[1].values')
-                    print(dframe.index.levels[1].values) #run values
-                    # print("iters:")
-                    # print('dframe.index.levels[2].values')
-                    # print(dframe.index.levels[2].values) #iter values
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
                     
-                    nsets = len(dframe.index.levels[0])
-                    nruns = len(dframe.index.levels[1])
-                    
-                    print("Length set list:")                        
-                    print(nsets)
-
-                    print("Length run list:")                        
-                    print(nruns)
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)  
 
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        print("ind:", ind)
+                        print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
                         fig, ax = plt.subplots()    #open new figure for many plot
                         clr = next(colors)
 
-                        # Index values:
-                        run_idx = r // nsets # r DIV blocks, ex: r MOD 4
-                        set_idx = r - run_idx*nsets
-                        #Use run and set labels derived from row index r
-                        set_no = dframe.index.levels[0].values[set_idx]
-                        run_no = dframe.index.levels[1].values[run_idx]
-
-                        self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                      
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            set_idx = r % nsets
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values #names
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            #set_idx = r // nruns    
+                            set_no = self.summary
+                            run_no = 0
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
+                            #print("iters:", dframe.index.values) #iter values
                         
                         ##Scatter plot_name many_output not-agent not-full case 4
                         #Note: this block is indented directly under plot_scatterplot, in order to have many plots
@@ -1423,7 +1483,7 @@ class Scatterplot(A):
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
-                else: #multiple_run,multiple_batch,multiple_set, many plot, summary=='full'
+                else: #many plot, summary=='full', multiple_run,multiple_batch,multiple_set
                 #Case: summary=='full'
                     fig, ax = plt.subplots()    #open new figure for many plot
 
@@ -1435,9 +1495,9 @@ class Scatterplot(A):
                     col_B = dframe[dframe.columns[1]]
 
                     ##Test
-                    # print('\nPrint (main.py): col_A')
+                    # print('\nPrint (plot.py): col_A')
                     # print(col_A)
-                    # print('\nPrint (main.py): col_B')
+                    # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
                     # edit colormap here
@@ -1448,35 +1508,50 @@ class Scatterplot(A):
 
                     clr = next(colors)
 
-                    ##Test
-                    #if args.trace:
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
 
-                    # Index values:
-                    print("dframe.index.levels:")
-                    #print(dframe.index.levels)
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, full runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        # print("iters:", dframe.index.levels[1].values) #iter values
 
-                    print("sets:")
-                    print('dframe.index.levels[0].values')
-                    print(dframe.index.levels[0].values) #set values
-
-                    print("runs:")
-                    print('dframe.index.levels[1].values')
-                    print(dframe.index.levels[1].values) #run values
-                    # print("iters:")
-                    # print('dframe.index.levels[2].values')
-                    # print(dframe.index.levels[2].values) #iter values
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, full batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values) #iter values
                     
-                    nsets = len(dframe.index.levels[0])
-                    nruns = len(dframe.index.levels[1])
-                    
-                    print("Length set list:")                        
-                    print(nsets)
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)                        
 
-                    print("Length run list:")                        
-                    print(nruns)
+                    if(self.analysistype == 'multiple_run'):
+                        set_no = dframe.index.levels[0].values #names
+                        run_no = dframe.index.levels[1].values #names
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                    if(self.analysistype == 'multiple_batch'):
+                        set_no = dframe.index.levels[0].values #names
+                        run_no = dframe.index.levels[1].values #names
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                    if(self.analysistype == 'multiple_set'):
+                        set_no = self.summary
+                        run_no = 0
+                        self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
 
-                    self.plot_scatterplot(ax, col_A, col_B, '[sets: ' + str(nsets) + ' runs: ' + str(nruns) + ']', legend_label[0], legend_label[1], clr)
-                    
                     ##Scatter plot_name many_output not-agent summary-full case 5
                     #Note: this block is indented directly under plot_scatterplot, in order to have many plots
                     if self.__P.plot_name(self.idx):
@@ -1492,7 +1567,7 @@ class Scatterplot(A):
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
-            file_count = file_count + 1
+                    file_count = file_count + 1
 
 class Boxplot(A):
     def __init__(self, idx, data, plt_config, main_param, outpath):

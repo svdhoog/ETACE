@@ -278,10 +278,10 @@ plot60:
     plot_legend: no
     legend_location: upper right
     #legend_label: price vs. output
-    ymin: -3.0
+    ymin: 0.0
     ymax: 6.0
-    xmin: -1.0
-    xmax: 4.0
+    xmin: 0.0
+    xmax: 7.0
     linestyle: solid
     marker: +
 
@@ -291,10 +291,10 @@ plot61:
     plot_legend: yes
     legend_location: upper right
     #legend_label: price vs. output
-    ymin: -3.0
-    ymax: 4.0
-    xmin: -3.0
-    xmax: 4.0
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
     linestyle: solid
     marker: +
 
@@ -304,10 +304,10 @@ plot62:
     plot_legend: yes
     legend_location: upper right
     #legend_label: price vs. output
-    ymin: -3.0
-    ymax: 4.0
-    xmin: -3.0
-    xmax: 4.0
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
     linestyle: solid
     marker: +
 
@@ -317,10 +317,10 @@ plot63:
     plot_legend: yes
     legend_location: upper right
     #legend_label: price vs. output
-    ymin: -3.0
-    ymax: 4.0
-    xmin: -3.0
-    xmax: 4.0
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
     linestyle: solid
     marker: +
 
@@ -425,17 +425,17 @@ plot73:
     xmax: 4.0
     marker: +
 
-plot74:
-    number_plots: many
-    plot_name: p74_scatter_full_agent_many
-    plot_legend: yes
-    legend_location: upper right
-    #legend_label: price vs. output
-    ymin: -3.0
-    ymax: 4.0
-    xmin: -3.0
-    xmax: 4.0
-    marker: +
+# plot74:
+#     number_plots: many
+#     plot_name: p74_scatter_full_agent_many
+#     plot_legend: yes
+#     legend_location: upper right
+#     #legend_label: price vs. output
+#     ymin: -3.0
+#     ymax: 4.0
+#     xmin: -3.0
+#     xmax: 4.0
+#     marker: +
 
 plot75:
     number_plots: many
