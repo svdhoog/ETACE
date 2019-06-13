@@ -17,10 +17,16 @@ def erf(msg):  # function to output the error message and exit
 def dir_check(d):
     if os.path.exists(d):
         print("- Directory ["+os.path.basename(d)+ "] is used for output files")
+        #test
+        if args.verbose:
+            print("os.path.basename(d)="+os.path.basename(d))
 
     else:
         os.makedirs(d)
         print("- Directory ["+os.path.basename(d)+ "] was created and is used for output files")
+        #test
+        if args.verbose:
+            print("os.path.basename(d)="+os.path.basename(d))
 
 
 def process_hdf_keys(string_in):  # function to extract set and run values from set_*_run_* string
@@ -127,6 +133,17 @@ if __name__ == "__main__":
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
     inpath = P.input_fpath()
     infiles = P.input_files()
+    
+    #test
+    #if args.verbose:
+    # print("\nPrint (main.py):")
+    # print("\n inpath="+inpath)
+    # print("\n infiles=")
+    # print(infiles)   
+    # print("\n")
+    #print("\n outpath=")
+    #print(outpath)
+
     primary_parameters = P.get_parameters()
     agent_storelist = {}  # all the agent HDF files are stored in this dict
     index = 0
@@ -142,15 +159,53 @@ if __name__ == "__main__":
     agent_dframes = {}  # All the main dataframes of different agenttypes are stored in this dict
 
     index = 0
+
+    #test
+    #print('\nPrint (main.py): agent_storelist.items()') #prints contents summary of h5 files
+    #print(agent_storelist.items())
+        
     for agentname, agentstore in agent_storelist.items():
+        
+        #test
+        #print("\nPrint (main.py): agentname="+agentname)
+        #print(agentname)
+                
         d = pd.DataFrame()  # Main dataframe to hold all the dataframes of each instance (one agenttype)
         df_list = []
+        
+        #test
+        #print('\nPrint (main.py): agentstore.keys()')
+        #print(agentstore.keys())
+        
         for key in agentstore.keys():  # go through sets and runs in the HDF file
             sets_runs = process_hdf_keys(key)  # get set and run values from the names: set_1_run_1_iters etc. hardcoded for set_*_run_*_iters atm
+
+            ##test
+            # print('\nPrint (main.py): sets_runs')
+            # print('key='+key)
+            # print('process_hdf_keys(key)=')
+            # print(process_hdf_keys(key))
+            # print('sets_runs=')
+            # print(sets_runs)    #prints set nos. and contents summary of hdf5
+            # print('sets_runs[0]= '+str(sets_runs[0])) #prints set nos.
+            # print('sets_runs[1]= '+str(sets_runs[1]))  #prints content summary of hdf5
+
             s = sets_runs[0]
             r = sets_runs[1]
             pnl = agentstore.select(key)  # open datapanel for particular set and run
+            
+            #test
+            #print('\nPrint (main.py): pnl')
+            #print(pnl)
+            #print(pnl.shape)            
+            
             df = pnl.to_frame()  # convert panel to Dataframe
+
+            #test
+            #print('\nPrint (main.py): df')
+            #print(df)
+            #print(df.shape)            
+
             # Add two columns for set and run into the dataframe for two added level of indexing
             df['set'] = s
             df['run'] = r
@@ -158,10 +213,20 @@ if __name__ == "__main__":
             df.set_index('set', append=True, inplace=True)
             df_list.append(df.reorder_levels(['set', 'run', 'major', 'minor']))
 
+        #test
+        #print('\nPrint (main.py): df_list')
+        #print(df_list)
+        
+        
         d = pd.concat(df_list)  # Add each dataframe from panel into a main dataframe containing all sets and runs
         del df_list
         agent_dframes[agentname] = d  # this dict contains agent-type names as keys, and the corresponding dataframes as values
         agentstore.close()
+
+        #test
+        #print('\nPrint (main.py): d')
+        #print(d)
+        #print(agent_dframes[agentname])
 
         # print a progressbar if verbose mode is activated
         if not args.verbose:
@@ -186,6 +251,7 @@ if __name__ == "__main__":
             else:
                 var_dic[j[0]] = None
             var_list = list(var_dic.keys())
+
 
         ##memory-heavy version        
         #d = agent_dframes[param['agent']]  # comment: this can be replaced in line below to save memory, here now just for simplicity. See memory-saving version
