@@ -167,7 +167,11 @@ class Timeseries(A):
                     plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                 else:
                     plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
-                
+                    
+                #Add a counter to the end
+                if file_count != 0:
+                    plot_name = str(plot_name) + '_' + str(file_count)
+
                 #Test code
                 #if args.trace:
                 print("\n Timeseries [case 0 one_output analysis=Agent]: ") #agent analysis, one plot
@@ -234,6 +238,10 @@ class Timeseries(A):
                     else:
                         plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
 
+                    #Add a counter to the end
+                    if file_count != 0:
+                        plot_name = str(plot_name) + '_' + str(file_count)
+
                     #Test code
                     #if args.trace:
                     print("\n Timeseries [case 1 one_output, analysis != Agent, summary != 'full']: ") #multiple_batch
@@ -289,6 +297,10 @@ class Timeseries(A):
                         plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                     else:
                         plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+
+                    #Add a counter to the end
+                    if file_count != 0:
+                        plot_name = str(plot_name) + '_' + str(file_count)
 
                     #Test                        
                     #if args.trace:
@@ -348,6 +360,10 @@ class Timeseries(A):
                                 plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[count]) #PlotName_VariableName
                             else:
                                 plot_name = str(self.agent) + '_' + str(self.variables[count]) #PlotLabel_AgentName_VariableName
+
+                            #Add a counter to the end
+                            if count != 0:
+                                plot_name = str(plot_name) + '_' + str(count)
 
                             #Test
                             #if args.trace:
@@ -411,11 +427,15 @@ class Timeseries(A):
                         else:
                             plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
 
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
+
                         #Test
                         #if args.trace:
                         print("\n Timeseries [case 4 many_output, analysis != Agent, len(dframe.columns) == 2]:")
                         print(plot_name)
-                        print("file_count= "+str(file_count))                        
+                        #print("file_count= "+str(file_count))                        
 
                         #Data:
                         #print('dframe.iloc['+str(r)+']= ')
@@ -465,6 +485,10 @@ class Timeseries(A):
                             plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
                         else:
                             plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
 
                         #Test
                         #if args.trace:
@@ -756,7 +780,7 @@ class Histogram():
             self.__N = len(dframe.index.get_level_values('major').unique())
 
             if self.__analysistype == A.agent:
-                print(" -Warning: too many plots will be produced !!! ")
+                print("- Warning: too many plots will be produced !!! ")
                 minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
                 for m in minor_index:
                     D = dframe.xs( int(m) , level='minor')
@@ -789,6 +813,11 @@ class Histogram():
                             else:
                                 #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
                                 plot_name = str(self.agent) + '_' + str(self.__data.columns[col])    #PlotLabel_AgentName_DataColsName
+                            
+                            #Add a counter to the end
+                            if count != 0:
+                                plot_name = str(plot_name) + '_' + str(count)
+
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
@@ -823,10 +852,14 @@ class Histogram():
                         
                         #plot_name
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count) #PlotName_Count
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count) #PlotName_Count
                         else:
                             #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #AgentName_VariableName
                             plot_name = str(self.agent) + '_' + str(self.__data.columns[col])   #AgentName_DataColsName
+
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
 
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
@@ -860,8 +893,13 @@ class Histogram():
                         else:
                             #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) + str(s)   #AgentName_VariableName_
                             plot_name = str(self.agent) + '_' + str(self.__data.columns[col])               #AgentName_DataColsName
+
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
+
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
 
@@ -875,7 +913,7 @@ class Scatterplot(A):
         self.__P = plt_config
         self.outpath = outpath + '/scatterplot'
         self.dir_check(self.outpath)
-        self.__N = len(main_param['major']) #main_param['major'].values()
+        self.__N = len(main_param['major']) #length of iters list
         self.__S = len(main_param['set']) #length of sets list
         self.__R = len(main_param['run']) #length of runs list
         self.__analysistype = self.map_analysis(main_param['analysis'])
@@ -946,13 +984,11 @@ class Scatterplot(A):
         file_count = 0
         step = 2
 
-        #What does this do?
         for col in range(0, len(self.__data.columns), step):
             if len(self.__data.columns) < 2:
                 print(">> Problem with data! Either set delay to True, or specify at least two variables to plot!")
                 sys.exit(1)
             
-            #What does this do?
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
             
             #test
@@ -971,17 +1007,12 @@ class Scatterplot(A):
                 else:
                     colors = iter(cm.rainbow(np.linspace(0, 1, len(dframe)//self.__N)))
 
-                #Refactor: use groupby on minor index to re-order hierarchical index!
-                
-                ##Old code
-                #D = dframe.groupby('minor')
-
-                #Using groupby
+                #Using groupby on minor index to re-order hierarchical index
                 grouped = dframe.groupby('minor')
                 # print(grouped.get_group(0))
                 # print(grouped.get_group(1))
 
-                #m: agent instances
+                #m: agent index (not IDs)
                 for m in minor_index:
 
                     #Select only agent index m
@@ -991,7 +1022,7 @@ class Scatterplot(A):
                     # print('D = grouped.get_group('+str(m)+')')
                     # print(D)
 
-                    #Old code #Refactor:
+                    #Old code refactored:
                     #D = dframe.xs(int(m), level='minor') #agent-specific dframe containing: set,run,iter,vars
                     
                     #test
@@ -1003,7 +1034,7 @@ class Scatterplot(A):
                         print(">> Something wrong with data, check and retry!")
                         sys.exit (1)
 
-                    #Refactor:
+                    #Refactor candidate:
                     y1 = []
                     y2 = []
                     col_A = D[D.columns[0]]     #col_A: values of variable 0
@@ -1015,7 +1046,7 @@ class Scatterplot(A):
                     # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
-                    #Refactor: Series of Array for all set+run data
+                    #Refactor candidate: Series of Array for all set+run data
                     #Append set_run data for agent index m
                     # Note: range(0, len(D), self.__N) uses as increment self.__N,
                     # so it is selecting rows of D that are self.__N rows apart.
@@ -1058,7 +1089,7 @@ class Scatterplot(A):
                     print(range(0, len(D)//self.__N) )
 
                     for ind, r in enumerate(range(0, len(D)//self.__N)):
-                        print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
+                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
 
                         clr = next(colors)                    
 
@@ -1128,7 +1159,7 @@ class Scatterplot(A):
                     # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
-                    #Refactor: Series of Array for all set+run data
+                    #Refactor candidate: Series of Array for all set+run data
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
@@ -1171,7 +1202,7 @@ class Scatterplot(A):
                     print("Length iter list:", niter)                        
 
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
+                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
 
                         clr = next(colors)                        
 
@@ -1332,7 +1363,7 @@ class Scatterplot(A):
                     nruns = len(D.index.levels[1])
 
                     for ind, r in enumerate(range(0, len(D)//self.__N)):        # loop all rows/no.iters
-                        print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
+                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
                         fig, ax = plt.subplots() #open new figure for many plot option
                         clr = next(colors)
                         
@@ -1352,15 +1383,19 @@ class Scatterplot(A):
                         
                         ##Scatter plot_name many_output agent case 3
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_no)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_ind)
                         else:
-                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_no)
+                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_ind)
                         
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
+
                         #if args.trace:
                         print("\n Scatterplot [case 3 many_output analysis=Agent]:")
                         print(plot_name)
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
             else: #many plot, summary != 'full', multiple_run,multiple_batch,multiple_set
                 if self.summary != 'full':
@@ -1379,7 +1414,7 @@ class Scatterplot(A):
                     # print('\nPrint (plot.py): col_B')
                     # print(col_B)
 
-                    #Refactor: Series of Array for all set+run data
+                    #Refactor candidate: Series of Array for all set+run data
                     #This block is only needed if summary != 'full'
                     for i in range(0, len(dframe), self.__N):
                         y1.append(np.array(col_A[i:i+self.__N]))
@@ -1439,7 +1474,7 @@ class Scatterplot(A):
                     print("Length iter list:", niter)  
 
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
+                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
                         fig, ax = plt.subplots()    #open new figure for many plot
                         clr = next(colors)
 
@@ -1457,7 +1492,7 @@ class Scatterplot(A):
                             set_idx = r % nsets
                             set_no = dframe.index.levels[0].values[set_idx]
                             run_no = dframe.index.levels[1].values #names
-                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                            self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
                             # print("set:", dframe.index.levels[0].values[set_idx]) #set values
                             # print("iters:", dframe.index.levels[1].values) #run values
                         if(self.analysistype == 'multiple_set'):
@@ -1471,17 +1506,21 @@ class Scatterplot(A):
                         ##Scatter plot_name many_output not-agent not-full case 4
                         #Note: this block is indented directly under plot_scatterplot, in order to have many plots
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no)
                         else:
-                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no)
+                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no)
                         
+                        #Add a counter to the end
+                        if file_count != 0:
+                            plot_name = str(plot_name) + '_' + str(file_count)
+
                         #if args.trace:
                         print("\n Scatterplot [case 4 many_output, analysis != Agent]:")
                         print(plot_name)
-                        print("file_count= "+str(file_count))
+                        #print("file_count= "+str(file_count))
                         
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
                 else: #many plot, summary=='full', multiple_run,multiple_batch,multiple_set
                 #Case: summary=='full'
@@ -1559,13 +1598,17 @@ class Scatterplot(A):
                     else:
                         plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets) + '_runs_' + str(nruns)
                     
+                    #Add a counter to the end
+                    if file_count != 0:
+                        plot_name = str(plot_name) + '_' + str(file_count)
+
                     #if args.trace:
                     print("\n Scatterplot [case 5 many_output, analysis != Agent, summary==full]:")
                     print(plot_name)
-                    print("file_count= "+str(file_count))
+                    #print("file_count= "+str(file_count))
                     
                     plot_format = self.__P.plot_format(self.idx)
-                    plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                    plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
                     file_count = file_count + 1
 
