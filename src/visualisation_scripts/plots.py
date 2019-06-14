@@ -16,7 +16,7 @@ class Plot():
         self.__P = Plot_configuration(par_fpath)
 
     def num_plot_mapper(self, val, obj):
-        one_plot = lambda: obj.one_output()
+        one_plot = lambda: obj.one_plot()
         many_plot = lambda: obj.many_output()
         options = {'one': one_plot, 'many': many_plot}
         return options[val]()
@@ -49,6 +49,7 @@ class Timeseries(A):
         self.__S = len(main_param['set']) #length of sets list
         self.__R = len(main_param['run']) #length of runs list
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.analysistype = main_param['analysis']
         self.__P = plt_config
         self.summary = main_param['summary']
         self.outpath = outpath + '/timeseries'
@@ -100,7 +101,7 @@ class Timeseries(A):
         return out
 
 
-    def one_output(self):
+    def one_plot(self):
         file_count = 0
         step = 1
         if self.summary == 'custom_quantile':
@@ -115,6 +116,7 @@ class Timeseries(A):
             legend_label = dframe.columns
             fig, ax = plt.subplots()
 
+            # timeseries one_plot agent
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
                 for i, m in enumerate(minor_index):
@@ -139,42 +141,71 @@ class Timeseries(A):
                             colors = iter(cm.gray(a))
                         else:
                             colors = iter(cm.rainbow(a))
+
+                        # Index values:
+                        print("D.index.levels:")
+                        #print(D.index.levels) #D only contains sets, runs, iters, no agents
+
+                        print("sets:")
+                        print('D.index.levels[0].values')
+                        print(D.index.levels[0].values) #set values
+
+                        print("runs:")
+                        print('D.index.levels[1].values')
+                        print(D.index.levels[1].values) #run values
+                        # print("iters:")
+                        # print('D.index.levels[2].values')
+                        # print(D.index.levels[2].values) #iter values
+                        
+                        nsets = len(D.index.levels[0])
+                        nruns = len(D.index.levels[1])
+                        
+                        print("Length set list:")                        
+                        print(nsets)
+
+                        print("Length run list:")                        
+                        print(nruns)
+
                         for r in range(0, len(y)):
                             clr = next(colors)
 
-                            #if args.trace:
-                            #Data:
-                            #print('dframe.iloc['+str(r)+']= ')
-                            #print(dframe.iloc[r])
-                            #Index:
-                            print("row r:")
-                            print(dframe.index[r])
-                            # Index values:
-                            print("set:")
-                            print(dframe.index[r][0])
-                            print("run:")
-                            print(dframe.index[r][1])
-                            # print("iters:")
-                            # print(dframe.index[r][2])
-                            # print("agent:")
-                            # print(dframe.index[r][3])
-                            #End of Test code
+                            # Index values: block in r-loop
+                            run_idx = r % nruns     # r MOD blocks, ex: r MOD 4
+                            set_idx = r // nruns    # r DIV blocks, ex: r DIV 4
+                            
+                            #TEST
+                            # print("set:")
+                            # print(D.index.levels[0].values[set_idx])
 
-                            self.plot_line(ax, x, y[r], legend_label[0]+'_run_'+str(r)+'_agent_'+str(m),clr, str(self.variables[file_count]))  # Legend entries for runs
+                            # print("run:")
+                            # print(D.index.levels[1].values[run_idx])
 
-                #Timeseries plot_name one_output agent case 0
+                            ##print("iters:")
+                            ##print(D.index.levels[2].values)
+                            
+                            #Agent index: does not exist in D, but does in dframe
+                            #TODO: use dframe or d or df_main (all not defined n this function)
+                            # print("agent index:")
+                            # print(m)
+
+                            #Use run and set labels derived from row index r
+                            set_no = D.index.levels[0].values[set_idx]
+                            run_no = D.index.levels[1].values[run_idx]                      
+
+                            #TODO: Use agent label derived from agent index m (required access to global dataframe)
+                            agent_ind = m
+                            #agent_id = df_main.index.levels[3].values[m]   #TODO
+
+                            self.plot_line(ax, x, y[r], 'set ' + str(set_no) + ' run ' + str(run_no) + ' agent '+  str(agent_ind), clr, str(self.__data.columns[col]))  # Legend entries for runs
+
+                #Timeseries plot_name one_plot agent case 0
+                plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_VariableName
                 if self.__P.plot_name(self.idx):
-                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
-                else:
-                    plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_VariableName
                     
-                #Add a counter to the end
-                if file_count != 0:
-                    plot_name = str(plot_name) + '_' + str(file_count)
-
                 #Test code
                 #if args.trace:
-                print("\n Timeseries [case 0 one_output analysis=Agent]: ") #agent analysis, one plot
+                print("Timeseries [case 0 one_plot analysis=Agent]: ") #agent analysis, one_plot
                 print(plot_name)
                 #End of Test code
 
@@ -182,8 +213,15 @@ class Timeseries(A):
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
 
-            else:   #not-agent analysis
-                if len(dframe.columns) == 2:
+            else:   # timeseries one_plot quantiles multiple_run,multiple_batch,multiple_set
+                #Test
+                # print('len(dframe.columns)= '+str(len(dframe.columns)))                
+                # print(dframe)
+
+                if len(dframe.columns) == 2: # quantiles
+
+                    print('- Summary [quantiles]')
+
                     y1 = []
                     y2 = []
                     col_A = dframe[dframe.columns[0]]
@@ -206,52 +244,89 @@ class Timeseries(A):
                     else:
                         colors = iter(cm.rainbow(a))
 
+                    # Block: nsets nruns
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
+
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
+
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
+                    
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)                        
+
                     for r in range(0, len(dframe)//self.__N):
                         clr = next(colors)
                         
-                        #if args.trace:
-                        #Data:
-                        #print('dframe.iloc['+str(r)+']= ')
-                        #print(dframe.iloc[r])
-                        #Index:
-                        print("row r:")
-                        print(dframe.index[r])
-                        # Index values:
-                        print("set:")
-                        print(dframe.index[r][0])
-                        print("run:")
-                        print(dframe.index[r][1])
-                        # print("iters:")
-                        # print(dframe.index[r][2])
-                        # print("agent:")
-                        # print(dframe.index[r][3])
-                        #End of Test code
+                        # block set_no run_no
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                            
+                            self.plot_line(ax, x, y1[r], legend_label[0]+' set ' + str(set_no)+' run ' + str(run_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], legend_label[1]+' set ' + str(set_no)+' run ' + str(run_no), clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns    #irrelevant?
+                            set_idx = r
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = 0
+                            self.plot_line(ax, x, y1[r], legend_label[0]+' set ' + str(set_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], legend_label[1]+' set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            set_no = self.summary
+                            run_no = 0
+                            self.plot_line(ax, x, y1[r], legend_label[0]+' set ' + str(set_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], legend_label[1]+' set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            #print("iters:", dframe.index.values) #iter values
 
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'-set-'+str(r), clr, str(self.variables[file_count]))  # Legend entries for quantiles per set
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'-set-'+str(r), clr, str(self.variables[file_count]))
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color=self.__P.fillcolor(self.idx), alpha=.5)
 
-                    #Timeseries plot_name one_output not-agent not-full case 1
+                    #Timeseries plot_name one_plot not-agent not-full case 1
+                    plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_VariableName
                     if self.__P.plot_name(self.idx):
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
-                    else:
-                        plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
-
-                    #Add a counter to the end
-                    if file_count != 0:
-                        plot_name = str(plot_name) + '_' + str(file_count)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_VariableName
 
                     #Test code
                     #if args.trace:
-                    print("\n Timeseries [case 1 one_output, analysis != Agent, summary != 'full']: ") #multiple_batch
+                    print("Timeseries [case 1 one_plot, analysis != Agent, quantiles]: ") #multiple_batch
                     print(plot_name)
                     #End of Test code
 
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
-                else:
+                else: # timeseries one_plot !quantiles multiple_run,multiple_batch,multiple_set
+                    
+                    print('- Summary [!quantiles?]')
+
                     y1 = []
                     col_A = dframe[dframe.columns[0]]
                     for i in range(0, len(dframe), self.__N):
@@ -268,47 +343,75 @@ class Timeseries(A):
                     else:
                         colors = iter(cm.rainbow(a))
 
+                    # Block: nsets nruns
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
+
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
+
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
+                    
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)                        
+
                     for r in range(0, len(dframe)//self.__N):
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
 
-                        #if args.trace:
-                        #Data:
-                        #print('dframe.iloc['+str(r)+']= ')
-                        #print(dframe.iloc[r])
-                        #Index:
-                        print("row r:")
-                        print(dframe.index[r])
-                        # Index values:
-                        print("set:")
-                        print(dframe.index[r][0])
-                        print("run:")
-                        print(dframe.index[r][1])
-                        # print("iters:")
-                        # print(dframe.index[r][2])
-                        # print("agent:")
-                        # print(dframe.index[r][3])
-                        # #End of Test code
-
-                        self.plot_line(ax, x, y1[r], legend_label[0] + " " + str(r), clr, str(self.variables[file_count]))
+                        # Block inside r-loop: set_no run_no
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                      
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no) + ' ' + self.summary, clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns    #irrelevant?
+                            set_idx = r
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = 0
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no) + ' ' + self.summary, clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            set_no = self.summary
+                            run_no = 0
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no) + ' ' + self.summary, clr, str(self.__data.columns[col]))
+                            #print("iters:", dframe.index.values) #iter values
                     
-                    #Timeseries plot_name one_output not-agent full case 2
+                    #Timeseries plot_name one_plot not-agent full case 2
+                    plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_VariableName
                     if self.__P.plot_name(self.idx):
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
-                    else:
-                        plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
-
-                    #Add a counter to the end
-                    if file_count != 0:
-                        plot_name = str(plot_name) + '_' + str(file_count)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_VariableName
 
                     #Test                        
                     #if args.trace:
-                    print("\n Timeseries [case 2 one_output, analysis != Agent, summary = 'full']:")
+                    print("Timeseries [case 2 one_plot, analysis != Agent, !quantiles]:")
                     print(plot_name)
-                    print("r in: range(0, len(dframe)//self.__N="+str(range(0, len(dframe)//self.__N)))
-                    print("range(0, len(dframe)="+str(range(0, len(dframe))))
-                    #End of Test code
 
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
@@ -320,18 +423,27 @@ class Timeseries(A):
         if self.summary == 'custom_quantile':
             step = 2
         file_count = 0
-        for col in range(0, len(self.__data.columns),step):
+        for col in range(0, len(self.__data.columns),step):            
+            print('- Plotting [' + self.__data.columns[col] + ']')
             if self.summary == 'custom_quantile':
                 dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()  # one variable, one case at a time
             else:
                 dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
             legend_label = dframe.columns
 
+            # timeseries many_plot agent
             if self.__analysistype == A.agent:
-                print("- Warning: analysis type is Agent, plotting type is many_output; could be that too many plots will be produced !!! ")
+                print('- Warning: analysis type is Agent, plotting type is many_output.')
+                print('- Number of plots: ' + str(len(dframe)//self.__N) + ' of ' + str(len(self.__data.columns)*(len(dframe)//self.__N)))
+
                 minor_index = dframe.index.get_level_values('minor').unique()  # get the index values for minor axis, which will later be used to sort the dataframe
+                
+                #Use groupby
+                grouped = dframe.groupby('minor')
+
                 for m in minor_index:
-                    D = dframe.xs( int(m) , level='minor')
+                    D = grouped.get_group(m)
+                    #D = dframe.xs( int(m) , level='minor')     # remove
                     if len(D.columns) == 2:
                         print("Quantile not possible for agent level analysis")
                         sys.exit(1)
@@ -348,51 +460,55 @@ class Timeseries(A):
                         else:
                             colors = iter(cm.rainbow(a))
 
-                        for i in range(0,len(D),self.__N):
-                            fig, ax = plt.subplots()
+                        nsets = len(D.index.levels[0])
+                        nruns = len(D.index.levels[1])
+
+                        for i in range(0,len(D),self.__N):      # blocks of self.__N rows belong to one agent
+                            #fig, ax = plt.subplots()
                             y = np.array(D[i:i+self.__N])
                             x = np.arange(1, self.__N+1)
+                            #clr = next(colors)
+                            
+                        for ind, r in enumerate(range(0, len(D)//self.__N)):        # loop all rows/no.iters
+                            # print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
+
+                            fig, ax = plt.subplots()
                             clr = next(colors)
-                            self.plot_line(ax, x, y, legend_label[0] + "_run_" + str(count) + "_agent_" + str(m), clr, str(self.variables[count]))
+
+                            # Index values:
+                            run_idx = r % nruns     # r MOD blocks, ex: r MOD 4
+                            set_idx = r // nruns    # r DIV blocks, ex: r DIV 4
+
+                            #Use run and set labels derived from row index r
+                            set_no = D.index.levels[0].values[set_idx]
+                            run_no = D.index.levels[1].values[run_idx]                      
+
+                            #TODO: Use agent label derived from agent index m (required access to global dataframe)
+                            agent_ind = m
+                            #agent_id = df_main.index.levels[3].values[m]   #TODO
+
+                            self.plot_line(ax, x, y, 'set ' + str(set_no) + ' run ' + str(run_no) + ' agent ' + str(m), clr, str(self.__data.columns[col]))
         
                             #Timeseries plot_name many_output agent case 3
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) + '_set_' + str(set_no) + '_run_' + str(run_no) + "_agent_" + str(m)#PlotLabel_AgentName_VariableName
                             if self.__P.plot_name(self.idx):
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[count]) #PlotName_VariableName
-                            else:
-                                plot_name = str(self.agent) + '_' + str(self.variables[count]) #PlotLabel_AgentName_VariableName
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
 
                             #Add a counter to the end
-                            if count != 0:
-                                plot_name = str(plot_name) + '_' + str(count)
+                            # if count != 0:
+                            #     plot_name = str(plot_name) + '_' + str(count)
 
                             #Test
                             #if args.trace:
-                            print("\n Timeseries [case 3 many_output analysis=Agent]:")
+                            print("Timeseries [case 3 many_output analysis=Agent]:")
                             print(plot_name)
 
-                            #Data:
-                            #print('dframe.iloc['+str(r)+']= ')
-                            #print(dframe.iloc[r])
-                            #Index:
-                            # print("row count:")
-                            # print(dframe.index[count])
-                            # # Index values:
-                            # print("set:")
-                            # print(dframe.index[count][0])
-                            # print("run:")
-                            # print(dframe.index[count][1])
-                            # print("iters:")
-                            # print(dframe.index[count][2])
-                            # print("agent:")
-                            # print(dframe.index[count][3])
-                            #End of Test
-
                             plot_format = self.__P.plot_format(self.idx)
-                            plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                            plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                             plt.close()
-                            count = count + 1
-            else:   #not-agent analysis
-                if len(dframe.columns) == 2:
+                        count = count + 1
+            else:   # timeseries many_plot quantiles multiple_run,multiple_batch,multiple_set
+                if len(dframe.columns) == 2:    # quantiles
                     y1 = []
                     y2 = []
                     col_A = dframe[dframe.columns[0]]
@@ -413,52 +529,96 @@ class Timeseries(A):
                     else:
                         colors = iter(cm.rainbow(a))
 
+                    # block: nsets nruns
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
+
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
+
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
+                    
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter)  
+
+                    # many plot
                     for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         clr = next(colors)
-                        self.plot_line(ax, x, y1[r], legend_label[0]+'-set-'+str(r), clr, str(self.variables[file_count]))  # Legend entries for quantiles per set
-                        self.plot_line(ax, x, y2[r], legend_label[1]+'-set-'+str(r), clr, str(self.variables[file_count]))
+
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                      
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no) + ' run ' + str(run_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], 'set ' + str(set_no) + ' run ' + str(run_no), clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            set_idx = r % nsets
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values #names
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            #set_idx = r // nruns    
+                            set_no = self.summary
+                            run_no = 0
+                            self.plot_line(ax, x, y1[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))  # Legend entries for quantiles per set
+                            self.plot_line(ax, x, y2[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            #print("iters:", dframe.index.values) #iter values
+                        
                         if self.__P.fill_between(self.idx):
                             plt.fill_between(x, y1[r], y2[r], color='k', alpha=.5)
 
-                        #Timeseries plot_name many_output not-agent not-full case 4
+                        #Timeseries plot_name many_output not-agent not-full case 4                        
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) +  '_set_' + str(set_no) + '_run_' + str(run_no) #PlotLabel_AgentName_VariableName
+
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
+                            
 
                         #Add a counter to the end
-                        if file_count != 0:
-                            plot_name = str(plot_name) + '_' + str(file_count)
+                        # if file_count != 0:
+                        #     plot_name = str(plot_name) + '_' + str(file_count)
 
                         #Test
                         #if args.trace:
-                        print("\n Timeseries [case 4 many_output, analysis != Agent, len(dframe.columns) == 2]:")
+                        print("Timeseries [case 4 many_output, analysis != Agent, quantiles]:")
                         print(plot_name)
                         #print("file_count= "+str(file_count))                        
 
-                        #Data:
-                        #print('dframe.iloc['+str(r)+']= ')
-                        #print(dframe.iloc[r])
-                        #Index:
-                        print("row r:")
-                        print(dframe.index[r])
-                        # Index values:
-                        print("set:")
-                        print(dframe.index[r][0])
-                        print("run:")
-                        print(dframe.index[r][1])
-                        # print("iters:")
-                        # print(dframe.index[r][2])
-                        # print("agent:")
-                        # print(dframe.index[r][3])
-                        #End of test                        
-
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
                         file_count = file_count + 1
-                else:
+                else: # timeseries many_plot !quantiles multiple_run,multiple_batch,multiple_set
                     y =[]
                     for i in range(0,len(dframe),self.__N):
                         y.append(np.array(dframe[i:i+self.__N]))
@@ -468,53 +628,93 @@ class Timeseries(A):
                     a = np.empty(shape=size,)
                     for s in range(size):
                         a[s] = s/size
+                    
                     if self.__P.greyscale(self.idx):
                         colors = iter(cm.gray(a))
                     else:
                         colors = iter(cm.rainbow(a))
 
-                    for s in range(0, len(dframe)//self.__N):
+                    # block: nsets nruns
+                    if(self.analysistype == 'multiple_run'):
+                        print("Analysis type: multiple_run")
+                        print("Description: Show all runs, summary across agents")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = len(dframe.index.levels[1])
+                        niter = len(dframe.index.levels[2])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        print("runs:", dframe.index.levels[1].values) #run values
+                        # print("iters:", dframe.index.levels[2].values) #iter values
+
+                    if(self.analysistype == 'multiple_batch'):
+                        print("Analysis type: multiple_batch")
+                        print("Description: Show all batches, summary across runs")
+                        nsets = len(dframe.index.levels[0])
+                        nruns = 0
+                        niter = len(dframe.index.levels[1])
+                        print("sets:", dframe.index.levels[0].values) #set values
+                        #print("iters:", dframe.index.levels[1].values) #iter values
+
+                    if(self.analysistype == 'multiple_set'):
+                        print("Analysis type: multiple_set")
+                        print("Description: Show all sets, summary across batches")
+                        nsets = 1
+                        nruns = 0
+                        niter = len(dframe)
+                        #print("iters:", dframe.index.values)
+                    
+                    print("Length set list:", nsets)                        
+                    print("Length run list:", nruns)                        
+                    print("Length iter list:", niter) 
+                    
+                    # many plot
+                    for r in range(0, len(dframe)//self.__N):
                         fig, ax = plt.subplots()
                         x = np.arange(1, self.__N+1)
                         clr = next(colors)
-                        self.plot_line(ax, x, y[s], legend_label[0] + "_" + str(s), clr, str(""))
                         
+                        if(self.analysistype == 'multiple_run'):
+                            run_idx = r % nruns
+                            set_idx = r // nruns
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = dframe.index.levels[1].values[run_idx]                      
+                            self.plot_line(ax, x, y[r], 'set ' + str(set_no) + ' run ' + str(run_no), clr, str(self.__data.columns[col]))
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) +  '_set_' + str(set_no) + ' run ' + str(run_no) #PlotLabel_AgentName_VariableName                            
+                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("run:", dframe.index.levels[1].values[run_idx]) #run values
+                            # print("iters:", dframe.index.levels[2].values) #iter values
+                        if(self.analysistype == 'multiple_batch'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            set_idx = r % nsets
+                            set_no = dframe.index.levels[0].values[set_idx]
+                            run_no = "" #dframe.index.levels[1].values #names
+                            self.plot_line(ax, x, y[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) +  '_set_' + str(set_no) #PlotLabel_AgentName_VariableName                            # print("set:", dframe.index.levels[0].values[set_idx]) #set values
+                            # print("iters:", dframe.index.levels[1].values) #run values
+                        if(self.analysistype == 'multiple_set'):
+                            #run_idx = r % nruns     #Irrelevant?
+                            #set_idx = r // nruns    
+                            set_no = self.summary
+                            run_no = "" #0
+                            self.plot_line(ax, x, y[r], 'set ' + str(set_no), clr, str(self.__data.columns[col]))
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) +  '_set_' + str(set_no) #PlotLabel_AgentName_VariableName
+                            #print("iters:", dframe.index.values) #iter values
 
                         #Timeseries plot_name many_output not-agent not-full case 5
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.variables[file_count]) #PlotName_VariableName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_VariableName
 
                         #Add a counter to the end
-                        if file_count != 0:
-                            plot_name = str(plot_name) + '_' + str(file_count)
+                        # if file_count != 0:
+                        #     plot_name = str(plot_name) + '_' + str(file_count)
 
                         #Test
                         #if args.trace:
-                        print("\n Timeseries [case 5 many_output, analysis != Agent, len(dframe.columns) != 2]:")
+                        print("Timeseries [case 5 many_output, analysis != Agent, !quantiles]:")
                         print(plot_name)
-                        print("file_count= "+str(file_count))                        
-
-                        #Data:
-                        #print('dframe.iloc['+str(s)+']= ')
-                        #print(dframe.iloc[s])
-                        #Index:
-                        # print("row s:")
-                        # print(dframe.index[s])
-                        # # Index values:
-                        # print("set:")
-                        # print(dframe.index[s][0])
-                        # print("run:")
-                        # print(dframe.index[s][1])
-                        # print("iters:")
-                        # print(dframe.index[s][2])
-                        # print("agent:")
-                        # print(dframe.index[s][3])
-                        #End of test 
+                        #print("file_count= "+str(file_count))                        
 
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(s) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
 
@@ -528,6 +728,7 @@ class Histogram():
         self.dir_check(self.outpath)
         #self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.analysistype = main_param['analysis']
         self.__P = plt_config
         self.summary = main_param['summary']
         if self.__analysistype == A.agent and self.summary  == 'custom_quantile':
@@ -587,7 +788,7 @@ class Histogram():
         return out
 
 
-    def one_output(self):
+    def one_plot(self):
         file_count = 0
         step = 1
         if self.summary == 'custom_quantile':
@@ -630,10 +831,10 @@ class Histogram():
                             self.plot_histogram(ax, y[r], legend_label[0]+'-set-'+str(r)+'_'+str(m), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                 
                 #plot_name
+                plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                 if self.__P.plot_name(self.idx):
-                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
-                else:
-                    plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_DataColsName
+                    
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
@@ -668,11 +869,10 @@ class Histogram():
                             self.plot_histogram(ax, y2[r], legend_label[1]+'_'+str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         
                         #plot_name
-                        #Example: DataColsName: price
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_DataColsName
+                            
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -697,11 +897,10 @@ class Histogram():
                             self.plot_histogram(ax, y1[r], legend_label[0]+'_'+str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
 
                         #plot_name
-                        #Example: DataColsName: 
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx))  + '_' + plot_name #PlotName_DataColsName
+                            
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -728,11 +927,10 @@ class Histogram():
                         self.plot_histogram(ax, col_B, legend_label[1], clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
 
                         #plot_name
-                        #Example: DataColsName: 
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_DataColsName
+                            
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -750,11 +948,10 @@ class Histogram():
                         self.plot_histogram(ax, col_A, legend_label[0], clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         
                         #plot_name
-                        #Example: DataColsName: 
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col]) #PlotName_DataColsName
-                        else:
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col]) #PlotLabel_AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_DataColsName
+                            
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
@@ -807,16 +1004,13 @@ class Histogram():
                             self.plot_histogram(ax, y, legend_label[0] + "_run_" + str(count) + "_instance_" + str(m), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                             
                             #plot_name
-                            #Example: Count: 
+                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])    #PlotLabel_AgentName_DataColsName
                             if self.__P.plot_name(self.idx):
-                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(count) #PlotName_Count
-                            else:
-                                #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #PlotLabel_AgentName_VariableName
-                                plot_name = str(self.agent) + '_' + str(self.__data.columns[col])    #PlotLabel_AgentName_DataColsName
+                                plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_Count
                             
                             #Add a counter to the end
-                            if count != 0:
-                                plot_name = str(plot_name) + '_' + str(count)
+                            # if count != 0:
+                            #     plot_name = str(plot_name) + '_' + str(count)
 
                             plot_format = self.__P.plot_format(self.idx)
                             plt.savefig(self.outpath + '/' + plot_name + "_run_" + str(count) + "_" + str(m) + "." + plot_format, format=plot_format, bbox_inches='tight')
@@ -851,18 +1045,16 @@ class Histogram():
                         self.plot_histogram(ax, y2[r], legend_label[1] + "_run_" + str(r), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         
                         #plot_name
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col])   #AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(file_count) #PlotName_Count
-                        else:
-                            #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) #AgentName_VariableName
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])   #AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name #PlotName_Count
 
                         #Add a counter to the end
-                        if file_count != 0:
-                            plot_name = str(plot_name) + '_' + str(file_count)
+                        # if file_count != 0:
+                        #     plot_name = str(plot_name) + '_' + str(file_count)
 
                         plot_format = self.__P.plot_format(self.idx)
-                        plt.savefig(self.outpath + '/' + plot_name + "_" + str(file_count) + "." + plot_format, format=plot_format, bbox_inches='tight')
+                        plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
 
                         file_count = file_count + 1
@@ -888,15 +1080,13 @@ class Histogram():
                         self.plot_histogram(ax, y[s], legend_label[0] + "_" + str(s), clr, self.__P.bins(self.idx), str(self.__data.columns[col]))
                         
                         #plot_name
+                        plot_name = str(self.agent) + '_' + str(self.__data.columns[col])               #AgentName_DataColsName
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(s)
-                        else:
-                            #plot_name = str(self.agent) + '_' + str(self.variables[file_count]) + str(s)   #AgentName_VariableName_
-                            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])               #AgentName_DataColsName
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
 
                         #Add a counter to the end
-                        if file_count != 0:
-                            plot_name = str(plot_name) + '_' + str(file_count)
+                        # if file_count != 0:
+                        #     plot_name = str(plot_name) + '_' + str(file_count)
 
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
@@ -980,7 +1170,7 @@ class Scatterplot(A):
         
         return out
 
-    def one_output(self):
+    def one_plot(self):
         file_count = 0
         step = 2
 
@@ -997,6 +1187,7 @@ class Scatterplot(A):
             # print('\nPrint (plot.py): dframe')
             # print(dframe)
 
+            # scatter one_plot agent
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
                 fig, ax = plt.subplots() # initialize figure
@@ -1084,16 +1275,12 @@ class Scatterplot(A):
                     print("Length run list:")                        
                     print(nruns)
 
-                    ##Test: r range is len(D) DIV N: No. of data blocks with set_run data
-                    print('range(0, len(D)//self.__N)')
-                    print(range(0, len(D)//self.__N) )
-
                     for ind, r in enumerate(range(0, len(D)//self.__N)):
-                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
+                        ## print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
 
                         clr = next(colors)                    
 
-                        # Index values:
+                        # Index values: block in r-loop
                         run_idx = r % nruns     # r MOD blocks, ex: r MOD 4
                         set_idx = r // nruns    # r DIV blocks, ex: r DIV 4
                         
@@ -1122,25 +1309,22 @@ class Scatterplot(A):
 
                         self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ' agent '+  str(agent_ind) + ']', legend_label[0], legend_label[1], clr)
                         
-                #Scatter plot_name one_output agent case 0
+                #Scatter plot_name one_plot agent case 0
+                plot_name = str(self.agent) + '_' + str("_".join(self.variables))
                 if self.__P.plot_name(self.idx):
-                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables))
-                else:
-                    plot_name = str(self.agent) + '_' + str("_".join(self.variables))
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
 
                 #Test code
                 #if args.trace:
-                print("\n Scatterplot [case 0 one_output analysis=Agent]: ") #agent analysis, one plot
+                print("Scatterplot [case 0 one_plot analysis=Agent]: ") #agent analysis, one_plot
                 print(plot_name)
-                print("data.columns[col]= "+str(self.__data.columns[col]))
-                print("legend_label[0] legend_label[1]="+legend_label[0]+' '+legend_label[1]) #Ex: output price
                 #End of Test code
 
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                 plt.close()
 
-            else: #one plot, summary != 'full', multiple_run,multiple_batch,multiple_set
+            else: # scatter one_plot summary!='full' multiple_run,multiple_batch,multiple_set
                 if self.summary != 'full':
                     fig, ax = plt.subplots() # initialize figure
                     legend_label = dframe.columns
@@ -1170,6 +1354,7 @@ class Scatterplot(A):
                     else:
                         colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
                     
+                    # Block: nsets nruns
                     if(self.analysistype == 'multiple_run'):
                         print("Analysis type: multiple_run")
                         print("Description: Show all runs, summary across agents")
@@ -1202,10 +1387,11 @@ class Scatterplot(A):
                     print("Length iter list:", niter)                        
 
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
+                        ## print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
 
                         clr = next(colors)                        
 
+                        # Block inside r-loop: set_no run_no
                         if(self.analysistype == 'multiple_run'):
                             run_idx = r % nruns
                             set_idx = r // nruns
@@ -1228,26 +1414,22 @@ class Scatterplot(A):
                             run_no = 0
                             self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
                             #print("iters:", dframe.index.values) #iter values
-
-                        # self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ' batch ' + str(batch_no) + ']', legend_label[0], legend_label[1], clr)
                         
-                    #Scatter plot_name one_output not-agent not-full case 1
+                    #Scatter plot_name one_plot not-agent not-full case 1
+                    plot_name = str(self.agent) + '_' + str("_".join(self.variables))
                     if self.__P.plot_name(self.idx):
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables))
-                    else:
-                        plot_name = str(self.agent) + '_' + str("_".join(self.variables))
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
                     
                     #Test
                     #if args.trace:
-                    print("\n Scatterplot [case 1 one_output, analysis != Agent, summary != 'full']: ") #multiple_batch
+                    print("Scatterplot [case 1 one_plot, analysis != Agent, summary != 'full']: ") #multiple_batch
                     print(plot_name)
                     #End of Test code
 
                     plot_format = self.__P.plot_format(self.idx)
                     plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                     plt.close()
-                else: #one plot, summary=='full', multiple_run,multiple_batch,multiple_set
-                #Case: summary=='full'
+                else: # scatter one_plot summary=='full' multiple_run,multiple_batch,multiple_set
                     fig, ax = plt.subplots() # initialize figure
                     legend_label = dframe.columns
                     if len(dframe.columns) != 2:
@@ -1264,6 +1446,7 @@ class Scatterplot(A):
 
                     clr = next(colors)
                     
+                    # block: nsets nruns
                     if(self.analysistype == 'multiple_run'):
                         print("Analysis type: multiple_run")
                         print("Description: Show all runs, summary across agents")
@@ -1308,14 +1491,13 @@ class Scatterplot(A):
                         run_no = 0
                         self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
                     
-                    #Scatter plot_name one_output not-agent full case 2
+                    #Scatter plot_name one_plot not-agent full case 2
+                    plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_full'
                     if self.__P.plot_name(self.idx):
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_full'
-                    else:
-                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_full'
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
 
                     #if args.trace:
-                    print("\n Scatterplot [case 2 one_output, analysis != Agent, summary = 'full']:")
+                    print("Scatterplot [case 2 one_plot, analysis != Agent, summary = 'full']:")
                     print(plot_name)
 
                     plot_format = self.__P.plot_format(self.idx)
@@ -1332,6 +1514,7 @@ class Scatterplot(A):
                 sys.exit(1)
             dframe = self.__data[[self.__data.columns[col], self.__data.columns[col+1]]].copy()
 
+            # scatter many_plot agent
             if self.__analysistype == A.agent:
                 minor_index = dframe.index.get_level_values('minor').unique()
 
@@ -1346,7 +1529,7 @@ class Scatterplot(A):
 
                 for m in minor_index:
                     D = grouped.get_group(m)
-                    #D = dframe.xs(int(m), level='minor')
+                    #D = dframe.xs(int(m), level='minor')     # remove
                     legend_label = D.columns
                     if len(dframe.columns) != 2:
                         print("Something wrong with data, check and retry!")
@@ -1359,11 +1542,11 @@ class Scatterplot(A):
                         y1.append(np.array(col_A[i:i+self.__N]))
                         y2.append(np.array(col_B[i:i+self.__N]))
                     
-                    nsets = len(D.index.levels[0])              # get totals self.__S self.__R?
+                    nsets = len(D.index.levels[0])
                     nruns = len(D.index.levels[1])
 
                     for ind, r in enumerate(range(0, len(D)//self.__N)):        # loop all rows/no.iters
-                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
+                        ## print('Loop dframe block r: '+str(ind)+'/'+str(len(D)//self.__N))
                         fig, ax = plt.subplots() #open new figure for many plot option
                         clr = next(colors)
                         
@@ -1382,22 +1565,21 @@ class Scatterplot(A):
                         self.plot_scatterplot(ax, y1[r], y2[r], '[set ' + str(set_no) + ' run ' + str(run_no) + ' agent '+  str(agent_ind) + ']', legend_label[0], legend_label[1], clr)
                         
                         ##Scatter plot_name many_output agent case 3
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_ind)
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_ind)
-                        else:
-                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no) + '_run_' + str(run_no) + '_' + 'agent_'+  str(agent_ind)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
                         
                         #Add a counter to the end
-                        if file_count != 0:
-                            plot_name = str(plot_name) + '_' + str(file_count)
+                        # if file_count != 0:
+                        #     plot_name = str(plot_name) + '_' + str(file_count)
 
                         #if args.trace:
-                        print("\n Scatterplot [case 3 many_output analysis=Agent]:")
+                        print("Scatterplot [case 3 many_output analysis=Agent]:")
                         print(plot_name)
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
-            else: #many plot, summary != 'full', multiple_run,multiple_batch,multiple_set
+            else: # scatter many_plot summary!='full' multiple_run,multiple_batch,multiple_set
                 if self.summary != 'full':
                     legend_label = dframe.columns
                     if len(dframe.columns) != 2:
@@ -1426,22 +1608,7 @@ class Scatterplot(A):
                     else:
                         colors = iter(cm.rainbow(np.linspace(0, 1, len(y1))))
 
-                    if(self.analysistype == 'multiple_run'):
-                        print("Analysis type: multiple_run")
-                        print("Description: Show all runs, summary across agents")
-                        nsets = len(dframe.index.levels[0])
-                        nruns = len(dframe.index.levels[1])
-                        niter = len(dframe.index.levels[2])
-                        print("sets:")
-                        print('dframe.index.levels[0].values')
-                        print(dframe.index.levels[0].values) #set values
-                        print("runs:")
-                        print('dframe.index.levels[1].values')
-                        print(dframe.index.levels[1].values) #run values
-                        # print("iters:")
-                        # print('dframe.index.levels[2].values')
-                        # print(dframe.index.levels[2].values) #iter values
-
+                    # block: nsets nruns
                     if(self.analysistype == 'multiple_run'):
                         print("Analysis type: multiple_run")
                         print("Description: Show all runs, summary across agents")
@@ -1473,8 +1640,9 @@ class Scatterplot(A):
                     print("Length run list:", nruns)                        
                     print("Length iter list:", niter)  
 
+                    # many plot
                     for ind, r in enumerate(range(0, len(dframe)//self.__N)):
-                        #print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
+                        ## print('Loop dframe block r: '+str(ind)+'/'+str(len(dframe)//self.__N))
                         fig, ax = plt.subplots()    #open new figure for many plot
                         clr = next(colors)
 
@@ -1505,25 +1673,23 @@ class Scatterplot(A):
                         
                         ##Scatter plot_name many_output not-agent not-full case 4
                         #Note: this block is indented directly under plot_scatterplot, in order to have many plots
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no)
                         if self.__P.plot_name(self.idx):
-                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no)
-                        else:
-                            plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_set_' + str(set_no)
+                            plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
                         
                         #Add a counter to the end
                         if file_count != 0:
                             plot_name = str(plot_name) + '_' + str(file_count)
 
                         #if args.trace:
-                        print("\n Scatterplot [case 4 many_output, analysis != Agent]:")
+                        print("Scatterplot [case 4 many_output, analysis != Agent]:")
                         print(plot_name)
                         #print("file_count= "+str(file_count))
                         
                         plot_format = self.__P.plot_format(self.idx)
                         plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
                         plt.close()
-                else: #many plot, summary=='full', multiple_run,multiple_batch,multiple_set
-                #Case: summary=='full'
+                else: # scatter many_plot summary=='full' multiple_run,multiple_batch,multiple_set
                     fig, ax = plt.subplots()    #open new figure for many plot
 
                     legend_label = dframe.columns
@@ -1582,28 +1748,29 @@ class Scatterplot(A):
                         set_no = dframe.index.levels[0].values #names
                         run_no = dframe.index.levels[1].values #names
                         self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets) + '_runs_' + str(nruns)
                     if(self.analysistype == 'multiple_batch'):
                         set_no = dframe.index.levels[0].values #names
-                        run_no = dframe.index.levels[1].values #names
+                        run_no = "" #dframe.index.levels[1].values #names
                         self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ' run ' + str(run_no) + ']', legend_label[0], legend_label[1], clr)
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets)
                     if(self.analysistype == 'multiple_set'):
                         set_no = self.summary
-                        run_no = 0
+                        run_no = "" #0
                         self.plot_scatterplot(ax, col_A, col_B, '[set ' + str(set_no) + ']', legend_label[0], legend_label[1], clr)
+                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets)
 
                     ##Scatter plot_name many_output not-agent summary-full case 5
                     #Note: this block is indented directly under plot_scatterplot, in order to have many plots
                     if self.__P.plot_name(self.idx):
-                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets) + '_runs_' + str(nruns)
-                    else:
-                        plot_name = str(self.agent) + '_' + str("_".join(self.variables)) + '_sets_' + str(nsets) + '_runs_' + str(nruns)
+                        plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
                     
                     #Add a counter to the end
-                    if file_count != 0:
-                        plot_name = str(plot_name) + '_' + str(file_count)
+                    # if file_count != 0:
+                    #     plot_name = str(plot_name) + '_' + str(file_count)
 
                     #if args.trace:
-                    print("\n Scatterplot [case 5 many_output, analysis != Agent, summary==full]:")
+                    print("Scatterplot [case 5 many_output, analysis != Agent, summary==full]:")
                     print(plot_name)
                     #print("file_count= "+str(file_count))
                     
@@ -1623,6 +1790,7 @@ class Boxplot(A):
         self.dir_check(self.outpath)
         self.__N = len(main_param['major'])
         self.__analysistype = self.map_analysis(main_param['analysis'])
+        self.analysistype = main_param['analysis']
         if self.__analysistype == A.agent:
             print("Boxplot not possible for agent-level analysis!")
             sys.exit(1)
@@ -1715,7 +1883,7 @@ class Boxplot(A):
         
         return ax
 
-    def one_output(self):
+    def one_plot(self):
 
         for col in range(0, len(self.__data.columns)):
             dframe = pd.DataFrame(self.__data[self.__data.columns[col]])
@@ -1733,11 +1901,10 @@ class Boxplot(A):
             for r in range(0, len(D)//self.__N):
                 self.plot_boxplot(ax, y[r], self.__data.columns[col], str(self.__data.columns[col]))
 
-            #Boxplots plot_name one_output case 1
+            #Boxplots plot_name one_plot case 1
+            plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
             if self.__P.plot_name(self.idx):
-                plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
-            else:
-                plot_name = str(self.agent) + '_' + str(self.__data.columns[col])
+                plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
             
             plot_format = self.__P.plot_format(self.idx)
             plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
@@ -1761,10 +1928,9 @@ class Boxplot(A):
                 self.plot_boxplot(ax, y[s], self.__data.columns[col], str(self.__data.columns[col]))
                 
                 #Boxplots plot_name many_output case 2
+                plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
                 if self.__P.plot_name(self.idx):
-                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + str(self.__data.columns[col])
-                else:
-                    plot_name = str(self.idx) + '_' + str(self.agent) + '_' + str(self.__data.columns[col])
+                    plot_name = str(self.__P.plot_name(self.idx)) + '_' + plot_name
                 
                 plot_format = self.__P.plot_format(self.idx)
                 plt.savefig(self.outpath + '/' + plot_name + "." + plot_format, format=plot_format, bbox_inches='tight')
