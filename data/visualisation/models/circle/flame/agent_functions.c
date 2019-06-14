@@ -16,7 +16,7 @@ int set_xy(void)
 
 	X = A + CONST_RADIUS*cos(s);
 
-	B = CONST_B;
+	B = RUN;
 
 	Y = B + CONST_RADIUS*sin(s);
 
