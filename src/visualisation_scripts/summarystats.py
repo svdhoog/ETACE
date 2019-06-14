@@ -61,7 +61,9 @@ class SummaryStats(A):
             Q = float(N[0])
             s = s.append(self.quantile(Q))
             for i in range(len(list(s))):
-                s.rename(columns={list(s)[i]: str(list(s)[i])+"_quantile ("+str(Q)+")"}, inplace=True)
+                #s.rename(columns={list(s)[i]: str(list(s)[i])+"_quantile ("+str(Q)+")"}, inplace=True)
+                s.rename(columns={list(s)[i]: str(list(s)[i])+"_Q("+str(Q)+")"}, inplace=True)
+                #s.rename(columns={list(s)[i]: "Q("+str(Q)+")"}, inplace=True) # quantile label: Q(0.2)
             return s
 
         elif len(N) == 2:
@@ -71,11 +73,13 @@ class SummaryStats(A):
             Q2 = float(N[1])
             s1 = s1.append(self.quantile(Q1))  # data frame for lower quantile
             for i in range(len(list(s1))):
-                s1.rename(columns={list(s1)[i]: str(list(s1)[i])+"_l_quantile ("+str(Q1)+")"}, inplace=True)
+                s1.rename(columns={list(s1)[i]: str(list(s1)[i])+"_Q("+str(Q1)+")"}, inplace=True) # varname_Q(0.2)
+                # s1.rename(columns={list(s1)[i]: "Q("+str(Q1)+")"}, inplace=True) # lower quantile label: Q(0.2)
 
             s2 = s2.append(self.quantile(Q2))  # data frame for upper quantile
             for i in range(len(list(s2))):
-                s2.rename(columns={list(s2)[i]: str(list(s2)[i])+"_u_quantile ("+str(Q2)+")"}, inplace=True)
+                s2.rename(columns={list(s2)[i]: str(list(s2)[i])+"_Q("+str(Q2)+")"}, inplace=True) # varname_Q(0.8)
+                # s2.rename(columns={list(s2)[i]: "Q("+str(Q2)+")"}, inplace=True) # upper quantile label: Q(0.8)
 
             D = pd.concat([s1, s2], axis=1)
             return D[list(sum(zip(s1.columns, s2.columns), ()))] # arrange columns (l_q, u_q) in alternating fashion
