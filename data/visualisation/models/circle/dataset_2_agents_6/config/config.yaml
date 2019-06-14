@@ -22,42 +22,42 @@ i/o:
 ##         set: [range,[1,4]]
 ##         run: [range,[1,2]]
 ##         major: [range,[1,628,1]]
-##         minor: [range,[1,6]]
+##         minor: [range,[0,5]]
 ##         summary: custom_quantile
 ##         quantile_values:
 ##             lower_percentile : 0.20
 ##             upper_percentile : 0.80
 
-plot11:
-    timeseries:
-        agent: Agent
-        analysis: multiple_run
-        variables:
-            var1: [x,y]
-        set: [range,[1,4]]
-        run: [range,[1,2]]
-        major: [range,[1,628,1]]
-        minor: [range,[1,6]]
-        summary: custom_quantile
-        quantile_values:
-            lower_percentile : 0.20
-            upper_percentile : 0.80
+# plot11:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: custom_quantile
+#         quantile_values:
+#             lower_percentile : 0.20
+#             upper_percentile : 0.80
 
-plot12:
-    timeseries:
-        agent: Agent
-        analysis: multiple_batch
-        variables:
-            var1: [x]
-            var2: [y]
-        set: [range,[1,4]]
-        run: [range,[1,2]]
-        major: [range,[1,628,1]]
-        minor: [range,[1,6]]
-        summary: custom_quantile
-        quantile_values:
-            lower_percentile : 0.20
-            upper_percentile : 0.80
+# plot12:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x]
+#             var2: [y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: custom_quantile
+#         quantile_values:
+#             lower_percentile : 0.20
+#             upper_percentile : 0.80
 
 # plot13:
 #     timeseries:
@@ -68,7 +68,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: custom_quantile
 #         quantile_values:
 #             lower_percentile : 0.20
@@ -84,7 +84,7 @@ plot12:
 #        set: [range,[1,4]]
 #        run: [range,[1,2]]
 #        major: [range,[1,628,1]]
-#        minor: [range,[1,6]]
+#        minor: [range,[0,5]]
 #        summary: mean
 
 # plot21:
@@ -96,7 +96,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot22:
@@ -108,7 +108,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot23:
@@ -120,7 +120,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 ##--------------------------------
 ##Many plots
@@ -132,9 +132,9 @@ plot12:
 #            var1: [x]
 #            var2: [y]
 #        set: [1]
-#        run: [1]
+#        run: [range,[1,2]]
 #        major: [range,[1,628,1]]
-#        minor: [range,[1,6]]
+#        minor: [range,[0,5]]
 #        summary: mean
 
 # plot25:
@@ -144,10 +144,10 @@ plot12:
 #         variables:
 #             var1: [x]
 #             var2: [y]
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot26:
@@ -159,7 +159,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot27:
@@ -171,7 +171,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # #TIME SERIES - FULL
@@ -184,7 +184,7 @@ plot12:
 #        set: [range,[1,4]]
 #        run: [range,[1,2]]
 #        major: [range,[1,628,1]]
-#        minor: [range,[1,6]]
+#        minor: [range,[0,5]]
 #        summary: full
 
 # plot31:
@@ -196,7 +196,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot32:
@@ -208,7 +208,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot33:
@@ -220,7 +220,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # ##  BOXPLOT - MEAN
@@ -233,7 +233,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot41:
@@ -245,7 +245,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot42:
@@ -257,7 +257,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot43:
@@ -269,7 +269,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # ## BOXPLOT - FULL
@@ -282,7 +282,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot51:
@@ -294,7 +294,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot52:
@@ -306,7 +306,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot53:
@@ -318,11 +318,11 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 ## SCATTERPLOT - MEAN
-## One plot
+# ## One plot
 # plot60:
 #   scatterplot:
 #         agent: Agent
@@ -331,50 +331,50 @@ plot12:
 #             var1: [x]
 #             var2: [y]
 #         delay: no
-#         set: [range,[1,2]]
-#         run: [1]
-#         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
-#         summary: mean
-
-# plot61:
-#   scatterplot:
-#         agent: Agent
-#         analysis: multiple_run
-#         variables:
-#             var1: [x,y]
-#         delay: no
-#         set: [range,[1,2]]
-#         run: [range,[1,2]]
-#         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
-#         summary: mean
-
-# plot62:
-#   scatterplot:
-#         agent: Agent
-#         analysis: multiple_batch
-#         variables:
-#             var1: [x,y]
-#         delay: no
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
-#         summary: mean        
-
-# plot63:
-#   scatterplot:
-#         agent: Agent
-#         analysis: multiple_set
-#         variables:
-#             var1: [x,y]
-#         delay: no
-#         set: [range,[1,4]]
-#         run: [range,[1,2]]
-#         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]        #this is index [0,5], should be using labels: [i].id
 #         summary: mean
+
+plot61:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_run    #shows summary across agents, for each run, each set
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean
+
+plot62:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_batch    #shows summary across agents & runs, for each set
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean        
+
+plot63:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_set    #shows summary across agents & runs & sets
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean
 # ## --------------------------------
 # ## Many plots
 # plot64:
@@ -384,10 +384,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
-#         run: [1]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [2]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot65:
@@ -400,7 +400,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot66:
@@ -410,10 +410,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean        
 
 # plot67:
@@ -426,7 +426,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # ## SCATTERPLOT - FULL
@@ -440,7 +440,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot71:
@@ -450,10 +450,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot72:
@@ -463,10 +463,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full        
 
 # plot73:
@@ -476,10 +476,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 # ## --------------------------------
 # ## Many plots
@@ -493,7 +493,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot75:
@@ -503,10 +503,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6,1]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # plot76:
@@ -516,10 +516,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full        
 
 # plot77:
@@ -529,10 +529,10 @@ plot12:
 #         variables:
 #             var1: [x,y]
 #         delay: no
-#         set: [range,[1,2]]
+#         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full
 
 # ## HISTOGRAM - MEAN
@@ -545,7 +545,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean          ##  Note: the summary is mean value, over each level, gives hist of distribution of means
 
 # plot81:
@@ -557,7 +557,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # plot82:
@@ -569,7 +569,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean    
 
 # plot83:
@@ -581,7 +581,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: mean
 
 # ## HISTOGRAM - FULL
@@ -594,7 +594,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full  ##  Note: here the histogram is over the entire distribution
 
 # plot91:
@@ -606,7 +606,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full  ##  Note: here the histogram is over the entire distribution
 
 # plot92:
@@ -618,7 +618,7 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full  # Note: here the histogram is over the entire distribution
 
 # plot93:
@@ -630,5 +630,5 @@ plot12:
 #         set: [range,[1,4]]
 #         run: [range,[1,2]]
 #         major: [range,[1,628,1]]
-#         minor: [range,[1,6]]
+#         minor: [range,[0,5]]
 #         summary: full  # Note: here the histogram is over the entire distribution

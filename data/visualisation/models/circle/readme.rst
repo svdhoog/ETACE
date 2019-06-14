@@ -65,7 +65,7 @@ with
 
 	CONST_RADIUS = set_no
 
-	CONST_B = set_no
+	CONST_B = run_no
 
 Output Data Sets
 -------
