@@ -25,8 +25,6 @@ class NP:
 class main_configuration():
 
     def __init__(self, in_fpath):
-
-#        self.main_f = in_fpath + '/main.yaml' # the main configuration file
         self.main_f = in_fpath + '/config.yaml' # the main configuration file
         self.parsed_values = self.parse_yaml(self.main_f)
 
@@ -127,7 +125,7 @@ class transform_configuration():
 
     def __init__(self, in_fpath):
 
-        self.transform_f = in_fpath + '/config_transform.yaml' # the main configuration file
+        self.transform_f = in_fpath + '/config_transform.yaml' # the configuration file for variable transformations
         self.parsed_values = self.parse_yaml(self.transform_f)
 
     def erf(self, msg):  # function to output the error message and exit
@@ -160,10 +158,8 @@ class Plot_configuration():
 
     def __init__(self, p_fpath):
 
-        self.plot_f = p_fpath + '/plot_config.yaml'
+        self.plot_f = p_fpath + '/plot_config.yaml' # the configuration file for plot options (matplotlib) 
         self.__param = self.parse_yaml(self.plot_f)
-
-
         self.__default_plot_parameters = Figure_default_parameters()
 
     def erf(self, msg):

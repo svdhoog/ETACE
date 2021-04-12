@@ -45,7 +45,6 @@ class Transform():
             #df_out[variables.values()] = roll_mean[::3].pct_change(4) 
             df_out[variables.values()] = roll_mean[::3][variables.values()]
             df_out = df_out.pct_change(4) # compute pct change with respect to same observation (quarter) 4 periods ago
-
             return df_out.rename(columns = col_d)
 
         def summation(df_out):
@@ -65,7 +64,6 @@ class Transform():
 
 
     def mom(self,fn, df_out): # method to print monthly growth rate (month on month)
-
         variables = self.P.get_parameters(self.__idx)['variables']
         col_d = self.col_name_mapper()
         df_out[variables.values()] = self.__data[variables.values()].pct_change(1) # compute pct change with respect to 1 period ago
