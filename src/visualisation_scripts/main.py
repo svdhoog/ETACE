@@ -149,7 +149,8 @@ if __name__ == "__main__":
     index = 0
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
-        agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+        #agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+        agent_storelist[key] = pd.io.pytables.HDFStore(f_p,  mode='r') # Is read-only mode needed here?
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index+=1

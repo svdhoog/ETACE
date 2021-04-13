@@ -1,0 +1,564 @@
+
+#TIME SERIES - QUANTILE
+plot10:
+    number_plots: one
+    plot_name: p10_ts_quantile
+    plot_legend: yes
+    legend_location: upper right
+    #ymin: -10.0
+    #ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0    
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: green
+    #plot_format: pdf
+
+plot11:
+    number_plots: one
+    plot_name: p11_ts_quantile_multi_run
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0    
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: green
+    #plot_format: pdf
+
+plot12:
+    number_plots: one
+    plot_name: p12_ts_quantile_multi_batch
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0    
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: green
+    #plot_format: pdf
+
+plot13:
+    number_plots: one
+    plot_name: p13_ts_quantile_multi_set
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0    
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: green
+    #plot_format: pdf
+
+#TIME SERIES - MEAN
+plot20:
+    number_plots: one
+    plot_name: p20_ts_mean_agent
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot21:
+    number_plots: one
+    plot_name: p21_ts_mean_multi_run
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot22:
+    number_plots: one
+    plot_name: p22_ts_mean_multi_batch
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot23:
+    number_plots: one
+    plot_name: p23_ts_mean_multi_set
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot24:
+    number_plots: many
+    plot_name: p24_ts_mean_agent_many
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    # xmin: -10.0
+    # xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot25:
+    number_plots: many
+    plot_name: p25_ts_mean_multi_run_many
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot26:
+    number_plots: many
+    plot_name: p26_ts_mean_multi_batch_many
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+plot27:
+    number_plots: many
+    plot_name: p27_ts_mean_multi_set_many
+    plot_legend: yes
+    legend_location: upper right
+    ymin: 0.0
+    ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+
+#TIME SERIES - FULL
+plot30:
+    number_plots: one
+    plot_name: p30_ts_full_agent
+    plot_legend: yes
+    legend_location: upper right
+    #ymin: -10.0
+    #ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: darkgreen
+
+plot31:
+    number_plots: one
+    plot_name: p31_ts_full_multi_run
+    plot_legend: yes
+    legend_location: upper right
+    #ymin: -10.0
+    #ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: darkgreen
+
+plot32:
+    number_plots: one
+    plot_name: p32_ts_full_multi_batch
+    plot_legend: yes
+    legend_location: upper right
+    #ymin: -10.0
+    #ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: darkgreen
+
+plot33:
+    number_plots: one
+    plot_name: p33_ts_full_multi_set
+    plot_legend: yes
+    legend_location: upper right
+    #ymin: -10.0
+    #ymax: 10.0
+    #xmin: -10.0
+    #xmax: 10.0
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    fill_between: yes
+    fillcolor: darkgreen
+
+# # BOXPLOT - MEAN
+plot40:
+    number_plots: one
+    plot_name: p40_box_mean
+    plot_legend: yes
+    legend_location: upper right
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    greyscale: True
+
+# BOXPLOT - FULL
+plot50:
+    number_plots: one
+    plot_name: p50_box_full
+    plot_legend: yes
+    legend_location: upper right
+    #xlabel: Time
+    #ylabel: price
+    linestyle: solid
+    marker: None
+    greyscale: True
+    bars: 50
+
+#SCATTERPLOT - MEAN
+plot60:
+    number_plots: one
+    plot_name: p60_scatter_mean_agent
+    plot_legend: no
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
+    linestyle: solid
+    marker: +
+
+plot61:
+    number_plots: one
+    plot_name: p61_scatter_mean_multi_run
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
+    linestyle: solid
+    marker: +
+
+plot62:
+    number_plots: one
+    plot_name: p62_scatter_mean_multi_batch
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
+    linestyle: solid
+    marker: +
+
+plot63:
+    number_plots: one
+    plot_name: p63_scatter_mean_multi_set
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: 0.0
+    ymax: 6.0
+    xmin: 0.0
+    xmax: 7.0
+    linestyle: solid
+    marker: +
+
+plot64:
+    number_plots: many
+    plot_name: p64_scatter_mean_agent_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    linestyle: solid
+    marker: +
+
+plot65:
+    number_plots: many
+    plot_name: p65_scatter_mean_multi_run_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    linestyle: solid
+    marker: +
+
+plot66:
+    number_plots: many
+    plot_name: p66_scatter_mean_multi_batch_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    linestyle: solid
+    marker: +
+
+plot67:
+    number_plots: many
+    plot_name: p67_scatter_mean_multi_set_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    linestyle: solid
+    marker: +
+
+#SCATTERPLOT - FULL
+plot70:
+    number_plots: one
+    plot_name: p70_scatter_full_agent
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+plot71:
+    number_plots: one
+    plot_name: p71_scatter_full_multi_run
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+plot72:
+    number_plots: one
+    plot_name: p72_scatter_full_multi_batch
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+plot73:
+    number_plots: one
+    plot_name: p73_scatter_full_multi_set
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+# plot74:
+#     number_plots: many
+#     plot_name: p74_scatter_full_agent_many
+#     plot_legend: yes
+#     legend_location: upper right
+#     #legend_label: price vs. output
+#     ymin: -3.0
+#     ymax: 4.0
+#     xmin: -3.0
+#     xmax: 4.0
+#     marker: +
+
+plot75:
+    number_plots: many
+    plot_name: p75_scatter_full_multi_run_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+plot76:
+    number_plots: many
+    plot_name: p76_scatter_full_multi_batch_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+plot77:
+    number_plots: many
+    plot_name: p77_scatter_full_multi_set_many
+    plot_legend: yes
+    legend_location: upper right
+    #legend_label: price vs. output
+    ymin: -3.0
+    ymax: 4.0
+    xmin: -3.0
+    xmax: 4.0
+    marker: +
+
+#HISTOGRAM - MEAN
+plot80:
+    number_plots: one
+    plot_name: p80_hist_mean_agent
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: True
+    legend_location: upper right
+
+plot81:
+    number_plots: one
+    plot_name: p81_hist_mean_multiple_runs
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: False
+    legend_location: upper right
+
+plot82:
+    number_plots: one
+    plot_name: p82_hist_mean_multiple_batches
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: False
+    legend_location: upper right
+
+plot83:
+    number_plots: one
+    plot_name: p83_hist_mean_multiple_sets
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: step
+    plot_legend: yes
+    fill_between: no
+    stacked: False
+    legend_location: upper right
+
+#HISTOGRAM - FULL
+plot90:
+    number_plots: one
+    plot_name: p90_hist_full_agent
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: True
+    legend_location: upper right
+
+plot91:
+    number_plots: one
+    plot_name: p91_hist_full_multiple_runs
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: False
+    legend_location: upper right
+
+plot92:
+    number_plots: one
+    plot_name: p92_hist_full_multiple_batches
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: bar
+    plot_legend: yes
+    fill_between: yes
+    stacked: False
+    legend_location: upper right
+
+plot93:
+    number_plots: one
+    plot_name: p93_hist_full_multiple_sets
+    plot_title: (Agent = Firm, var = Price)
+    number_bins: 50
+    histtype: step
+    plot_legend: yes
+    fill_between: no
+    stacked: False
+    legend_location: upper right
