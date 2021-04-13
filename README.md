@@ -54,7 +54,7 @@ For the FLAViz visualization scripts:
 * python3-numexp (>= 2.6)
 * python3-numpy (>= 1.14.3)
 * python3-pandas (0.22.0 or >= 0.19.0)
-* python3-pyTables (>= 3.4) -- currently used for HDF5 files, write-once, non-appendable
+* python3-pyTables (>= 3.4) -- currently used for HDF5 files, using the 'tables' format (slower than 'fixed' format, but allows for appendable HDFStores)
 * python3-scipy (1.1.0)
 * python3-tk (>= 3.4.3)
 * python3-yaml (>= 3.12)
