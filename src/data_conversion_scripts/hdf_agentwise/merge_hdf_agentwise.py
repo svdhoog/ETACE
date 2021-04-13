@@ -57,14 +57,19 @@ def error(mesg):
 
 if __name__ == "__main__":
     # Setup for command line arguments
-    parser = argparse.ArgumentParser(prog='merge_hdf_agentwise.py', description='Converts the SQLite database files to HDF5 files. For each db files, creates an equivalent HDF5 file.')
+    parser = argparse.ArgumentParser(prog='merge_hdf_agentwise.py', description='\
+        * Converts HDF5 files containing multiple agent types to HDF5 files per agent type. \
+        * Input can be a path to a folder that contains multiple HDF5 files, or to a folder hierarchy. \
+        * Output will be to a user-specified folder. \
+        * If the input folder is a folder hierarchy, it will be traversed, and a similar folder hierarchy will be created in the output folder.\
+        * The contents of the agent-wise HDF5 files combines the data per agent type, as found in the traversed folders.')
     parser.add_argument('hdfpath', help='Path to folder containing the individual hdf files', nargs=1, type=str)
     parser.add_argument('agentlist', help='File containing name of agent-types to process', nargs=1, type=str)
-    parser.add_argument('-o', '--outpath', help='Path to the folder where the output is desired', nargs=1, type=str)
+    parser.add_argument('-o', '--outpath', help='Path to the folder where the output will be stored', nargs=1, type=str)
     parser.add_argument('-v', '--verbose', help='Get the status of the intermediate processing steps', action='store_true')
-    parser.add_argument('-s', '--status', help='Get the total progress of the processing', action='store_true')
+    parser.add_argument('-s', '--status', help='Get the overall progress of the process (status is less verbose)', action='store_true')
     parser.add_argument('-c', '--chunksize', help='Set the chunksize for HDF5 files', nargs='?', type=int, const=500, default=500, action='store', required=False)
-    parser.add_argument('-z', '--compress', help='Use internal compression in HDFStore', nargs='?', type=int, const=1, default=1, action='store', required=False)
+    parser.add_argument('-z', '--compress', help='Use the internal compression (currently set to: bzip) in the HDFStore', nargs='?', type=int, const=1, default=1, action='store', required=False)
 
     args = parser.parse_args()
 
