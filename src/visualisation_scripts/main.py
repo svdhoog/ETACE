@@ -126,8 +126,8 @@ def progress_bar(name, iteration, total, barLength=20):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(prog='main.py', description='Visualise and transform various time-series data.')
-    parser.add_argument('--configpath', '-p', help='Path to folder containing the configuration (.yaml) files', nargs=1, type=str, required=True)
+    parser = argparse.ArgumentParser(prog='main.py', description='FLAViz: Visualization and data transformation of timeseries data of agent-based models.')
+    parser.add_argument('--configdir', '-p', help='Path to folder that contains the configuration (.yaml) files (config.yaml, plot_config.yaml)', nargs=1, type=str, required=True)
     parser.add_argument('--verbose', '-v', help='Activate the verbose mode which contains tracking steps and progress', required=False, action='store_false')
     args = parser.parse_args()
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
@@ -149,7 +149,8 @@ if __name__ == "__main__":
     index = 0
     for key, value in infiles.items():
         f_p = str(inpath) + "/" + str(value)
-        agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+        #agent_storelist[key] = pd.io.pytables.HDFStore(f_p)
+        agent_storelist[key] = pd.io.pytables.HDFStore(f_p,  mode='r') # Is read-only mode needed here?
         # print a progressbar if verbose mode is activated
         if not args.verbose:
             index+=1
@@ -192,14 +193,15 @@ if __name__ == "__main__":
 
             s = sets_runs[0]
             r = sets_runs[1]
-            pnl = agentstore.select(key)  # open datapanel for particular set and run
-            
+            #pnl = agentstore.select(key)  # open datapanel for particular set and run
+            df = agentstore.select(key)  # open datapanel for particular set and run
+
             #test
             #print('\nPrint (main.py): pnl')
             #print(pnl)
             #print(pnl.shape)            
             
-            df = pnl.to_frame()  # convert panel to Dataframe
+            #df = pnl.to_frame()  # convert panel to Dataframe
 
             #test
             #print('\nPrint (main.py): df')

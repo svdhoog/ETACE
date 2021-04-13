@@ -1,0 +1,634 @@
+i/o:
+
+    # set up the name of the root folder from repository
+    repo_name: 'FLAViz'
+
+    # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
+    input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/h5_agentwise/'
+    
+    # set up your y_path for the resulting plots, it's relative unless it starts with a '/'
+    output_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/Plots'
+    
+    input_files:
+        Agent: Agent.h5
+
+#TIME SERIES - QUANTILE
+## plot10:     #Quantile not possible for agent level analysis!
+##     timeseries:
+##         agent: Agent
+##         analysis: agent
+##         variables:
+##             var1: [x,y]
+##         set: [range,[1,4]]
+##         run: [range,[1,2]]
+##         major: [range,[1,628,1]]
+##         minor: [range,[0,5]]
+##         summary: custom_quantile
+##         quantile_values:
+##             lower_percentile : 0.20
+##             upper_percentile : 0.80
+
+# plot11:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: custom_quantile
+#         quantile_values:
+#             lower_percentile : 0.20
+#             upper_percentile : 0.80
+
+# plot12:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x]
+#             var2: [y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: custom_quantile
+#         quantile_values:
+#             lower_percentile : 0.20
+#             upper_percentile : 0.80
+
+# plot13:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: custom_quantile
+#         quantile_values:
+#             lower_percentile : 0.20
+#             upper_percentile : 0.80
+
+# #TIME SERIES - MEAN
+# plot20:
+#    timeseries:
+#        agent: Agent
+#        analysis: agent
+#        variables:
+#            var1: [x,y]
+#        set: [range,[1,4]]
+#        run: [range,[1,2]]
+#        major: [range,[1,628,1]]
+#        minor: [range,[0,5]]
+#        summary: mean
+
+# plot21:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot22:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot23:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+##--------------------------------
+##Many plots
+# plot24:
+#    timeseries:
+#        agent: Agent
+#        analysis: agent
+#        variables:
+#            var1: [x]
+#            var2: [y]
+#        set: [1]
+#        run: [range,[1,2]]
+#        major: [range,[1,628,1]]
+#        minor: [range,[0,5]]
+#        summary: mean
+
+# plot25:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x]
+#             var2: [y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot26:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot27:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# #TIME SERIES - FULL
+# plot30:           #Agent+Full does not exist
+#    timeseries:
+#        agent: Agent
+#        analysis: agent
+#        variables:
+#            var1: [x,y]
+#        set: [range,[1,4]]
+#        run: [range,[1,2]]
+#        major: [range,[1,628,1]]
+#        minor: [range,[0,5]]
+#        summary: full
+
+# plot31:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot32:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot33:
+#     timeseries:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# ##  BOXPLOT - MEAN
+# plot40:
+#     boxplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot41:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot42:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot43:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# ## BOXPLOT - FULL
+# plot50:           #Agent+Full does not exist
+#     boxplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot51:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot52:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot53:
+#     boxplot:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+## SCATTERPLOT - MEAN
+# ## One plot
+# plot60:
+#   scatterplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x]
+#             var2: [y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]        #this is index [0,5], should be using labels: [i].id
+#         summary: mean
+
+plot61:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_run    #shows summary across agents, for each run, each set
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean
+
+plot62:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_batch    #shows summary across agents & runs, for each set
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean        
+
+plot63:
+  scatterplot:
+        agent: Agent
+        analysis: multiple_set    #shows summary across agents & runs & sets
+        variables:
+            var1: [x,y]
+        delay: no
+        set: [range,[1,4]]
+        run: [range,[1,2]]
+        major: [range,[1,628,1]]
+        minor: [range,[0,5]]
+        summary: mean
+# ## --------------------------------
+# ## Many plots
+# plot64:
+#   scatterplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot65:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot66:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean        
+
+# plot67:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# ## SCATTERPLOT - FULL
+# plot70:           ## Agent+Full does not exist
+#   scatterplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot71:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot72:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full        
+
+# plot73:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+# ## --------------------------------
+# ## Many plots
+# plot74:           ## Agent+Full does not exist
+#   scatterplot:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot75:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# plot76:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full        
+
+# plot77:
+#   scatterplot:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         delay: no
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full
+
+# ## HISTOGRAM - MEAN
+# plot80:
+#     histogram:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean          ##  Note: the summary is mean value, over each level, gives hist of distribution of means
+
+# plot81:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# plot82:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean    
+
+# plot83:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: mean
+
+# ## HISTOGRAM - FULL
+# plot90:               ## Agent+Full does not exist
+#     histogram:
+#         agent: Agent
+#         analysis: agent
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full  ##  Note: here the histogram is over the entire distribution
+
+# plot91:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_run
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full  ##  Note: here the histogram is over the entire distribution
+
+# plot92:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_batch
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full  # Note: here the histogram is over the entire distribution
+
+# plot93:
+#     histogram:
+#         agent: Agent
+#         analysis: multiple_set
+#         variables:
+#             var1: [x,y]
+#         set: [range,[1,4]]
+#         run: [range,[1,2]]
+#         major: [range,[1,628,1]]
+#         minor: [range,[0,5]]
+#         summary: full  # Note: here the histogram is over the entire distribution

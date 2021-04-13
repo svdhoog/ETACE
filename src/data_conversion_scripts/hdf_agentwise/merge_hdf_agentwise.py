@@ -1,3 +1,4 @@
+
 #!/usr/bin/env python3
 
 #######################################################################################################################
@@ -12,20 +13,34 @@ import pandas as pd
 
 pd.set_option('io.hdf.default_format','table')  # Commenting this line out will write HDF5 as a fixed format, and not as a table format
                                                 # Writing as a fixed format is faster than writing as a table, but the file cannot be 'modified/appended to' later on
-
+                                                # We require the 'table' format here, due to the append in the function write_hdf() below.
 DB_SUFFIX = '.h5'
-#agentlist = ["Eurostat", "Government"] # Enter all agent-names that is to be processed
+
+# Assumed input: a text file agentlist.txt containing the names of all agent types to process
+# agentlist = ["Eurostat", "Government"] # Enter all agent-names to be processed
 
 def write_hdf(fname):
     set_run_name = os.path.splitext(os.path.basename(fname))[0]
+
+    print('\t\tTrying to open HDFStore in file: ' + os.path.basename(fname))
+    print('\t\t' + set_run_name)
+
     # Read the input HDF5 file in memory
-    store = pd.io.pytables.HDFStore(fname)
+    #store = pd.io.pytables.HDFStore(fname,  mode='r') # this opens the file fname and gives a ref to it
+    store = pd.HDFStore(fname,  mode='r')
+
+    print('\t\tHDFStore now opened')
+
     # Filtering out each agent types from the input HDF5 file
+    print('\t\tstore.keys():')
+    print(store.keys())
     for key in store.keys():
+        print('\t\tExtracting data for: ' + key.replace("b'","'"))
         if agentname in key:
-            frame = store.select(key)
-            store_out[set_run_name] = frame
+            frame = store.select(key) # Retrieve pandas object stored in file, with optional WHERE selections
+            store_out[set_run_name] = frame # store the object as data group '/set_run_name' in the HDFStore store_out
     store.close()
+    print('\t\tHDFStore closed.')
 
 # Function to check for existing directories, and create a new one if not present
 def dir_check(d):
@@ -42,14 +57,48 @@ def error(mesg):
 
 if __name__ == "__main__":
     # Setup for command line arguments
-    parser = argparse.ArgumentParser(prog='merge_hdf_agentwise.py', description='Converts the SQLite database files to HDF5 files. For each db files, creates an equivalent HDF5 file.')
+    parser = argparse.ArgumentParser(prog='merge_hdf_agentwise.py', description='\
+        * Converts HDF5 files containing multiple agent types to HDF5 files per agent type. \
+        * Input can be a path to a folder that contains multiple HDF5 files, or to a folder hierarchy. \
+        * Output will be to a user-specified folder. \
+        * If the input folder is a folder hierarchy, it will be traversed, and a similar folder hierarchy will be created in the output folder.\
+        * The contents of the agent-wise HDF5 files combines the data per agent type, as found in the traversed folders.')
     parser.add_argument('hdfpath', help='Path to folder containing the individual hdf files', nargs=1, type=str)
     parser.add_argument('agentlist', help='File containing name of agent-types to process', nargs=1, type=str)
-    parser.add_argument('-o', '--outpath', help='Path to the folder where the output is desired', nargs=1, type=str)
+    parser.add_argument('-o', '--outpath', help='Path to the folder where the output will be stored', nargs=1, type=str)
     parser.add_argument('-v', '--verbose', help='Get the status of the intermediate processing steps', action='store_true')
-    parser.add_argument('-s', '--status', help='Get the total progress of the processing', action='store_true')
+    parser.add_argument('-s', '--status', help='Get the overall progress of the process (status is less verbose)', action='store_true')
+    parser.add_argument('-c', '--chunksize', help='Set the chunksize for HDF5 files', nargs='?', type=int, const=500, default=500, action='store', required=False)
+    parser.add_argument('-z', '--compress', help='Use the internal compression (currently set to: bzip) in the HDFStore', nargs='?', type=int, const=1, default=1, action='store', required=False)
 
     args = parser.parse_args()
+
+    #Setup for verbose arguments
+    if args.verbose:
+        def verboseprint(*args):
+            for arg in args:
+                print (arg, end=' ')
+            print()
+    else:
+        verboseprint = lambda *a: None
+
+    #Setup for process status arguments
+    if args.status:
+        def statusprint(*args):
+            for arg in args:
+                print (arg, end=' ')
+            print()
+    else:
+        statusprint = lambda *a: None
+
+    # Settings for HDF5 files
+    chunksize = args.chunksize
+    verboseprint ('- Chunksize used in HDFStore: ' + str(chunksize))
+    h5_compression = args.compress
+    if (h5_compression):        
+        verboseprint ('- Compression used in HDFStore: ' + str(h5_compression))
+    else:
+        verboseprint ('- Compression used in HDFStore: ' + 'None')
 
     f_agentnames = args.agentlist[0]
     agentlist = []
@@ -80,32 +129,12 @@ if __name__ == "__main__":
         targetFolder = args.outpath[0]
     else:
         # Choose one of the options below and comment out the other as desired.
-
         targetFolder =  './output_'+os.path.basename(os.path.normpath(input_dbfolder)) # For output folder in the same folder where Python script is located.
         #targetFolder =  os.path.abspath(os.path.join(os.path.normpath(input_dbfolder), os.pardir))+'/output_'+os.path.basename(os.path.normpath(input_dbfolder))  # For output folder in the same folder where input folder is located
         #targetFolder =  os.path.dirname(input_dbfolder)  # Creates no output folder and places h5 file in same folder as input file
 
-
     # Function call to check if the output folder already exists, and create if not present
     dir_check(targetFolder)
-
-    #Setup for verbose arguments
-    if args.verbose:
-        def verboseprint(*args):
-            for arg in args:
-                print (arg, end=' ')
-            print()
-    else:
-        verboseprint = lambda *a: None
-
-    #Setup for process status arguments
-    if args.status:
-        def statusprint(*args):
-            for arg in args:
-                print (arg, end=' ')
-            print()
-    else:
-        statusprint = lambda *a: None
 
     # Process each folder in the input directory
     processed_folders = 0
@@ -126,16 +155,24 @@ if __name__ == "__main__":
             db_file_list = []
             for fname in glob.glob(os.path.join(dir_list[i], '*'+DB_SUFFIX)):
                 db_file_list.append(fname)
+                statusprint('- adding to list: '+str(fname))
             statusprint('- Total number of files within folder: '+ str(len(db_file_list)))
-            # Generate panels
+    
+            # Generate HDFStore objects and store in h5 file
             processed_files =[]
-            #print (db_file_list)
-            outFileName = output_folder + '/' + agentname +'.h5'
-            #store_out = pd.HDFStore(outFileName, 'w')  # to store without compression
-            store_out = pd.HDFStore(outFileName, 'w', chunksize = 500, complevel = 1, complib ='bzip2', fletcher32 = True) # store with compression
+
+            # Filename to write the new HDFStore
+            fname_tostore = output_folder + '/' + agentname +'.h5'
+            
+            if (h5_compression):
+                store_out = pd.HDFStore(fname_tostore, 'w', chunksize = chunksize, complevel = 1, complib ='bzip2', fletcher32 = True) # store with compression
+            else:
+                store_out = pd.HDFStore(fname_tostore, 'w')  # to store without compression
+
+            # Loop: process all h5 files set_*_run_*_iters.h5 and store them as groups in the new HDFStore 'store_out', written to file: fname_tostore
             for fname in sorted(db_file_list):
                 verboseprint('\n- Started processing: '+os.path.basename(fname))
-                write_hdf(fname)
+                write_hdf(fname) # write the pandas object (DataFrame) to the HDFStore
                 processed_files.append(fname)
                 percent = round((float(len(processed_files))/len(db_file_list))*100,2)
                 statusprint('- Number processed files: '+str(len(processed_files))+', of total: '+str(len(db_file_list))+'    Progress:'+ str(percent) +'%'),
