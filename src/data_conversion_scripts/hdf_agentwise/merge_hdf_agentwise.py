@@ -45,10 +45,13 @@ def write_hdf(fname):
 # Function to check for existing directories, and create a new one if not present
 def dir_check(d):
     if os.path.exists(d):
-        print("- Directory ["+os.path.realpath(d)+ "] is used for output files")
+        outpath = os.path.abspath(d)
+        print("- Directory used for output: [" + outpath + "]")
+
     else:
         os.makedirs(d)
-        print("- Directory ["+os.path.realpath(d)+ "] was created and is used for output files")
+        outpath = os.path.abspath(d)
+        print("- Output directory created: [" + outpath + "]")
 
 # Function to print out the error messages,if any, and exit
 def error(mesg):
@@ -110,7 +113,7 @@ if __name__ == "__main__":
     input_dbfolder = args.hdfpath[0]
 
     if os.getcwd() == os.path.abspath(input_dbfolder):
-        error("- Python script and data files not allowed in a single folder. Expects atleast a level of folder hierarchy. Fix issue and retry! ")
+        error("- Python script and data files not allowed in a single folder. Expects at least one level of folder hierarchy. Please fix the issue and retry.")
 
     dir_list =[]
     # Checking for nested subdirectories within a directory
@@ -129,9 +132,9 @@ if __name__ == "__main__":
         targetFolder = args.outpath[0]
     else:
         # Choose one of the options below and comment out the other as desired.
-        targetFolder =  './output_'+os.path.basename(os.path.normpath(input_dbfolder)) # For output folder in the same folder where Python script is located.
-        #targetFolder =  os.path.abspath(os.path.join(os.path.normpath(input_dbfolder), os.pardir))+'/output_'+os.path.basename(os.path.normpath(input_dbfolder))  # For output folder in the same folder where input folder is located
-        #targetFolder =  os.path.dirname(input_dbfolder)  # Creates no output folder and places h5 file in same folder as input file
+        #targetFolder =  './merged_agent_wise' # Set output folder to the same folder where this script is located.
+        targetFolder =  os.path.abspath(os.path.join(os.path.normpath(input_dbfolder), os.pardir))+'/merged_agent_wise'  # Set output folder in the same parent folder as input folder.
+        #targetFolder =  os.path.dirname(input_dbfolder)  # Creates no output folder and places the merged_agent_wise h5 file in the parent folder of the input folder.
 
     # Function call to check if the output folder already exists, and create if not present
     dir_check(targetFolder)
