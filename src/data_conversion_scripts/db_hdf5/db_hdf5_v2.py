@@ -31,14 +31,16 @@ def error(mesg):
     print('>>>>> (Error): {0}' .format(mesg), file = sys.stderr)
     sys.exit(1)
 
-
+# Function to read df from SQLite table for agent_name
 def agent_dataframe(agent_name):
     agent_name = agent_name.decode('utf-8')
     df = pd.read_sql(("SELECT * from "+ agent_name), con)
+    #print(df.head())
 
     # Ignoring the empty tables
     if df.empty == False:
-    #Converting the datatypes to make all of them uniform, to avoid pickling later on when writing to HDF
+    
+        #Converting the datatypes to make all of them uniform, to avoid pickling later on when writing to HDF
         types = df.apply(lambda x: pd.api.types.infer_dtype(x.values))
 
         for col in types[types=='floating'].index:
@@ -50,28 +52,33 @@ def agent_dataframe(agent_name):
         for col in types[types=='unicode'].index:
             df[col] = df[col].astype(str)
 
-        # Keeping count of the individual agent instance
-        # IterationList =[]
-        # agtin = str('agent_inst').encode('utf-8')
-        # IterationList = df['_ITERATION_NO'].tolist()
-        # j=0
-        # agentinstance_index =[j]
-        # for i in range(1,len(IterationList)):
-        #   if IterationList[i] == IterationList[i-1]:
-        #       j=j+1
-        #       agentinstance_index.append(j)
-        #   else:
-        #       j=0
-        #       agentinstance_index.append(j)
-        # # Adding the agent instance count as a separate column to the dataframe
-        # df[agtin] = agentinstance_index
-        # # Creating hierarchial index for df with the iteration number, and agent instance count
-        # df.set_index(['_ITERATION_NO',agtin], inplace=True)
+        # Rename col '_ITERATION_NO' to 'iter'
+        if '_ITERATION_NO' in types.index:
+            df.rename(columns={'_ITERATION_NO': 'iter'}, inplace=True)
 
-        # Set [iters,id] as the new index
-        #df.reset_index() # start anew
-        df.set_index(['_ITERATION_NO','id'], inplace=True)
-
+        if 'id' in types.index:
+            #print("Have 'id' variable")
+            # Create hierarchical index for df with iteration, agent id
+            # Set [iters,id] as the new index
+            df.set_index(['iter','id'], inplace=True)
+        else:
+            #print("No 'id' variable stored in DB")
+            # Count of agent instances
+            IterationList =[]
+            agtin = str('agent_inst').encode('utf-8')
+            IterationList = df['iter'].tolist()
+            j=0
+            agentinstance_index = [j]
+            for i in range(1,len(IterationList)):
+              if IterationList[i] == IterationList[i-1]:
+                  j=j+1
+                  agentinstance_index.append(j)
+              else:
+                  j=0
+                  agentinstance_index.append(j)
+            df[agtin] = agentinstance_index # Add agent instance count as separate column to dataframe
+            df.set_index(['iter', agtin], inplace=True) # Create hierarchical index for df with iteration and agent instance count
+        #print(df.head(10))
         return df
 
 def gen_hdf(fname, output_folder, chunksize, h5_compression):
