@@ -4,8 +4,8 @@ i/o:
     repo_name: 'FLAViz'
 
     # set up your input_path for the resulting plots, it's relative unless it starts with a '/'
-    #input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_1_agents_2/h5_agentwise/'
-    input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/h5_agentwise/'
+    #input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_1_agents_2/merged_agent_wise/'
+    input_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_2_agents_6/merged_agent_wise/'
     
     # set up your y_path for the resulting plots, it's relative unless it starts with a '/'
     #output_path: '/home/sander/scratch/svanderh/circle_test_model_data/its/dataset_1_agents_2/Plots'

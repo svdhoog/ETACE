@@ -127,7 +127,7 @@ def progress_bar(name, iteration, total, barLength=20):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(prog='main.py', description='FLAViz: Visualization and data transformation of timeseries data of agent-based models.')
-    parser.add_argument('--configdir', '-p', help='Path to folder that contains the configuration (.yaml) files (config.yaml, plot_config.yaml)', nargs=1, type=str, required=True)
+    parser.add_argument('--configpath', '-p', help='Path to folder that contains the configuration (.yaml) files (config.yaml, plot_config.yaml)', nargs=1, type=str, required=True)
     parser.add_argument('--verbose', '-v', help='Activate the verbose mode which contains tracking steps and progress', required=False, action='store_false')
     args = parser.parse_args()
     P = main_configuration(args.configpath[0])  # instantiate main_configuration class to process main yaml files
