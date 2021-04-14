@@ -36,19 +36,19 @@ class SummaryStats(A):
         return self.__data
 
     def mean(self):
-        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).mean()
-        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).mean()
-        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).mean()
-        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).mean()
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter', 'id']).mean()
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter']).mean()
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'iter']).mean()
+        multiple_set_analysis = lambda: self.__data.groupby(level=['iter']).mean()
 
         options = {A.agent: agent_analysis, A.multiple_run: multiple_run_analysis, A.multiple_batch: multiple_batch_analysis, A.multiple_set: multiple_set_analysis}
         return options[self.__analysis_type]()
 
     def quantile(self, val):
-        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).quantile(val)
-        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).quantile(val)
-        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).quantile(val)
-        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).quantile(val)
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter', 'id']).quantile(val)
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter']).quantile(val)
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'iter']).quantile(val)
+        multiple_set_analysis = lambda: self.__data.groupby(level=['iter']).quantile(val)
 
         options = {A.agent: agent_analysis, A.multiple_run: multiple_run_analysis, A.multiple_batch: multiple_batch_analysis, A.multiple_set: multiple_set_analysis}
         return options[self.__analysis_type]()
@@ -85,19 +85,19 @@ class SummaryStats(A):
             return D[list(sum(zip(s1.columns, s2.columns), ()))] # arrange columns (l_q, u_q) in alternating fashion
 
     def maximum(self):
-        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).max()
-        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).max()
-        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).max()
-        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).max()
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter', 'id']).max()
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter']).max()
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'iter']).max()
+        multiple_set_analysis = lambda: self.__data.groupby(level=['iter']).max()
 
         options = {A.agent: agent_analysis, A.multiple_run: multiple_run_analysis, A.multiple_batch: multiple_batch_analysis, A.multiple_set: multiple_set_analysis}
         return options[self.__analysis_type]()
 
     def minimum(self):
-        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major', 'minor']).min()
-        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'major']).min()
-        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'major']).min()
-        multiple_set_analysis = lambda: self.__data.groupby(level=['major']).min()
+        agent_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter', 'id']).min()
+        multiple_run_analysis = lambda: self.__data.groupby(level=['set', 'run', 'iter']).min()
+        multiple_batch_analysis = lambda: self.__data.groupby(level=['set', 'iter']).min()
+        multiple_set_analysis = lambda: self.__data.groupby(level=['iter']).min()
 
         options = {A.agent: agent_analysis, A.multiple_run: multiple_run_analysis, A.multiple_batch: multiple_batch_analysis, A.multiple_set: multiple_set_analysis}
         return options[self.__analysis_type]()

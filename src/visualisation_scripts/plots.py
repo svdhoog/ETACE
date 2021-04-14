@@ -7,8 +7,6 @@ import matplotlib.pyplot as plt
 #plt.style.use('ggplot')
 import matplotlib.cm as cm
 
-
-
 class Plot():
     def __init__(self, idx, data, par_fpath):
         self.idx = idx

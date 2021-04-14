@@ -21,8 +21,8 @@ i/o:
 ##             var1: [x,y]
 ##         set: [range,[1,4]]
 ##         run: [range,[1,2]]
-##         major: [range,[1,628,1]]
-##         minor: [range,[0,5]]
+##         major: [range,[1,628,1]] # iter
+##         minor: [range,[0,5]]     # agent instance no. / agent id?
 ##         summary: custom_quantile
 ##         quantile_values:
 ##             lower_percentile : 0.20
@@ -342,7 +342,8 @@ plot61:
         agent: Agent
         analysis: multiple_run    #shows summary across agents, for each run, each set
         variables:
-            var1: [x,y]
+            var1: x
+            var2: y
         delay: no
         set: [range,[1,4]]
         run: [range,[1,2]]
